@@ -2,6 +2,7 @@ import express from "express"; //Importamos la libreria 'express'
 import cors from "cors"; //Importamos la libreria 'cors'
 import dotenv from "dotenv"; //Importamos la libreria 'dotenv'
 import connection from "./db/connection.js"; //Importamos nuestra conexion
+import authRoutes from "./routes/auth.js"; //Importamos la ruta de LOGIN
 
 //Cargamos las variables de entorno
 dotenv.config();
@@ -11,6 +12,9 @@ const app = express();
 
 app.use(cors()); //Permitimos peticiones desde el frontend
 app.use(express.json()); //Permitimos recibir datos en JSON
+
+//Usamos la ruta de LOGIN
+app.use("/api", authRoutes);
 
 //Puerto del servidor
 const PORT = process.env.PORT;
@@ -22,5 +26,5 @@ app.get("/", (req, res) => {
 
 //Iniciamos el servidor
 app.listen(PORT, () => {
-    console.log("Servidor escuchando en localhost:3307")
+    console.log("Servidor escuchando en localhost:" + PORT)
 })

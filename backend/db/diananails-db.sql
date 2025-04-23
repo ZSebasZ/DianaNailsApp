@@ -193,12 +193,13 @@ INSERT INTO horas (id, hora, es_laboral) VALUES
 (40, '18:45', 1),
 (41, '19:00', 0);
 
--- Datos para la tabla de Administradores y Manicuristas
+-- Datos para la tabla de Administradores, Manicuristas y Clientes
 INSERT INTO usuarios (id, url_imagen, nombre, apellidos, telefono, email, contrasena) VALUES
 (1, '', 'Diana Lorena', 'Jimenez', '657487598', 'admin@diananails.com', 'abc123.'),
 (2, '', 'Sofia', 'Garcia', '666666661', 'sgarcia@diananails.com', 'abc123.'),
 (3, '', 'Ana', 'Ramírez', '666666662', 'nramirez@diananails.com', 'abc123.'),
-(4, '', 'Camila', 'Lopez', '666666663', 'clopez@diananails.com', 'abc123.');
+(4, '', 'Camila', 'Lopez', '666666663', 'clopez@diananails.com', 'abc123.'),
+(5, '', 'Cliente1', 'Apellido Cliente1', '666666664', 'cliente1@gmail.com', 'abc123.');
 
 INSERT INTO administradores (id, dni) VALUES
 (1, '84811274Q');
@@ -207,6 +208,9 @@ INSERT INTO manicuristas (id, dni, estrellas) VALUES
 (2, '12345678A', 5.0),
 (3, '12345678B', 5.0),
 (4, '12345678C', 5.0);
+
+INSERT INTO clientes (id, direccion_envio) VALUES
+(5, '')
 
 -- Datos para la tabal de Servicios
 INSERT INTO servicios (id, url_imagen, nombre, precio, horas_requeridas) VALUES
