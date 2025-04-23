@@ -3,7 +3,7 @@ import cors from "cors"; //Importamos la libreria 'cors'
 import dotenv from "dotenv"; //Importamos la libreria 'dotenv'
 import connection from "./db/connection.js"; //Importamos nuestra conexion
 import authRoutes from "./routes/auth.js"; //Importamos la ruta de LOGIN
-import registerClienteRoutes from "./routes/registerCliente.js"; //Importamos la ruta de REGISTER-CLIENTE
+//import registerClienteRoutes from "./routes/registerCliente.js"; //Importamos la ruta de REGISTER-CLIENTE
 
 //Cargamos las variables de entorno
 dotenv.config();
@@ -14,11 +14,8 @@ const app = express();
 app.use(cors()); //Permitimos peticiones desde el frontend
 app.use(express.json()); //Permitimos recibir datos en JSON
 
-//Usamos la ruta de LOGIN
+//Usamos la ruta de LOGIN y REGISTER-CLIENTE
 app.use("/api", authRoutes);
-
-//Usamos la ruta de REGISTER-CLIENTE
-app.use("/api", registerClienteRoutes);
 
 //Puerto del servidor
 const PORT = process.env.PORT;
