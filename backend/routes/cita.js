@@ -1,5 +1,5 @@
 import express from "express"; //Importamos la libreria 'express'
-import {getPrecioTotalHorasRequeridas, getHorasDisponiblesManicuristasDisponibles} from "./../controllers/citaController.js"
+import {getPrecioTotalHorasRequeridas, getHorasDisponiblesManicuristasDisponibles, nuevaCita} from "./../controllers/citaController.js"
 
 //Creamos el objeto Router para establecer las rutas que vamos a usar
 const router = express.Router()
@@ -21,6 +21,20 @@ router.get("/get-hors-mancrts-disponibles", getHorasDisponiblesManicuristasDispo
         "idCliente": 5,
         "fecha": "2025-04-27",
         "servicios": [1, 2]
+    }
+*/
+
+//Creamos la ruta para INSERTAR una CITA}
+router.post("/nueva-cita", nuevaCita)
+//JSON DE PRUEBA
+/*
+    {
+        "idCliente": 5,
+        "servicios": [1, 2],
+        "fecha": "2025-04-27",
+        "idHora": 1,
+        "idManicurista": 2,
+        "precio": 10
     }
 */
 
