@@ -4,6 +4,7 @@ import dotenv from "dotenv"; //Importamos la libreria 'dotenv'
 import connection from "./db/connection.js"; //Importamos nuestra conexion
 import authRoutes from "./routes/auth.js"; //Importamos la ruta de LOGIN y REGISTER
 import serviciosRoutes from "./routes/servicios.js"; //Importamos la ruta de SERVICIOS
+import citaRoutes from "./routes/cita.js"
 //import registerClienteRoutes from "./routes/registerCliente.js"; //Importamos la ruta de REGISTER-CLIENTE
 
 //Cargamos las variables de entorno
@@ -21,6 +22,9 @@ app.use("/api", authRoutes);
 
 //Usamos la ruta de SERVICIOS
 app.use("/api", serviciosRoutes);
+
+//Usamos la ruta de CITA
+app.use("/api", citaRoutes);
 
 //Puerto del servidor
 const PORT = process.env.PORT;
