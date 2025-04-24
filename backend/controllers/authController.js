@@ -1,6 +1,6 @@
 import connection from "./../db/connection.js"; //Importamos nuestra conexion
 
-//Creamos la funcion que se encarga del login
+//Creamos la funcion que se encarga del LOGIN
 const login = (req, res) => {
 
     //Obtenemos el email y contraseña que el frontend nos envia
@@ -40,7 +40,7 @@ const login = (req, res) => {
     })
 }
 
-//Creamos la funcion que se encarga del registro de usuarios-clientes
+//Creamos la funcion que se encarga del REGISTRO de USUARIOS-CLIENTES
 const registerCliente = (req, res) => {
 
     //Obtenemos el email y contraseña que el frontend nos envia
@@ -86,7 +86,7 @@ const registerCliente = (req, res) => {
     })
 }
 
-//Creamos la funcion que se encarga del registro de usuarios-manicuristas
+//Creamos la funcion que se encarga del REGISTRO de USUARIOS-MANICURISTAS
 const registerManicurista = (req, res) => {
 
     //Obtenemos el email y contraseña que el frontend nos envia

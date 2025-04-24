@@ -1,6 +1,6 @@
 import connection from "./../db/connection.js"; //Importamos nuestra conexion
 
-//Creamos la funcion que se encarga de la obtencion de los servicios
+//Creamos la funcion que se encarga de la OBTENCION de los SERVICIOS
 const getServicios = (req, res) => {
 
     //Sentencia SQL para la obtencion de los datos
@@ -18,6 +18,7 @@ const getServicios = (req, res) => {
     })
 }
 
+//Creamos la funcion que se encarga de la INSERCION de los SERVICIOS
 const nuevoServicio = (req, res) => {
 
     //Obtenemos los datos del nuevo servicio
@@ -47,4 +48,39 @@ const nuevoServicio = (req, res) => {
 
 }
 
-export {getServicios, nuevoServicio}
+//Creamos la funcion que se encarga de la ACTUALIZACION de los SERVICIOS
+const updateServicio = (req, res) => {
+
+    //Obtenemos el id del servicio a actualizat
+    const { id } = req.params
+
+    //Obtenemos los nuevos datos del servicio
+    const { url_imagen, nombre, precio, horas_requeridas } = req.body;
+
+    //Si alguno de los datos está vació o no se envia, mandamos un error
+    if (!nombre || !precio || !horas_requeridas) {
+        return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    //Sentencia SQL para actualizar el servicio
+    const updateServicio = "UPDATE servicios SET url_imagen = ?, nombre = ?, precio = ?, horas_requeridas = ? WHERE id = ?"
+
+    //Hacemos la actualizacion del servicio
+    connection.query(updateServicio, [url_imagen, nombre, precio, horas_requeridas, id], (error, result) => {
+        //Si ocurre algun error en la insercion, mostramos un mensaje
+        if (error) {
+            return res.status(500).json({ mensaje: "Error al actualizar el servicio" });
+        }
+
+        //Comprobamos si alguna fila se actualizó
+        if (result.affectedRows == 0) {
+            return res.status(404).json({ message: "Servicio no encontrado" });
+        }
+
+        //Si todo el proceso fue exitoso, monstramos un mensaje
+        res.status(200).json({ message: "Servicio actualizado correctamente" });
+    })
+
+}
+
+export {getServicios, nuevoServicio, updateServicio}
