@@ -233,3 +233,8 @@ INSERT INTO servicios (id, url_imagen, nombre, precio, horas_requeridas) VALUES
 (17, '', 'Pedicura completa con decoración', 28, 5),
 (18, '', 'Esmaltado de pies 1 solo color', 18, 2),
 (19, '', 'Esmaltado de pies con decoración', 21, 3);
+
+-- Datos para la tabla Metodos de pago
+INSERT INTO metodos_pago (metodo) VALUES
+("Pagar en local"),
+("Tarjeta");
