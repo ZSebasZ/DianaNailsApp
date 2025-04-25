@@ -9,7 +9,7 @@ router.post("/login", login)
 //JSON DE PRUEBA
 /*
     {
-        "email": "cliente1@gmail.com",
+        "email": "prueba1@gmail.com",
         "contrasena": "abc123."
     }
 */

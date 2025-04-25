@@ -25,7 +25,6 @@ CREATE TABLE clientes (
 CREATE TABLE manicuristas (
     id INT PRIMARY KEY,
     dni VARCHAR(20) UNIQUE NOT NULL,
-    estrellas FLOAT NOT NULL,
     FOREIGN KEY (id) REFERENCES usuarios(id)
 );
 
@@ -204,13 +203,13 @@ INSERT INTO usuarios (id, url_imagen, nombre, apellidos, telefono, email, contra
 INSERT INTO administradores (id, dni) VALUES
 (1, '84811274Q');
 
-INSERT INTO manicuristas (id, dni, estrellas) VALUES
-(2, '12345678A', 5.0),
-(3, '12345678B', 5.0),
-(4, '12345678C', 5.0);
+INSERT INTO manicuristas (id, dni) VALUES
+(2, '12345678A'),
+(3, '12345678B'),
+(4, '12345678C');
 
 INSERT INTO clientes (id, direccion_envio) VALUES
-(5, '')
+(5, '');
 
 -- Datos para la tabal de Servicios
 INSERT INTO servicios (id, url_imagen, nombre, precio, horas_requeridas) VALUES

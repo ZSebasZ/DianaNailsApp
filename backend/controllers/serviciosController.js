@@ -67,7 +67,7 @@ const updateServicio = (req, res) => {
 
     //Hacemos la actualizacion del servicio
     connection.query(updateServicio, [url_imagen, nombre, precio, horas_requeridas, id], (error, result) => {
-        //Si ocurre algun error en la insercion, mostramos un mensaje
+        //Si ocurre algun error en la actualizacion, mostramos un mensaje
         if (error) {
             return res.status(500).json({ mensaje: "Error al actualizar el servicio" });
         }

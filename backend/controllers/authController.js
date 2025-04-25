@@ -1,3 +1,4 @@
+import e from "express";
 import connection from "./../db/connection.js"; //Importamos nuestra conexion
 
 //Creamos la funcion que se encarga del LOGIN
@@ -28,14 +29,84 @@ const login = (req, res) => {
             return res.status(401).json({ mensaje: "Contraseña incorrecta" })
         }
 
-        //Si todo esta correcta, enviamos un mensaje indicando el inicio correcto de sesion
-        res.json({
-            mensaje: "Sesion iniciada",
-            usuario: {
-                id: usuario.id,
-                nombre: usuario.nombre,
-                email: usuario.email,
+        //Hacemos la consulta para determinar si es administrador, manicurista o cliente
+        const queryTipoUsuario = "SELECT CASE WHEN EXISTS (SELECT 1 FROM administradores WHERE id = ?) THEN 0 WHEN EXISTS (SELECT 1 FROM manicuristas WHERE id = ?) THEN 1 WHEN EXISTS (SELECT 1 FROM clientes WHERE id = ?) THEN 2 ELSE -1 END AS tipo_usuario"
+        connection.query(queryTipoUsuario, [usuario.id, usuario.id, usuario.id], (error, result) => {
+            //Si no existe enviamos un mensaje de error
+            if (result.length == 0) {
+                return res.status(404).json({ mensaje: "Error al determinar el tipo de usuario" })
             }
+
+            //Si todo salio bien, devolvemos los datos correspondientes
+            const tipoUsuario = parseInt(result[0].tipo_usuario)
+            switch (tipoUsuario) {
+                //En caso de ser administrador
+                case 0:
+                    res.json({
+                        mensaje: "Sesion iniciada",
+                        tipoUsuario: tipoUsuario,
+                        usuario: {
+                            id: usuario.id,
+                            url_umagen: usuario.url_imagen,
+                            nombre: usuario.nombre,
+                            apellidos: usuario.apellidos,
+                            telefono: usuario.telefono,
+                            //email: usuario.email,
+                        }
+                    })
+                    break;
+                //En caso de ser manicurista
+                case 1:
+                    //Obtenemos los datos faltantes sobre la manicurista
+                    const queryDatosManicurista = "SELECT dni FROM manicuristas WHERE id = ?"
+                    connection.query(queryDatosManicurista, [usuario.id], (error, results) => {
+                        //Si no existe enviamos un mensaje de error
+                        if (results.length == 0) {
+                            return res.status(404).json({ mensaje: "Error al obtener los datos de la manicurista" })
+                        }
+
+                        res.json({
+                            mensaje: "Sesion iniciada",
+                            tipoUsuario: tipoUsuario,
+                            usuario: {
+                                id: usuario.id,
+                                url_imagen: usuario.url_imagen,
+                                nombre: usuario.nombre,
+                                apellidos: usuario.apellidos,
+                                telefono: usuario.telefono,
+                                //email: usuario.email,
+                                dni: results[0].dni,
+                            }
+                        })
+                    })
+                    break;
+                //En caso de ser cliente
+                case 2:
+                    //Obtenemos los datos faltantes sobre la manicurista
+                    const queryDatosCliente = "SELECT direccion_envio FROM clientes WHERE id = ?"
+                    connection.query(queryDatosCliente, [usuario.id], (error, results) => {
+                        //Si no existe enviamos un mensaje de error
+                        if (results.length == 0) {
+                            return res.status(404).json({ mensaje: "Error al obtener los datos del cliente" })
+                        }
+
+                        res.json({
+                            mensaje: "Sesion iniciada",
+                            tipoUsuario: tipoUsuario,
+                            usuario: {
+                                id: usuario.id,
+                                url_umagen: usuario.url_imagen,
+                                nombre: usuario.nombre,
+                                apellidos: usuario.apellidos,
+                                telefono: usuario.telefono,
+                                email: usuario.email,
+                                direccion_envio: results[0].direccion_envio
+                            }
+                        })
+                    })
+                    break;
+            }
+
         })
     })
 }
@@ -90,7 +161,7 @@ const registerCliente = (req, res) => {
                     }
 
                     const idCarritoInsertado = result.insertId;
-                    
+
                     //Si todo el proceso fue exitoso, monstramos un mensaje
                     res.status(201).json({ mensaje: "Cliente registrado con exito. ID usuario: " + idUsuarioInsertado + " - ID cliente: " + idUsuarioInsertado + " - ID carrito: " + idCarritoInsertado });
 
@@ -132,8 +203,8 @@ const registerManicurista = (req, res) => {
             const idUsuarioInsertado = result.insertId;
 
             //Hacemos la insercion de la nueva manicurista
-            const insertNuevoCliente = "INSERT INTO manicuristas(id, dni, estrellas) VALUES (?, ?, ?)"
-            connection.query(insertNuevoCliente, [idUsuarioInsertado, dni, 5], (error, result) => {
+            const insertNuevoCliente = "INSERT INTO manicuristas(id, dni) VALUES (?, ?)"
+            connection.query(insertNuevoCliente, [idUsuarioInsertado, dni], (error, result) => {
                 //Si ocurre algun error en la insercion, mostramos un mensaje
                 if (error) {
                     return res.status(500).json({ mensaje: "Error al registrar la manicurista" });
