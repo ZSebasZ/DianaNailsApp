@@ -6,7 +6,8 @@ import authRoutes from "./routes/auth.js"; //Importamos la ruta de LOGIN y REGIS
 import serviciosRoutes from "./routes/servicios.js"; //Importamos la ruta de SERVICIOS
 import citaRoutes from "./routes/cita.js" //Importamos la ruta de CITA
 import perfilRoutes from "./routes/perfil.js" //Importamos la ruta de PERFIL
-//import registerClienteRoutes from "./routes/registerCliente.js"; //Importamos la ruta de REGISTER-CLIENTE
+import citasCliente from "./routes/citasCliente.js" //Importamos la ruta de CITAS_CLIENTES
+
 
 //Cargamos las variables de entorno
 dotenv.config();
@@ -29,6 +30,9 @@ app.use("/api", citaRoutes);
 
 //Usamos la ruta de PERFIL
 app.use("/api", perfilRoutes);
+
+//Usamos la ruta de CITAS_CLIENTES
+app.use("/api", citasCliente);
 
 //Puerto del servidor
 const PORT = process.env.PORT;

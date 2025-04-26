@@ -263,6 +263,6 @@ const deleteCliente = (req, res) => {
     })
 }
 
-
+//PENDIENTE actualiza contraseña
 
 export { updateDatosPersManicurista, updateDatosPersCliente, deleteCliente }
