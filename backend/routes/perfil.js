@@ -30,7 +30,7 @@ router.put("/update-datos-pers-cliente/:id", updateDatosPersCliente)
 */
 
 //Creamos la ruta para la ELIMINACION de un CLIENTE
-router.delete("/delete-cliente/:id", deleteCliente)
+router.delete("/delete-cliente/:idCliente", deleteCliente)
 //JSON DE PRUEBA
 /*
     {

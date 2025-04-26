@@ -85,7 +85,7 @@ const updateDatosPersCliente = (req, res) => {
 const deleteCliente = (req, res) => {
 
     //Obtenemos el id del cliente a eliminar
-    const { idCliente } = req.body;
+    const { idCliente } = req.params;
 
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!idCliente) {

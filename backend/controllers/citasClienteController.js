@@ -3,7 +3,7 @@ import connection from "./../db/connection.js"; //Importamos nuestra conexion
 //Creamos la funcion que OBTIENE las proximas CITAS de un CLIENTE
 const getCitasCliente = (req, res) => {
     //Obtenemos el id del cliente
-    const { idCliente } = req.body;
+    const { idCliente } = req.params;
 
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!idCliente) {
@@ -63,6 +63,86 @@ const getCitasCliente = (req, res) => {
 
 }
 
+//Creamos la funcion para BORRAR una CITA de un CLIENTE
+const deleteCitaCliente = (req, res) => {
+    //Obtenemos el id del cliente y de la cita
+    const { idCliente, idCita } = req.params;
 
+    //Guardamos la fecha y hora actuales
+    //Ffecha actual en formato 'Y-m-d' (año-mes-dia)
+    const fechaActual = new Date().toISOString().split('T')[0];
 
-export { getCitasCliente }
+    //Obtener la hora actual en formato 'H:i' (hora:minuto)
+    const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    //Verificamos si la cita se puede borrar, segun la hora y fecha actual
+    const queryBorrarCita = `SELECT CASE WHEN (SELECT c.fecha FROM citas AS c WHERE c.id = ${idCita}) > '${fechaActual}' THEN 1 WHEN (SELECT c.fecha FROM citas AS c WHERE c.id = 1) = '${fechaActual}' THEN CASE WHEN (SELECT h.hora FROM citas_horas AS ch JOIN horas AS h ON ch.id_hora = h.id WHERE ch.id_cita = 1 LIMIT 1) > '${horaActual}' THEN 1 ELSE 0 END ELSE 0 END AS resultado;`
+    connection.query(queryBorrarCita, (error, result) => {
+        //Si ocurre algun error en la actualizacion, mostramos un mensaje
+        if (error) {
+            return res.status(500).json({ mensaje: "Error al ejecutar: " + queryBorrarCita });
+        }
+
+        //return res.status(200).json({ mensaje: result[0].resultado });
+
+        if (result[0].resultado == 1) {
+            //Iniciamos una transaccion
+            connection.beginTransaction((errorEliminarCliente) => {
+                //Si hay un error al iniciar la transaccion mostramos un mensaje
+                if (errorEliminarCliente) return res.status(500).json({ mensaje: "Error al iniciar la transacción" });
+
+                //Borramos todas las citas_horas del cliente
+                const deleteCitasHorasCliente = "DELETE FROM citas_horas WHERE id_cita = ?"
+                connection.query(deleteCitasHorasCliente, [idCita], (error, result) => {
+                    //Si surge algun error, avisamos con un mensaje
+                    if (error) {
+                        return connection.rollback(() => {
+                            res.status(500).json({ mensaje: "Error al ejecutar: " + deleteCitasHorasCliente });
+                        })
+                    }
+
+                    //Borramos todas las citas_servicios del cliente
+                    const deleteCitasServiciosCliente = "DELETE FROM citas_servicios WHERE id_cita = ?"
+                    connection.query(deleteCitasServiciosCliente, [idCita], (error, result) => {
+                        //Si surge algun error, avisamos con un mensaje
+                        if (error) {
+                            return connection.rollback(() => {
+                                res.status(500).json({ mensaje: "Error al ejecutar: " + deleteCitasServiciosCliente });
+                            })
+                        }
+
+                        //Borramos la cita del cliente
+                        const deleteCitaCliente = "DELETE FROM citas WHERE id = ? AND id_cliente = ?"
+                        connection.query(deleteCitaCliente, [idCita, idCliente], (error, result) => {
+                            //Si surge algun error, avisamos con un mensaje
+                            if (error) {
+                                return connection.rollback(() => {
+                                    res.status(500).json({ mensaje: "Error al ejecutar: " + deleteCitaCliente });
+                                })
+                            }
+
+                            // Si todo salió bien, confirmamos la transacción
+                            connection.commit((error) => {
+                                if (error) {
+                                    return connection.rollback(() => {
+                                        res.status(500).json({ mensaje: "Error al confirmar la transacción" });
+                                    });
+                                }
+
+                                res.status(201).json({ mensaje: "Cita eliminada correctamente" });
+                            });
+
+                        })
+
+                    })
+                })
+
+            })
+        } else {
+            res.status(200).json({ mensaje: "La cita no puede ser borrada" });
+        }
+
+    })
+}
+
+export { getCitasCliente, deleteCitaCliente }
