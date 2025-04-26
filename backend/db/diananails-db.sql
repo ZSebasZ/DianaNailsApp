@@ -237,3 +237,16 @@ INSERT INTO servicios (id, url_imagen, nombre, precio, horas_requeridas) VALUES
 INSERT INTO metodos_pago (metodo) VALUES
 ("Pagar en local"),
 ("Tarjeta");
+
+-- Datos para la tabla Productos
+INSERT INTO productos (url_imagen, nombre, descripcion, precio, estrellas, stock) VALUES
+('', 'Esmalte Rosa Pastel', 'Esmalte de uñas color rosa pastel, larga duración.', 5.99, 4.5, 30),
+('', 'Esmalte Rojo Clásico', 'Esmalte de uñas color rojo intenso, secado rápido.', 6.50, 4.7, 25),
+('', 'Kit Básico de Manicura', 'Set de manicura con cortaúñas, lima y empujador de cutículas.', 12.00, 4.8, 15),
+('', 'Crema Hidratante de Manos', 'Crema nutritiva para manos suaves y protegidas.', 8.50, 4.6, 40),
+('', 'Removedor de Cutículas', 'Gel removedor de cutículas para un acabado profesional.', 4.75, 4.4, 20),
+('', 'Limas de Uñas (Pack x5)', 'Juego de limas profesionales para manicura y pedicura.', 3.99, 4.3, 50),
+('', 'Baño Relajante para Pies', 'Sales minerales para baño relajante de pies.', 7.20, 4.2, 18),
+('', 'Kit Pedicura Completo', 'Set profesional de pedicura con piedra pómez, cortaúñas y separadores.', 14.99, 4.7, 10),
+('', 'Base Fortalecedora de Uñas', 'Protector y fortalecedor de uñas antes del esmalte.', 6.80, 4.5, 22),
+('', 'Esmalte en Gel UV', 'Esmalte semipermanente para uñas con acabado brillante.', 9.99, 4.9, 12);
