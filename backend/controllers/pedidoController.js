@@ -33,4 +33,57 @@ const insertPedidoCliente = (req, res) => {
     })
 }
 
-export {insertPedidoCliente}
+//Creamos la funcion que se encarga de CANCELAR(borrar) un PEDIDO
+const deletePedidoCliente = (req, res) => {
+    //Obtenemos los datos del nuevo producto en el carrito
+    const { idPedido } = req.params;
+
+    //Si alguno de los datos está vació o no se envia, mandamos un error
+    if (!idPedido) {
+        return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    //Iniciamos una transaccion
+    connection.beginTransaction((errorPedidoCliente) => {
+        //Si hay un error al iniciar la transaccion mostramos un mensaje
+        if (errorPedidoCliente) return res.status(500).json({ mensaje: "Error al iniciar la transacción" });
+
+        //Borramos los productos del pedido
+        const deleteProductosPedidoCliente = "DELETE FROM pedidos_productos WHERE id_pedido = ?"
+        connection.query(deleteProductosPedidoCliente, [idPedido], (error, result) => {
+            //Si surge algun error, avisamos con un mensaje
+            if (error) {
+                return connection.rollback(() => {
+                    res.status(500).json({ mensaje: "Error al ejecutar: " + deleteProductosPedidoCliente });
+                })
+            }
+
+            //Borramos el pedido
+            const deletePedidoCliente = "DELETE FROM pedidos WHERE id = ?"
+            connection.query(deletePedidoCliente, [idPedido], (error, result) => {
+                //Si surge algun error, avisamos con un mensaje
+                if (error) {
+                    return connection.rollback(() => {
+                        res.status(500).json({ mensaje: "Error al ejecutar: " + deletePedidoCliente });
+                    })
+                }
+
+                // Si todo salió bien, confirmamos la transacción
+                connection.commit((error) => {
+                    if (error) {
+                        return connection.rollback(() => {
+                            res.status(500).json({ mensaje: "Error al confirmar la transacción" });
+                        });
+                    }
+
+                    res.status(201).json({ mensaje: "Pedido cancelado con exito" });
+                });
+
+            })
+
+        })
+
+    })
+}
+
+export { insertPedidoCliente, deletePedidoCliente }
