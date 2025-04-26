@@ -1,5 +1,5 @@
 import express from "express"; //Importamos la libreria 'express'
-import {insertCarritoProducto, updateCarritoProducto, deleteCarritoProducto} from "./../controllers/carritoController.js"
+import {insertCarritoProducto, updateCarritoProducto, deleteCarritoProducto, getCarritoProductos} from "./../controllers/carritoController.js"
 
 //Creamos el objeto Router para establecer las rutas que vamos a usar
 const router = express.Router()
@@ -33,6 +33,16 @@ router.delete("/delete-carrito-producto", deleteCarritoProducto)
     {
         "idCarrito": 1,
         "idProducto": 7
+    }
+*/
+
+//Creamos la ruta que OBTIENE todos los PRODUCTOS del CARRITO de un CLIENTE
+router.get("/get-carrito-productos", getCarritoProductos)
+//JSON DE PRUEBA
+/*
+    {
+        "idCarrito": 1,
+        "idCliente": 8
     }
 */
 

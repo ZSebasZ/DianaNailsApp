@@ -88,4 +88,63 @@ const deleteCarritoProducto = (req, res) => {
     })
 }
 
-export { insertCarritoProducto, updateCarritoProducto, deleteCarritoProducto }
+//Creamos la funcion que se encarga de OBTENER todos los PRODUCTOS del CARRITO
+const getCarritoProductos = (req, res) => {
+    //Obtenemos el id del carrito
+    const { idCarrito, idCliente } = req.body;
+
+    //Si alguno de los datos está vació o no se envia, mandamos un error
+    if (!idCarrito || !idCliente) {
+        return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    //Obtenemos el subtotal del carrito
+    const querySubtotalCarrito = "SELECT ROUND(subtotal, 2) as subtotal FROM carritos WHERE id_cliente = ? AND id = ?"
+    connection.query(querySubtotalCarrito, [idCliente, idCarrito], (error, result) => {
+        //Si ocurre algun error mostramos un mensaje
+        if (error) {
+            return res.status(500).json({ mensaje: "Error al obtener el subtotal del carrito" });
+        }
+
+        const subtotalCarrito = parseFloat(result[0].subtotal)
+
+        if (subtotalCarrito == 0) {
+            //Si el subtotal es 0, indicamos que no hay productos en el carrito
+            return res.status(200).json({ mensaje: "No hay productos en el carrito" });
+        } else {
+            //De lo contrario, obtenemos todos los productos del carrito
+            const queryCarritoProductos = "SELECT cp.id_producto, p.nombre, cp.cantidad, ROUND(cp.cantidad*p.precio, 2) as totalPrecio FROM carritos_productos as cp, productos as p WHERE cp.id_producto = p.id AND cp.id_carrito = ?"
+            connection.query(queryCarritoProductos, [idCarrito], (error, results) => {
+                //Si ocurre algun error mostramos un mensaje
+                if (error) {
+                    return res.status(500).json({ mensaje: "Error al obtener los productos del carrito" });
+                }
+
+                //Creamos el JSON de los productos del carrito
+                const carritoProductos = {
+                    carritoProductos: [],
+                    subtotalCarrito: subtotalCarrito
+                };
+
+                results.forEach(row => {
+                    carritoProductos.carritoProductos.push({
+                        producto: {
+                            id: row.id_producto,
+                            nombre: row.nombre,
+                            cantidad: row.cantidad,
+                            totalPrecio: row.totalPrecio
+                        }
+                    });
+                });
+
+                //Si todo salio bien, enviamos los datos
+                res.status(200).json(carritoProductos)
+
+            })
+
+        }
+    })
+
+}
+
+export { insertCarritoProducto, updateCarritoProducto, deleteCarritoProducto, getCarritoProductos }
