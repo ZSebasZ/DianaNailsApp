@@ -30,4 +30,39 @@ const nuevaOpinion= (req, res) => {
 
 }
 
-export {nuevaOpinion}
+//Creamos la funcion que se encarga de la OBTENCION de las OPINIONES
+const getOpiniones = (req, res) => {
+    //Obtenemos los datos del filtro de las opiniones
+    const { estrellas, antiguedad } = req.body;
+
+    //Si alguno de los datos está vació o no se envia, mandamos un error
+    if (estrellas < 0 || estrellas > 5 || !antiguedad) {
+        return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    //Obtenemos las opniones segun el filtro obtenido
+    let queryOpiniones = ""
+    if (estrellas == 0) {
+        queryOpiniones = `SELECT id, titulo, descripcion, estrellas, fecha FROM opiniones `
+    } else {
+        queryOpiniones = `SELECT id, titulo, descripcion, estrellas, fecha FROM opiniones WHERE estrellas = ${parseInt(estrellas)} `
+    }
+
+    if (antiguedad == "recientes") {
+        queryOpiniones += `ORDER BY fecha DESC`
+    } else {
+        queryOpiniones += `ORDER BY fecha ASC`
+    }
+
+    connection.query(queryOpiniones, (error, results) => {
+        //Si ocurre algun error en la obtencion, mostramos un mensaje
+        if (error) {
+            return res.status(500).json({ mensaje: "Error al obtener las opiniones" });
+        }
+
+        //Si todo el proceso fue exitoso, monstramos un mensaje
+        res.status(200).json(results);
+    })
+}
+
+export {nuevaOpinion, getOpiniones}
