@@ -83,8 +83,8 @@ const login = (req, res) => {
                 //En caso de ser cliente
                 case 2:
                     //Obtenemos los datos faltantes sobre la manicurista
-                    const queryDatosCliente = "SELECT direccion_envio FROM clientes WHERE id = ?"
-                    connection.query(queryDatosCliente, [usuario.id], (error, results) => {
+                    const queryDatosCliente = "SELECT direccion_envio, (SELECT id FROM carritos WHERE id_cliente = ?) as id_carrito FROM clientes WHERE id = ?;"
+                    connection.query(queryDatosCliente, [usuario.id, usuario.id], (error, results) => {
                         //Si no existe enviamos un mensaje de error
                         if (results.length == 0) {
                             return res.status(404).json({ mensaje: "Error al obtener los datos del cliente" })
@@ -100,7 +100,8 @@ const login = (req, res) => {
                                 apellidos: usuario.apellidos,
                                 telefono: usuario.telefono,
                                 email: usuario.email,
-                                direccion_envio: results[0].direccion_envio
+                                direccion_envio: results[0].direccion_envio,
+                                id_carrito: results[0].id_carrito
                             }
                         })
                     })

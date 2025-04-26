@@ -4,7 +4,7 @@ import connection from "./../db/connection.js"; //Importamos nuestra conexion
 const getProductos = (req, res) => {
 
     //Sentencia SQL para la obtencion de los productos
-    const queryObtenerProductos = "SELECT id, url_imagen, nombre, descripcion, precio, estrellas FROM productos"
+    const queryObtenerProductos = "SELECT id, url_imagen, nombre, descripcion, precio, estrellas, stock FROM productos"
 
     //Hacemos la query para la obtencion de los productos
     connection.query(queryObtenerProductos, (error, results) => {

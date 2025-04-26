@@ -87,9 +87,9 @@ const deleteCitaCliente = (req, res) => {
 
         if (result[0].resultado == 1) {
             //Iniciamos una transaccion
-            connection.beginTransaction((errorEliminarCliente) => {
+            connection.beginTransaction((errorEliminarCita) => {
                 //Si hay un error al iniciar la transaccion mostramos un mensaje
-                if (errorEliminarCliente) return res.status(500).json({ mensaje: "Error al iniciar la transacción" });
+                if (errorEliminarCita) return res.status(500).json({ mensaje: "Error al iniciar la transacción" });
 
                 //Borramos todas las citas_horas del cliente
                 const deleteCitasHorasCliente = "DELETE FROM citas_horas WHERE id_cita = ?"

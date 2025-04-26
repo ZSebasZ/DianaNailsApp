@@ -9,6 +9,7 @@ import perfilRoutes from "./routes/perfil.js" //Importamos la ruta de PERFIL
 import citasClienteRoutes from "./routes/citasCliente.js" //Importamos la ruta de CITAS_CLIENTES
 import opinionesRoutes from "./routes/opiniones.js" //Importamos la ruta de OPINIONES
 import productosRoutes from "./routes/productos.js" //Importamos la ruta de PRODUCTOS
+import carritoRoutes from "./routes/carrito.js" //Importamos la ruta de CARRITO
 
 
 //Cargamos las variables de entorno
@@ -41,6 +42,9 @@ app.use("/api", opinionesRoutes);
 
 //Usamos la ruta de PRODUCTOS
 app.use("/api", productosRoutes);
+
+//Usamos la ruta de CARRITO
+app.use("/api", carritoRoutes);
 
 //Puerto del servidor
 const PORT = process.env.PORT;

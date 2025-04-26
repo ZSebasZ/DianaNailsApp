@@ -148,6 +148,70 @@ CREATE TABLE citas_horas (
     FOREIGN KEY (id_hora) REFERENCES horas(id)
 );
 
+-- Triggers
+-- Trigger para recalcular el subtotal después de INSERT o UPDATE o DELETE
+DELIMITER //
+
+CREATE TRIGGER recalcular_subtotal_carrito
+AFTER INSERT ON carritos_productos
+FOR EACH ROW
+BEGIN
+    UPDATE carritos
+    SET subtotal = (
+        SELECT IFNULL(SUM(cp.cantidad * p.precio), 0)
+        FROM carritos_productos AS cp
+        JOIN productos AS p ON cp.id_producto = p.id
+        WHERE cp.id_carrito = NEW.id_carrito
+    )
+    WHERE id = NEW.id_carrito;
+END;
+//
+
+CREATE TRIGGER recalcular_subtotal_carrito_update
+AFTER UPDATE ON carritos_productos
+FOR EACH ROW
+BEGIN
+    UPDATE carritos
+    SET subtotal = (
+        SELECT IFNULL(SUM(cp.cantidad * p.precio), 0)
+        FROM carritos_productos AS cp
+        JOIN productos AS p ON cp.id_producto = p.id
+        WHERE cp.id_carrito = NEW.id_carrito
+    )
+    WHERE id = NEW.id_carrito;
+END;
+//
+
+CREATE TRIGGER recalcular_subtotal_carrito_delete
+AFTER DELETE ON carritos_productos
+FOR EACH ROW
+BEGIN
+    UPDATE carritos
+    SET subtotal = (
+        SELECT IFNULL(SUM(cp.cantidad * p.precio), 0)
+        FROM carritos_productos AS cp
+        JOIN productos AS p ON cp.id_producto = p.id
+        WHERE cp.id_carrito = OLD.id_carrito
+    )
+    WHERE id = OLD.id_carrito;
+END;
+//
+
+-- Trigger que elimina un producto del carrito de compras si su cantidad es 0
+CREATE TRIGGER eliminar_producto_carrito_si_cantidad_cero
+AFTER UPDATE ON carritos_productos
+FOR EACH ROW
+BEGIN
+    IF NEW.cantidad = 0 THEN
+        DELETE FROM carritos_productos
+        WHERE id_carrito = NEW.id_carrito
+          AND id_producto = NEW.id_producto;
+    END IF;
+END;
+//
+
+DELIMITER ;
+
 -- Datos para la tabla de horas
 INSERT INTO horas (id, hora, es_laboral) VALUES
 (1, '09:00', 1),
