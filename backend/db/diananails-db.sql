@@ -210,6 +210,22 @@ BEGIN
 END;
 //
 
+-- Trigger que pasa los productos del carrito al la tabla pedidos_productos
+CREATE TRIGGER after_insert_pedido
+AFTER INSERT ON pedidos
+FOR EACH ROW
+BEGIN
+    -- Insertamos en pedidos_productos todos los productos que estaban en el carrito del cliente
+    INSERT INTO pedidos_productos (id_pedido, id_producto, cantidad)
+    SELECT 
+        NEW.id,              -- El id del nuevo pedido insertado
+        cp.id_producto,      -- El producto del carrito
+        cp.cantidad          -- La cantidad del carrito
+    FROM carritos_productos AS cp
+    JOIN carritos AS c ON cp.id_carrito = c.id
+    WHERE c.id_cliente = NEW.id_cliente;
+END //
+
 DELIMITER ;
 
 -- Datos para la tabla de horas
