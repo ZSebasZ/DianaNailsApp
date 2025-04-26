@@ -86,7 +86,7 @@ CREATE TABLE pedidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_cliente INT NOT NULL,
     id_metodo_pago INT NOT NULL,
-    subtotal FLOAT NOT NULL,
+    total FLOAT NOT NULL,
     estado VARCHAR(50) NOT NULL,
     fecha DATETIME NOT NULL,
     FOREIGN KEY (id_cliente) REFERENCES clientes(id),
