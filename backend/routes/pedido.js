@@ -1,5 +1,5 @@
 import express from "express"; //Importamos la libreria 'express'
-import {insertPedidoCliente, deletePedidoCliente} from "./../controllers/pedidoController.js"
+import {insertPedidoCliente, deletePedidoCliente, getPedidosCliente, getDetallesPedidosCliente} from "./../controllers/pedidoController.js"
 
 //Creamos el objeto Router para establecer las rutas que vamos a usar
 const router = express.Router()
@@ -19,5 +19,23 @@ router.patch("/nuevo-pedido-cliente", insertPedidoCliente)
 //Creamos la ruta para el BORRADO(cancelar) de un PEDIDO
 router.delete("/delete-pedido-cliente/:idPedido", deletePedidoCliente)
 
+//Creamos la ruta para la OBTENCION de los PEDIDOS del CLIENTE
+router.get("/get-pedidos-cliente", getPedidosCliente)
+//JSON DE PRUEBA
+/*
+    {
+        "idCliente": 8
+    }
+*/
+
+//Creamos la ruta para la OBTENCION de los PEDIDOS del CLIENTE
+router.get("/get-detalles-pedido-cliente", getDetallesPedidosCliente)
+//JSON DE PRUEBA
+/*
+    {
+        "idCliente": 8,
+        "idPedido": 1
+    }
+*/
 
 export default router;
