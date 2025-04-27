@@ -145,4 +145,68 @@ const deleteCitaCliente = (req, res) => {
     })
 }
 
-export { getCitasCliente, deleteCitaCliente }
+//Creamos la funcion que OBTIENE las proximas CITAS de un CLIENTE
+const getCitasClientes = (req, res) => {
+    //Obtenemos el id del admin
+    const { idAdmin } = req.params;
+
+    //Si alguno de los datos está vació o no se envia, mandamos un error
+    if (!idAdmin && idAdmin == 1) {
+        return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    //Guardamos la fecha y hora actuales
+    //Ffecha actual en formato 'Y-m-d' (año-mes-dia)
+    const fechaActual = new Date().toISOString().split('T')[0];
+
+    //Obtener la hora actual en formato 'H:i' (hora:minuto)
+    const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    //Obtenemos todas las citas de los clientes, a partir de la fecha y hora actuales
+    const getCitasClientes = `SELECT CONCAT(u.nombre, ' ', u.Apellidos) AS cliente, c.id AS id_cita, c.fecha AS fecha_cita, c.precio, s.nombre, (SELECT h.hora FROM citas_horas AS ch, horas AS h WHERE ch.id_cita = c.id AND h.id = ch.id_hora LIMIT 1) AS horaInicio, (SELECT h2.hora FROM citas_horas AS ch, horas AS h, horas AS h2 WHERE ch.id_hora = h.id AND h2.id = h.id + 1 AND ch.id_cita = c.id ORDER BY ch.id_hora DESC LIMIT 1) AS horaFin FROM clientes AS cl, usuarios AS u, citas AS c, citas_servicios AS cs, servicios AS s WHERE cl.id = c.id_cliente AND cs.id_servicio = s.id AND c.id = cs.id_cita AND u.id = cl.id AND c.id IN (SELECT id FROM (SELECT id FROM citas WHERE fecha >= '${fechaActual}') AS maxFilas) AND (c.fecha > '${fechaActual}' OR (c.fecha = '${fechaActual}' AND (SELECT h.hora FROM citas_horas AS ch, horas AS h WHERE ch.id_cita = c.id AND h.id = ch.id_hora LIMIT 1) > '${horaActual}')) ORDER BY c.fecha ASC, horaInicio ASC;`
+    connection.query(getCitasClientes, (error, results) => {
+        //Si ocurre algun error en la actualizacion, mostramos un mensaje
+        if (error) {
+            return res.status(500).json({ mensaje: "Error al obtener las citas" });
+        }
+
+        //Formamos el JSON que vamos a enviar
+        if (results.length > 0) {
+            let citasClientes = {
+                citas: []
+            };
+            let citaAnterior = "";
+            let cont = -1;
+
+            results.forEach(row => {
+                if (row.id_cita !== citaAnterior) {
+                    citasClientes.citas.push({
+                        cita: {
+                            cliente: row.cliente,
+                            id: row.id_cita,
+                            fecha: row.fecha_cita,
+                            precio: row.precio,
+                            servicios: [row.nombre],
+                            horaInicio: row.horaInicio,
+                            horaFin: row.horaFin
+                        }
+                    });
+                    citaAnterior = row.id_cita;
+                    cont++;
+                } else {
+                    citasClientes.citas[cont].cita.servicios.push(row.nombre);
+                }
+            });
+
+
+            //Si todo salio bien, enviamos los datos
+            res.status(200).json(citasClientes)
+
+        } else {
+            res.status(200).json({ message: "No hay citas" });
+        }
+    })
+
+}
+
+export { getCitasCliente, deleteCitaCliente, getCitasClientes }

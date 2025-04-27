@@ -218,4 +218,27 @@ const registerManicurista = (req, res) => {
     })
 }
 
-export { login, registerCliente, registerManicurista }
+//Creamos la funcion que se encarga de la OBTENCION de las MANICURISTAS
+const getManicuristas = (req, res) => {
+    //Obtenemos el id del admin
+    const { idAdmin } = req.params;
+
+    //Si alguno de los datos está vació o no se envia, mandamos un error
+    if (!idAdmin && idAdmin == 1) {
+        return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    //Obtenemos todas las manicuristas
+    const getManicuristas = `SELECT m.id as id_manicurista, url_imagen, nombre, apellidos, telefono, email, dni FROM usuarios as u, manicuristas as m WHERE u.id = m.id`
+    connection.query(getManicuristas, (error, results) => {
+        //Si ocurre algun error en la actualizacion, mostramos un mensaje
+        if (error) {
+            return res.status(500).json({ mensaje: "Error al obtener las manicuristas" });
+        }
+            //Si todo salio bien, enviamos los datos
+            res.status(200).json(results)
+    })
+
+}
+
+export { login, registerCliente, registerManicurista, getManicuristas }

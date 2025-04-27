@@ -1,5 +1,5 @@
 import express from "express"; //Importamos la libreria 'express'
-import {login, registerCliente, registerManicurista} from "./../controllers/authController.js"
+import {login, registerCliente, registerManicurista, getManicuristas} from "./../controllers/authController.js"
 
 //Creamos el objeto Router para establecer las rutas que vamos a usar
 const router = express.Router()
@@ -43,5 +43,8 @@ router.post("/register-manicurista", registerManicurista)
         "dni": "11111111A"
     }
 */
+
+//Creamos la ruta para OBTENER las MANICURISTAS
+router.get("/get-manicuristas/:idAdmin", getManicuristas)
 
 export default router;
