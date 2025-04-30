@@ -210,7 +210,8 @@ BEGIN
 END;
 //
 
--- Trigger que pasa los productos del carrito al la tabla pedidos_productos
+-- Trigger que pasa los productos del carrito a la tabla pedidos_productos
+-- y actualiza el stock de los productos
 CREATE TRIGGER after_insert_pedido
 AFTER INSERT ON pedidos
 FOR EACH ROW
@@ -224,7 +225,15 @@ BEGIN
     FROM carritos_productos AS cp
     JOIN carritos AS c ON cp.id_carrito = c.id
     WHERE c.id_cliente = NEW.id_cliente;
+
+    -- Actualizamos el stock de los productos en la tabla productos
+    UPDATE productos AS p
+    JOIN carritos_productos AS cp ON p.id = cp.id_producto
+    JOIN carritos AS c ON cp.id_carrito = c.id
+    SET p.stock = p.stock - cp.cantidad
+    WHERE c.id_cliente = NEW.id_cliente;
 END //
+
 
 DELIMITER ;
 

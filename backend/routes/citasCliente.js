@@ -7,7 +7,7 @@ const router = express.Router()
 //Creamos la ruta para la OBTENCION de las CITAS de un CLIENTE
 router.get("/get-citas-cliente/:idCliente", getCitasCliente)
 
-//Creamos la ruta para la OBTENCION de las CITAS de un CLIENTE
+//Creamos la ruta para el BORRADO(cancelacion) de la CITA de un CLIENTE
 router.delete("/delete-cita-cliente/:idCliente/:idCita", deleteCitaCliente)
 //JSON DE PRUEBA
 /*
