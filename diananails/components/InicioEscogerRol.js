@@ -8,26 +8,34 @@ export const InicioEscogerRol = () => {
     //Estilos
     const styles = useThemedStyles((colors) => StyleSheet.create({
         container: {
+            fontFamily: 'Gantari',
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: colors.background,
         },
         text: {
-            color: colors.text,
+            fontFamily: 'GantariBold',
+            fontSize: 25,
+            color: colors.onBackground,
             textAlign: 'center',
         },
 
         button: {
-            color: colors.text,
-            backgroundColor: colors.bgButton,
+            backgroundColor: colors.primary,
             padding: 10,
             borderRadius: 5,
+        },
+        buttonText: {
+            fontFamily: 'CaveatBold',
+            fontSize: 30,
+            color: colors.onPrimary,
+            textAlign: 'center',
         },
         containerButtons: {
             marginTop: 20,
             justifyContent: 'space-between',
-            height: 100,
+            gap: 5,
         }
 
     }));
@@ -50,12 +58,12 @@ export const InicioEscogerRol = () => {
                     ]}
                     onPress={() => alert('Cliente')}
                 >
-                    <Text style={styles.text}>Cliente</Text>
+                    <Text style={styles.buttonText}>Cliente</Text>
                 </Pressable>
 
 
                 <Pressable style={styles.button}>
-                    <Text style={styles.text}>Manicurista</Text>
+                    <Text style={styles.buttonText}>Manicurista</Text>
                 </Pressable>
             </View>
         </View>

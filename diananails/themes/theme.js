@@ -1,9 +1,9 @@
-import { LightColors, DarkColors } from './colors';
+import colordata from './themeColors.json';
 
 export const lightTheme = {
-  colors: LightColors,
+  colors: colordata.schemes.light,
 };
 
 export const darkTheme = {
-  colors: DarkColors,
+  colors: colordata.schemes.dark,
 };
