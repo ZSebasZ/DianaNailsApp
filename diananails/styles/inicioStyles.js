@@ -45,6 +45,10 @@ export const inicioStyles = (colors) => StyleSheet.create({
         gap: wp(1),
         //width: wp(90),
     },
+    iconButton: {
+        color: colors.onPrimary,
+        fontSize: hp(3),
+    },
     buttonText: {
         fontFamily: 'CaveatBold',
         fontSize: 30,
@@ -61,6 +65,10 @@ export const inicioStyles = (colors) => StyleSheet.create({
         alignItems: 'center',
         marginTop: hp(5),
     },
+    iconRedSocial: {
+        color: colors.primary,
+        fontSize: hp(3),
+    }
 
 
 });

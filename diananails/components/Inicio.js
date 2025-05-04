@@ -49,19 +49,19 @@ export const Inicio = () => {
                                     },
                                 ]}
                             >
-                                <Icono IconComponent={FontAwesome6} name="user-large" onPrimary={true} style={styles.iconButton} />
+                                <Icono IconComponent={FontAwesome6} name="user-large" style={styles.iconButton} />
                                 <Text style={styles.buttonText}> Soy cliente </Text>
                             </Pressable>
                         </Link>
 
                         <Pressable style={styles.button}>
-                            <Icono IconComponent={FontAwesome6} name="building-user" onPrimary={true} style={styles.iconButton} />
+                            <Icono IconComponent={FontAwesome6} name="building-user" style={styles.iconButton} />
                             <Text style={styles.buttonText}> Soy manicurista </Text>
                         </Pressable>
                     </View>
                     <View style={styles.instagramIcon}>
                         <Pressable onPress={() => abrirPerfilInstagram()}>
-                            <Icono IconComponent={FontAwesome6} name="instagram" onPrimary={false} />
+                            <Icono IconComponent={FontAwesome6} name="instagram" style={styles.iconRedSocial} />
                         </Pressable>
                     </View>
                 </View>
