@@ -23,8 +23,6 @@ export const LoginScreen = () => {
         ? require('./../../assets/images/logoDark.png')
         : require('./../../assets/images/logoLight.png');
 
-    const [showError, setShowError] = useState("none");
-
     return (
         <Screen>
             <Stack.Screen
@@ -36,7 +34,7 @@ export const LoginScreen = () => {
                     headerTitle: ""
                 }}
             />
-            <View style={[styles.mainContainer, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+            <View style={styles.mainContainer}>
                 <StatusBar style="auto" />
                 <View style={styles.containerLogo}>
                     <Image source={logo} style={styles.logo}></Image>
@@ -48,14 +46,12 @@ export const LoginScreen = () => {
                             <Icono IconComponent={Ionicons} name="mail" onPrimary={false} style={styles.iconInput} />
                             <TextInput style={styles.textInput} placeholder="Email" placeholderTextColor={colors.secondary} />
                         </View>
-                        <Text style={[styles.textError, { display: showError }]}>Este campo es obligatorio</Text>
                     </View>
                     <View style={styles.containerField}>
                         <View style={styles.containerInput}>
                             <Icono IconComponent={FontAwesome6} name="lock" onPrimary={false} style={styles.iconInput} />
                             <TextInput style={styles.textInput} placeholder="Contraseña" placeholderTextColor={colors.secondary} secureTextEntry />
                         </View>
-                        <Text style={[styles.textError, { display: showError }]}>Este campo es obligatorio</Text>
                     </View>
                     <View style={styles.containerButtons}>
                         <Link asChild href={"/home"} style={styles.buttons}>

@@ -1,4 +1,5 @@
-import { View, Text, StatusBar, Image, useColorScheme, TextInput, Pressable } from "react-native";
+import { View, Text, StatusBar, Image, useColorScheme, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Link, Stack } from 'expo-router';
 import { Screen } from '../Screen';
@@ -23,8 +24,6 @@ export const RegistroScreen = () => {
         ? require('./../../assets/images/logoDark.png')
         : require('./../../assets/images/logoLight.png');
 
-    const [showError, setShowError] = useState("none");
-
     return (
         <Screen>
             <Stack.Screen
@@ -32,81 +31,75 @@ export const RegistroScreen = () => {
                     headerShown: false
                 }}
             />
-            <View style={[styles.mainContainer, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
-                <StatusBar style="auto" />
-                {/*<View style={styles.containerLogo}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+                <View style={[styles.mainContainer]}>
+                    <StatusBar style="auto" />
+                    {/*<View style={styles.containerLogo}>
                     <Image source={logo} style={styles.logo}></Image>
                 </View>*/}
-                <View style={styles.containerFormulario}>
-                    <Text style={styles.textTitle}>Registrate</Text>
-                    <View style={styles.containerField}>
-                        <View style={styles.containerInput}>
-                            <Icono IconComponent={FontAwesome6} name="user-large" onPrimary={false} style={styles.iconInput} />
-                            <TextInput style={styles.textInput} placeholder="Nombre" placeholderTextColor={colors.secondary} />
+                    <View style={styles.containerFormulario}>
+                        <Text style={styles.textTitle}>Registrate</Text>
+                        <View style={styles.containerField}>
+                            <View style={styles.containerInput}>
+                                <Icono IconComponent={FontAwesome6} name="user-large" onPrimary={false} style={styles.iconInput} />
+                                <TextInput style={styles.textInput} placeholder="Nombre" placeholderTextColor={colors.secondary} />
+                            </View>
                         </View>
-                        <Text style={[styles.textError, { display: showError }]}>Este campo es obligatorio</Text>
-                    </View>
-                    <View style={styles.containerField}>
-                        <View style={styles.containerInput}>
-                            <Icono IconComponent={FontAwesome6} name="user-large" onPrimary={false} style={styles.iconInput} />
-                            <TextInput style={styles.textInput} placeholder="Apellidos" placeholderTextColor={colors.secondary} secureTextEntry />
+                        <View style={styles.containerField}>
+                            <View style={styles.containerInput}>
+                                <Icono IconComponent={FontAwesome6} name="user-large" onPrimary={false} style={styles.iconInput} />
+                                <TextInput style={styles.textInput} placeholder="Apellidos" placeholderTextColor={colors.secondary} secureTextEntry />
+                            </View>
                         </View>
-                        <Text style={[styles.textError, { display: showError }]}>Este campo es obligatorio</Text>
-                    </View>
-                    <View style={styles.containerField}>
-                        <View style={styles.containerInput}>
-                            <Icono IconComponent={FontAwesome6} name="phone" onPrimary={false} style={styles.iconInput} />
-                            <TextInput style={styles.textInput} placeholder="Telefono" placeholderTextColor={colors.secondary} />
+                        <View style={styles.containerField}>
+                            <View style={styles.containerInput}>
+                                <Icono IconComponent={FontAwesome6} name="phone" onPrimary={false} style={styles.iconInput} />
+                                <TextInput style={styles.textInput} placeholder="Telefono" placeholderTextColor={colors.secondary} />
+                            </View>
                         </View>
-                        <Text style={[styles.textError, { display: showError }]}>Este campo es obligatorio</Text>
-                    </View>
-                    <View style={styles.containerField}>
-                        <View style={styles.containerInput}>
-                            <Icono IconComponent={FontAwesome6} name="map-location-dot" onPrimary={false} style={styles.iconInput} />
-                            <TextInput style={styles.textInput} placeholder="Direccion de envio" placeholderTextColor={colors.secondary} />
+                        <View style={styles.containerField}>
+                            <View style={styles.containerInput}>
+                                <Icono IconComponent={FontAwesome6} name="map-location-dot" onPrimary={false} style={styles.iconInput} />
+                                <TextInput style={styles.textInput} placeholder="Direccion de envio" placeholderTextColor={colors.secondary} />
+                            </View>
                         </View>
-                        <Text style={[styles.textError, { display: showError }]}>Este campo es obligatorio</Text>
-                    </View>
-                    <View style={styles.containerField}>
-                        <View style={styles.containerInput}>
-                            <Icono IconComponent={Ionicons} name="mail" onPrimary={false} style={styles.iconInput} />
-                            <TextInput style={styles.textInput} placeholder="Email" placeholderTextColor={colors.secondary} />
+                        <View style={styles.containerField}>
+                            <View style={styles.containerInput}>
+                                <Icono IconComponent={Ionicons} name="mail" onPrimary={false} style={styles.iconInput} />
+                                <TextInput style={styles.textInput} placeholder="Email" placeholderTextColor={colors.secondary} />
+                            </View>
                         </View>
-                        <Text style={[styles.textError, { display: showError }]}>Este campo es obligatorio</Text>
-                    </View>
-                    <View style={styles.containerField}>
-                        <View style={styles.containerInput}>
-                            <Icono IconComponent={FontAwesome6} name="lock" onPrimary={false} style={styles.iconInput} />
-                            <TextInput style={styles.textInput} placeholder="Contraseña" placeholderTextColor={colors.secondary} secureTextEntry/>
+                        <View style={styles.containerField}>
+                            <View style={styles.containerInput}>
+                                <Icono IconComponent={FontAwesome6} name="lock" onPrimary={false} style={styles.iconInput} />
+                                <TextInput style={styles.textInput} placeholder="Contraseña" placeholderTextColor={colors.secondary} secureTextEntry />
+                            </View>
                         </View>
-                        <Text style={[styles.textError, { display: showError }]}>Este campo es obligatorio</Text>
-                    </View>
-                    <View style={styles.containerField}>
-                        <View style={styles.containerInput}>
-                            <Icono IconComponent={FontAwesome6} name="user-lock" onPrimary={false} style={styles.iconInput} />
-                            <TextInput style={styles.textInput} placeholder="Confirmar contraseña" placeholderTextColor={colors.secondary} secureTextEntry/>
+                        <View style={styles.containerField}>
+                            <View style={styles.containerInput}>
+                                <Icono IconComponent={FontAwesome6} name="user-lock" onPrimary={false} style={styles.iconInput} />
+                                <TextInput style={styles.textInput} placeholder="Confirmar contraseña" placeholderTextColor={colors.secondary} secureTextEntry />
+                            </View>
                         </View>
-                        <Text style={[styles.textError, { display: showError }]}>Este campo es obligatorio</Text>
-                    </View>
-                    <View style={styles.containerButtons}>
-                        <Link asChild href={"/login"} replace style={styles.buttons}>
-                            <Pressable
-                                onPress={() => { }}
-                            >
-                                <Text style={styles.textButtons}>Registrarme</Text>
-                            </Pressable>
-                        </Link>
-                        <Link asChild href={"/login"} replace style={[styles.buttons, styles.buttonRegister]}>
-                            <Pressable
-                                onPress={() => { }}
-                            >
-                                <Text style={[styles.textButtons, styles.textButtonRegister]}>Volver</Text>
-                            </Pressable>
-                        </Link>
+                        <View style={styles.containerButtons}>
+                            <Link asChild href={"/login"} replace style={styles.buttons}>
+                                <Pressable
+                                    onPress={() => { }}
+                                >
+                                    <Text style={styles.textButtons}>Registrarme</Text>
+                                </Pressable>
+                            </Link>
+                            <Link asChild href={"/login"} replace style={[styles.buttons, styles.buttonRegister]}>
+                                <Pressable
+                                    onPress={() => { }}
+                                >
+                                    <Text style={[styles.textButtons, styles.textButtonRegister]}>Volver</Text>
+                                </Pressable>
+                            </Link>
+                        </View>
                     </View>
                 </View>
-            </View>
+            </ScrollView>
         </Screen>
-
     );
 }

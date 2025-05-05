@@ -23,7 +23,7 @@ export const registroStyles = (colors) => StyleSheet.create({
         fontFamily: 'GantariBold',
         color: colors.onBackground,
         textAlign: 'center',
-        marginVertical: hp(2),
+        marginBottom: hp(2),
     },
     containerFormulario: {},
     containerField: {

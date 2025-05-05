@@ -26,7 +26,7 @@ export const InicioScreen = () => {
     //Devolvemos la vista de la pantalla de bienvenida
     return (
         <Screen style={styles.screen}>
-            <View style={[styles.mainContainer, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+            <View style={styles.mainContainer}>
                 <StatusBar style="auto" />
                 <View style={styles.subMainContainer}>
                     <View style={styles.logoTextContainer}>
