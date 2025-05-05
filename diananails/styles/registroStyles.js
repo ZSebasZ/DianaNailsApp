@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
-export const loginStyles = (colors) => StyleSheet.create({
+export const registroStyles = (colors) => StyleSheet.create({
     screen: {
         backgroundColor: colors.background
     },
@@ -15,8 +15,8 @@ export const loginStyles = (colors) => StyleSheet.create({
     },
     logo : {
         resizeMode: "contain",
-        width: wp(60),
-        height: hp(30),
+        width: wp(35),
+        height: hp(15)
     },
     textTitle: {
         fontSize: hp(3.5),

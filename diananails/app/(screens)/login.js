@@ -1,10 +1,10 @@
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Login } from '../../components/Login';
+import { LoginScreen } from '../../components/login/LoginScreen';
 
-export default function Index() {
+export default function Login() {
     return (
         <SafeAreaProvider>
-            <Login />
+            <LoginScreen />
         </SafeAreaProvider>
     );
 }

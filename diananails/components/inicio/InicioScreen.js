@@ -1,16 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, Text, View, StyleSheet, Button, useColorScheme, Image } from 'react-native';
-import { useThemedStyles } from '../hooks/useThemeStyles';
+import { useThemedStyles } from '../../hooks/useThemeStyles';
 import { Link } from 'expo-router';
-import { inicioStyles } from '../styles/inicioStyles';
+import { inicioStyles } from '../../styles/inicioStyles';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import { Icono } from './Icono';
-import { abrirPerfilInstagram } from '../utils/instagramUtils';
-import { Screen } from './Screen';
+import { Icono } from '../Icono';
+import { abrirPerfilInstagram } from '../../utils/instagramUtils';
+import { Screen } from '../Screen';
 
 //Pantalla de bienvenida a la aplicacion
-export const Inicio = () => {
+export const InicioScreen = () => {
 
     const insets = useSafeAreaInsets();
 
@@ -20,8 +20,8 @@ export const Inicio = () => {
     //Detectamos el tema del sistema para saber que solo mostrar
     const colorScheme = useColorScheme();
     const logo = colorScheme === 'dark'
-        ? require('./../assets/images/logoDark.png')
-        : require('./../assets/images/logoLight.png');
+        ? require('./../../assets/images/logoDark.png')
+        : require('./../../assets/images/logoLight.png');
 
     //Devolvemos la vista de la pantalla de bienvenida
     return (
@@ -42,13 +42,7 @@ export const Inicio = () => {
 
                     <View style={styles.containerButtons}>
                         <Link asChild href={"/login"} style={styles.button}>
-                            <Pressable
-                                style={({ pressed }) => [
-                                    {
-                                        backgroundColor: pressed ? 'red' : styles.button.backgroundColor,
-                                    },
-                                ]}
-                            >
+                            <Pressable>
                                 <Icono IconComponent={FontAwesome6} name="user-large" style={styles.iconButton} />
                                 <Text style={styles.buttonText}> Soy cliente </Text>
                             </Pressable>

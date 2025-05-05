@@ -1,10 +1,10 @@
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { InicioScreen } from '../components/inicio/InicioScreen';
+import { RegistroScreen } from '../../components/registro/RegistroScreen';
 
-export default function Index() {
+export default function Registro() {
     return (
         <SafeAreaProvider>
-            <InicioScreen />
+            <RegistroScreen />
         </SafeAreaProvider>
     );
 }
