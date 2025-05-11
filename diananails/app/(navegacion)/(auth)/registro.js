@@ -1,5 +1,5 @@
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { RegistroScreen } from '../../components/registro/RegistroScreen';
+import { RegistroScreen } from '../../../screens/RegistroScreen';
 
 export default function Registro() {
     return (

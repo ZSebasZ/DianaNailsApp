@@ -1,5 +1,5 @@
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { InicioScreen } from '../components/inicio/InicioScreen';
+import { InicioScreen } from '../screens/InicioScreen';
 
 export default function Index() {
     return (
