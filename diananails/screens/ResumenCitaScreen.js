@@ -1,18 +1,9 @@
-import { View, Text, StatusBar, Image, useColorScheme, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { View, Text, useColorScheme, ScrollView } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Link, Stack } from 'expo-router';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
-import { agendarCitaStyles } from '../styles/agendarCitaStyles';
-import { Icono } from '../components/Icono';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useState } from "react";
 import { resumenCitaStyles } from "../styles/resumenCitaStyles";
-import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-import { LocaleConfig } from 'react-native-calendars';
-import { Picker } from '@react-native-picker/picker';
-import DropDownPicker from 'react-native-dropdown-picker';
 import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
 import { SeccionEnTab } from "../components/SeccionEnTab";
 import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerServicios";
@@ -58,7 +49,7 @@ export const ResumenCitaScreen = () => {
                         textInfo1={"La cita se agendará con los siguientes detalles"}
                     />
                     <View style={styles.contenedorSeccionDetalle}>
-                        <Text style={styles.textTituloSeccion}>Servicios</Text>
+                        <Text style={styles.textTituloSubSeccion}>Servicios</Text>
                         <View style={styles.contenedorServiciosSeleccionados}>
                             <CardServicioResumen
                                 fuenteTextoBold={fuenteTexto.gantariBold}
@@ -84,18 +75,22 @@ export const ResumenCitaScreen = () => {
                         </View>
                     </View>
                     <View style={styles.contenedorSeccionDetalle}>
-                        <Text style={styles.textTituloSeccion}>Fecha y hora</Text>
+                        <Text style={styles.textTituloSubSeccion}>Tiempo total</Text>
+                        <Text style={styles.textInfoSubSeccion}>1 hora y 30 minutos</Text>
+                    </View>
+                    <View style={styles.contenedorSeccionDetalle}>
+                        <Text style={styles.textTituloSubSeccion}>Fecha y hora</Text>
                         <View style={styles.contenedorFechaHora}>
-                            <Text style={styles.textTituloFechaHora}>Fecha: </Text>
-                            <Text style={styles.textInfoFechaHora}>10/10/2025</Text>
+                            <Text style={styles.textSubTituloSubSeccion}>Fecha: </Text>
+                            <Text style={styles.textInfoSubSeccion}>10/10/2025</Text>
                         </View>
                         <View style={styles.contenedorFechaHora}>
-                            <Text style={styles.textTituloFechaHora}>Hora: </Text>
-                            <Text style={styles.textInfoFechaHora}>19:30</Text>
+                            <Text style={styles.textSubTituloSubSeccion}>Hora: </Text>
+                            <Text style={styles.textInfoSubSeccion}>19:30</Text>
                         </View>
                     </View>
                     <View style={styles.contenedorSeccionDetalle}>
-                        <Text style={styles.textTituloSeccion}>Manicurista</Text>
+                        <Text style={styles.textTituloSubSeccion}>Manicurista</Text>
                         <View style={{ alignItems: "center" }}>
                             <CardManicurista
                                 estaSeleccionada={true}
@@ -105,9 +100,9 @@ export const ResumenCitaScreen = () => {
                             />
                         </View>
                     </View>
-                    <View style={[styles.contenedorSeccionDetalle, {paddingBottom: 70}]}>
-                        <Text style={styles.textTituloSeccion}>Metodo de pago</Text>
-                        <Text style={[styles.textInfoFechaHora, { textAlign: "center" }]}>Efectivo (pagar en el local)</Text>
+                    <View style={[styles.contenedorSeccionDetalle, { paddingBottom: 70 }]}>
+                        <Text style={styles.textTituloSubSeccion}>Metodo de pago</Text>
+                        <Text style={styles.textInfoSubSeccion}>Efectivo (pagar en el local)</Text>
                     </View>
 
                 </ScrollView>

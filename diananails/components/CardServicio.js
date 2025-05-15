@@ -38,8 +38,8 @@ export const CardServicio = (props) => {
 
     return (
         props.esLink ? (
-            <Link href={props.href}>
-                <Pressable style={[styles.contenedorServicio]}>
+            <Link href={props.href} asChild style={[styles.contenedorServicio]}>
+                <Pressable>
                     <Text style={[props.fuenteTextoBold, styles.textTituloServicio]}>{props.tituloServicio}</Text>
                     <Text style={[props.fuenteTextoBold, styles.textTituloInfo]}>Tiempo requerido</Text>
                     <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{props.tiempoServicio}</Text>

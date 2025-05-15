@@ -1,12 +1,8 @@
-import { View, Text, StatusBar, Image, useColorScheme, TextInput, Pressable } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Link, Stack, router } from 'expo-router';
+import { View, Text, StatusBar } from "react-native";
+import { Stack, router } from 'expo-router';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { loginStyles } from '../styles/loginStyles';
-import { Icono } from '../components/Icono';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { useState } from "react";
 import { LogoPrincipal } from "../components/LogoPrincipal";
 import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
 import { useContext } from "react";
@@ -77,6 +73,7 @@ export const LoginScreen = () => {
                         <BotonTexto
                             botonPrincipal={true}
                             esLink={true}
+                            replace={true}
                             href={"/(auth)/registro"}
                             fondo={false}
                             fuenteTexto={fuenteTexto.gantariBold}

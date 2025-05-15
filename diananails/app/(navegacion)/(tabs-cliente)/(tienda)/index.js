@@ -7,6 +7,14 @@ import { TiendaScreen } from '../../../../screens/TiendaScreen';
 
 export default function Index() {
     return (
-        <TiendaScreen/>
+        <>
+            <Stack.Screen
+                options={{
+                    headerShown: false
+                }}
+            />
+            <TiendaScreen />
+        </>
+
     );
 }

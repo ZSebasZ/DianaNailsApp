@@ -1,11 +1,7 @@
-import React from 'react';
-import { View, Text } from 'react-native';
-
+import { GestionAgregarScreen } from '../../../../screens/GestionAgregarScreen';
 
 export default function NuevaManicurista() {
     return (
-        <View>
-            <Text>NUEVA MANICURISTA</Text>
-        </View>
+        <GestionAgregarScreen tipo={"manicurista"}/>
     );
 }

@@ -1,13 +1,6 @@
-import { View, Image, StyleSheet, Text, Pressable } from "react-native";
-import { useLogoPrincipal } from "../hooks/useLogoPrincipal";
+import { View, StyleSheet, Text } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Icono } from "./Icono";
-import { botonIconoTextoStyles } from "../styles/botonIconoTextoStyles";
 import { useThemedStyles } from '../hooks/useThemeStyles';
-import { useContext } from "react";
-import { ThemeContext } from "../contexts/themeContext";
-import { Link } from "expo-router";
 import { BotonIcono } from "./BotonIcono";
 import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { BotonTexto } from "./BotonTexto";
@@ -33,14 +26,15 @@ export const BarraResumen = (props) => {
             flex: 1,
         },
         subContenedorLeft: {
-            alignItems: "flex-start",
+
         },
         subContenedorCenter: {
             alignItems: "center",
         },
-        subContenedorRight: {
-            alignItems: "flex-end",
-        },
+        subContenedorRight: props.hrefCarrito != null
+            ? { alignItems: "flex-end" }
+            : {},
+
 
         textTituloContenedorCenter: {
             fontSize: hp(2),
@@ -59,13 +53,13 @@ export const BarraResumen = (props) => {
             {props.botonVolver && (
                 <View style={[styles.subContenederosBarraResumen, styles.subContenedorLeft]}>
                     <BotonTexto
-                            botonNavegacion={true}
-                            esLink={true}
-                            href={props.hrefAtras}
-                            fondo={false}
-                            fuenteTexto={fuenteTexto.gantariBold}
-                            textoBoton={"Atrás"}
-                        />
+                        botonNavegacion={true}
+                        esLink={true}
+                        href={props.hrefAtras}
+                        fondo={false}
+                        fuenteTexto={fuenteTexto.gantariBold}
+                        textoBoton={"Atrás"}
+                    />
                 </View>
             )}
 
@@ -75,38 +69,42 @@ export const BarraResumen = (props) => {
             </View>
 
             {props.botonCarrito && (
-                <View style={[]}>
-                    <Link asChild href={"/(agendarCita)/(screens)/elegirFechaHora"}>
-                        <Pressable style={[]} >
-                            <Text style={[]}>Atras</Text>
-                        </Pressable>
-                    </Link>
+                <View style={[styles.subContenederosBarraResumen, styles.subContenedorRight]}>
+                    <BotonIcono
+                        botonNavegacion={true}
+                        esLink={true}
+                        href={props.hrefCarrito}
+                        fondo={true}
+                        nombreIcono={"cart"}
+                        conBurbuja={true}
+                        fuenteTexto={fuenteTexto.gantariRegular}
+                    />
                 </View>
             )}
 
             {props.botonSiguiente && (
                 <View style={[styles.subContenederosBarraResumen, styles.subContenedorRight]}>
                     <BotonTexto
-                            botonNavegacion={true}
-                            esLink={true}
-                            href={props.hrefSiguiente}
-                            fondo={true}
-                            fuenteTexto={fuenteTexto.gantariBold}
-                            textoBoton={"Siguiente"}
-                        />
+                        botonNavegacion={true}
+                        esLink={true}
+                        href={props.hrefSiguiente}
+                        fondo={true}
+                        fuenteTexto={fuenteTexto.gantariBold}
+                        textoBoton={props.esRealizarPedido ? "Realizar pedido" : "Siguiente"}
+                    />
                 </View>
             )}
             {props.botonAgendarCita && (
                 <View style={[styles.subContenederosBarraResumen, styles.subContenedorRight]}>
                     <BotonTexto
-                            botonNavegacion={true}
-                            esLink={true}
-                            replae={true}
-                            href={props.hrefAgendarCita}
-                            fondo={true}
-                            fuenteTexto={fuenteTexto.gantariBold}
-                            textoBoton={"Agendar cita"}
-                        />
+                        botonNavegacion={true}
+                        esLink={true}
+                        replae={true}
+                        href={props.hrefAgendarCita}
+                        fondo={true}
+                        fuenteTexto={fuenteTexto.gantariBold}
+                        textoBoton={"Agendar cita"}
+                    />
                 </View>
             )}
         </View>

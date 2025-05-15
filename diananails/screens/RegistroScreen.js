@@ -1,13 +1,8 @@
-import { View, Text, StatusBar, Image, useColorScheme, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Link, Stack } from 'expo-router';
+import { View, Text, StatusBar, ScrollView } from "react-native";
+import { Stack } from 'expo-router';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { registroStyles } from '../styles/registroStyles';
-import { Icono } from '../components/Icono';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { useState } from "react";
 import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
 import { ContenedorInputs } from "../components/ContenedorInputs";
 import { CampoTextoInput } from "../components/CampoTextoInput";

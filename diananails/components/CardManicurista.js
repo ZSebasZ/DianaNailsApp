@@ -33,7 +33,7 @@ export const CardManicurista = (props) => {
     return (
         props.esLink ? (
             <View>
-                <Link href={props.href}>
+                <Link href={props.href} asChild>
                     <Pressable style={styles.contenedorManicurista}>
                         <Image source={props.manicuristaImg} style={styles.manicuristaImg}></Image>
                         <Text style={[props.fuenteTextoBold, styles.textTituloManicurista]}>{props.nombreManicurista}</Text>

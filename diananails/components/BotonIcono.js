@@ -1,12 +1,8 @@
-import { View, Image, StyleSheet, Text, Pressable } from "react-native";
-import { useLogoPrincipal } from "../hooks/useLogoPrincipal";
+import { View, StyleSheet, Text, Pressable } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Icono } from "./Icono";
-import { botonIconoTextoStyles } from "../styles/botonIconoTextoStyles";
 import { useThemedStyles } from '../hooks/useThemeStyles';
-import { useContext } from "react";
-import { ThemeContext } from "../contexts/themeContext";
 import { Link } from "expo-router";
 
 export const BotonIcono = (props) => {
@@ -15,8 +11,8 @@ export const BotonIcono = (props) => {
 
     const styles = StyleSheet.create({
         boton: {
-            padding: 10,
-            flexDirection: "row",
+            padding: props.esPerfil ? 0 : 10,
+            
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 100,
@@ -34,38 +30,37 @@ export const BotonIcono = (props) => {
 
         iconoBoton: {
             color: props.fondo ? tema.background : tema.primary,
-            fontSize: hp(4)
+            fontSize: props.nombreIcono == "cart" || props.nombreIcono == "login" ? hp(3) : hp(4)
         },
 
 
         burbuja: {
-            flex: 1, 
-            justifyContent: "center", 
-            alignItems: "center", 
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
             position: "absolute",
-            top: -2, 
-            right: -2, 
-            width: 20, 
-            height: 20, 
-            backgroundColor: "red", 
+            top: -2,
+            right: -2,
+            width: 20,
+            height: 20,
+            backgroundColor: "red",
             borderRadius: 100
         },
         textBurbuja: {
-            color: "white", 
+            color: "white",
             fontSize: 12
         }
     })
 
     return (
         props.esLink ? (
-            <Link href={props.href} asChild>
+            <Link href={props.href} asChild style={[styles.boton, props.esEliminar && styles.botonEliminar]}>
                 <Pressable
-                    style={[styles.boton, props.esEliminar && styles.botonEliminar]}
                 >
-                    <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} style={[styles.iconoBoton]} />
+                    <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} style={[styles.iconoBoton, props.esEliminar && styles.iconoBotonEliminar]} />
                     {props.conBurbuja && (
-                        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", position: "absolute", top: -2, right: -2, width: 15, height: 15, backgroundColor: "red", borderRadius: 100 }}>
-                            <Text style={{ color: "white", fontSize: 10 }}>3</Text>
+                        <View style={styles.burbuja}>
+                            <Text style={[props.fuenteTexto, styles.textBurbuja]}>0</Text>
                         </View>
                     )}
                 </Pressable>

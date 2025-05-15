@@ -1,9 +1,9 @@
 import { Stack } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Icono } from '../../../components/Icono';
-import { useThemedStyles } from '../../../hooks/useThemeStyles';
-import { tabsMainLabelStyles } from "../../../styles/tabsMainLabelStyles";
-import { LogoTopBar } from '../../../components/LogoTopBar';
+import { Icono } from '../../../../components/Icono';
+import { useThemedStyles } from '../../../../hooks/useThemeStyles';
+import { tabsMainLabelStyles } from "../../../../styles/tabsMainLabelStyles";
+import { LogoTopBar } from '../../../../components/LogoTopBar';
 
 export default function AgendarCitaLayout() {
 
@@ -15,7 +15,7 @@ export default function AgendarCitaLayout() {
       screenOptions={{
         statusBarStyle: "auto",
         animation: 'none',
-        headerShown: true,
+        headerShown: false,
         headerStyle: { backgroundColor: colors.primary },
         headerShadowVisible: false,
         headerTintColor: "black",

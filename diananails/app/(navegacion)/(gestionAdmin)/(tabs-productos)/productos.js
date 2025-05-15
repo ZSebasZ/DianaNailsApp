@@ -1,10 +1,7 @@
-import React from 'react';
-import { View, Text } from 'react-native';
-import { TiendaScreen } from '../../../../screens/TiendaScreen';
-
+import { ProductosAdminScreen } from '../../../../screens/ProductosAdminScreen';
 
 export default function Productos() {
     return (
-        <TiendaScreen/>
+        <ProductosAdminScreen/>
     );
 }

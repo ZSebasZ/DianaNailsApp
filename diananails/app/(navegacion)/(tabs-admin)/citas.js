@@ -1,13 +1,7 @@
-import React from 'react';
-import { View, Text } from 'react-native'; 
-import { Link } from 'expo-router';
+import { CitasAdminScreen } from "./../../../screens/CitasAdminScreen"
 
 export default function Citas() {
     return (
-        <View>
-            <Text>
-                CITAS ADMIN
-            </Text>
-        </View>
+        <CitasAdminScreen/>
     );
 }

@@ -4,7 +4,7 @@ import { Icono } from '../../../../components/Icono';
 import { useThemedStyles } from '../../../../hooks/useThemeStyles';
 import { tabsMainLabelStyles } from "../../../../styles/tabsMainLabelStyles";
 import { LogoTopBar } from '../../../../components/LogoTopBar';
-import { Pressable, View } from 'react-native';
+import { Pressable } from 'react-native';
 
 export default function AgendarCitaLayout() {
 

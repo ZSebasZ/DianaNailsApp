@@ -1,17 +1,11 @@
-import { View, Text, StatusBar, Image, useColorScheme, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { View, useColorScheme, ScrollView } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Link, Stack } from 'expo-router';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { agendarCitaStyles } from '../styles/agendarCitaStyles';
-import { Icono } from '../components/Icono';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { useState } from "react";
 import { SeccionEnTab } from "../components/SeccionEnTab";
 import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
 import { CardServicio } from "../components/CardServicio";
-import { BotonIcono } from "./../components/BotonIcono"
 import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerServicios";
 import { BarraResumen } from "../components/BarraResumen";
 

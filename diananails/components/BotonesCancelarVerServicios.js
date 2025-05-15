@@ -1,13 +1,5 @@
-import { View, Image, StyleSheet, Text, Pressable } from "react-native";
-import { useLogoPrincipal } from "../hooks/useLogoPrincipal";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Icono } from "./Icono";
-import { botonIconoTextoStyles } from "../styles/botonIconoTextoStyles";
+import { View, StyleSheet } from "react-native";
 import { useThemedStyles } from '../hooks/useThemeStyles';
-import { useContext } from "react";
-import { ThemeContext } from "../contexts/themeContext";
-import { Link } from "expo-router";
 import { BotonIcono } from "./BotonIcono";
 import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 

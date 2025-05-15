@@ -1,11 +1,18 @@
 import { Stack } from 'expo-router';
-import { Text, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { PedidosClienteScreen } from '../../../../screens/PedidosClienteScreen';
-//import { CitasClienteScreen } from '../../screens/CitasClienteScreen';
+import BarraSuperior from '../../../../components/BarraSuperior';
 
 export default function PedidosCliente() {
     return (
-        <PedidosClienteScreen/>
+        <>
+            <BarraSuperior />
+            <Stack.Screen
+                options={{
+                    headerBackVisible: true,
+                }}
+            />
+            <PedidosClienteScreen/>
+        </>
+        
     );
 }

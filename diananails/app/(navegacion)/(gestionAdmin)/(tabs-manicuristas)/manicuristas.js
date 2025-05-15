@@ -1,10 +1,7 @@
-import React from 'react';
-import { View, Text } from 'react-native';
-import { ManicuristaMetodoPagoScreen } from '../../../../screens/ManicuristaMetodoPagoScreen';
-
+import { ManicuristasAdminScreen } from '../../../../screens/ManicuristasAdminScreen';
 
 export default function Manicuristas() {
     return (
-        <ManicuristaMetodoPagoScreen/>
+        <ManicuristasAdminScreen/>
     );
 }

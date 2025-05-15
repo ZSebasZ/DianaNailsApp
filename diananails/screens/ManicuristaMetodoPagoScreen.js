@@ -1,23 +1,15 @@
-import { View, Text, StatusBar, Image, useColorScheme, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { View, useColorScheme, ScrollView } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Link, Stack } from 'expo-router';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
-import { agendarCitaStyles } from '../styles/agendarCitaStyles';
-import { Icono } from '../components/Icono';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useState } from "react";
 import { manicuristaMetodoPagoStyles } from "../styles/manicuristaMetodoPagoStyles";
-import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-import { LocaleConfig } from 'react-native-calendars';
-import { Picker } from '@react-native-picker/picker';
-import DropDownPicker from 'react-native-dropdown-picker';
 import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
 import { SeccionEnTab } from "../components/SeccionEnTab";
 import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerServicios";
 import { BarraResumen } from "../components/BarraResumen";
 import { CardManicurista } from "../components/CardManicurista";
+import { ListaDropdown } from "../components/ListaDropdown";
 
 //Pantalla de Login
 export const ManicuristaMetodoPagoScreen = () => {
@@ -26,10 +18,10 @@ export const ManicuristaMetodoPagoScreen = () => {
 
     const [open, setOpen] = useState(false); // Estado para abrir/cerrar el dropdown
     const [value, setValue] = useState(null); // Estado para el valor seleccionado
-    const [items, setItems] = useState([
+    const items = [
         { label: 'Pagar en el local', value: 'efectivo' },
         { label: 'Tarjeta', value: 'tarjeta' }
-    ]);
+    ];
 
     const manicurista = require("./../assets/images/manicurista.jpg")
 
@@ -87,29 +79,10 @@ export const ManicuristaMetodoPagoScreen = () => {
                         tituloSeccion={"Metodo de pago"}
                         textInfo1={"Seleccione el metodo de pago"}
                     />
-                    <View style={styles.containerPicker}>
-                        <DropDownPicker
-                            listMode="SCROLLVIEW"
-                            placeholder="Metodos de pago"
-                            dropDownDirection="TOP"
-                            open={open} // Estado de apertura/cierre
-                            value={value} // Valor seleccionado
-                            items={items} // Lista de opciones
-                            setOpen={setOpen} // Función para cambiar el estado de apertura
-                            setValue={setValue} // Función para establecer el valor seleccionado
-                            setItems={setItems} // Función para actualizar los ítems (opcional)
-                            style={styles.dropdown} // Estilo del dropdown
-                            textStyle={styles.dropdownItemLabelText}
-                            listItemLabelStyle={styles.dropdownItemLabelText} // Estilo de cada ítem
-                            dropDownContainerStyle={styles.dropdownList} // Estilo del desplegable
-                            arrowIconStyle={styles.dropdownIcon} // Estilo de la flecha
-                            tickIconStyle={styles.dropdownIcon}
-                            showTickIcon={false}
-                            defaultValue={value} // Valor predeterminado
-                            selectedItemContainerStyle={styles.dropdownItemSelec}
-                            selectedItemLabelStyle={styles.dropdownLabelSelec}
-                        />
-                    </View>
+                    <ListaDropdown
+                        items={items}
+                        fuenteTexto={fuenteTexto.gantariRegular}
+                    />
                 </ScrollView>
             </View>
             <BotonesCancelarVerServicios />

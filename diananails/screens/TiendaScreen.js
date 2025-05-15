@@ -1,19 +1,13 @@
-import { View, Text, StatusBar, Image, useColorScheme, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { View, useColorScheme, ScrollView } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Link, Stack } from 'expo-router';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
-import { agendarCitaStyles } from '../styles/agendarCitaStyles';
-import { Icono } from '../components/Icono';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useState } from "react";
 import { tiendaStyles } from "../styles/tiendaStyles";
-import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-import { LocaleConfig } from 'react-native-calendars';
-import { Picker } from '@react-native-picker/picker';
-import DropDownPicker from 'react-native-dropdown-picker';
-
+import { SeccionEnTab } from "../components/SeccionEnTab";
+import { BarraResumen } from "../components/BarraResumen";
+import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
+import { CardProducto } from "../components/CardProducto";
 
 
 
@@ -29,8 +23,9 @@ export const TiendaScreen = () => {
         { label: 'Tarjeta', value: 'tarjeta' }
     ]);
 
-    const manicurista = require("./../assets/images/manicurista.jpg")
+    const producto = require("./../assets/images/manicurista.jpg")
 
+    const fuenteTexto = fuenteTextoStyles();
 
     //Estilos
     const styles = useThemedStyles(tiendaStyles);
@@ -42,98 +37,61 @@ export const TiendaScreen = () => {
         : require('./../assets/images/logoLight.png');
 
     return (
-        <View style={styles.mainContainer}>
-            <View style={{ flex: 1 }}>
-                <ScrollView style={{ backgroundColor: "" }} nestedScrollEnabled={true}>
-                    <View>
-                        <Text style={styles.textTitle}>Tienda</Text>
-                        <Text style={styles.textInfo}>Bienvenid@ a nuestra tienda, aqui encontraras productos sobre manicura y pedicura</Text>
-                    </View>
-                    <View style={styles.containerProductos}>
-                        <Link href={`/tienda/${"limagrano5"}`} asChild>
-                            <Pressable style={styles.containerProducto}>
-                                <Image source={manicurista} style={styles.productoImg}></Image>
-                                <View style={styles.containerInfoProducto}>
-                                    <Text style={styles.textTitleProducto}>Lima grano 5</Text>
-                                    <Text style={styles.textPrecioProducto}>12.99 $</Text>
-
-                                    <View style={styles.containerBotonAnadirProducto}>
-                                        <Pressable style={styles.botonAnadirProducto}>
-                                            <Text style={styles.textBotonAnadirProducto}>Añadir</Text>
-                                        </Pressable>
-                                    </View>
-                                </View>
-                            </Pressable>
-                        </Link>
-                        <Pressable style={styles.containerProducto}>
-                            <Image source={manicurista} style={styles.productoImg}></Image>
-                            <View style={styles.containerInfoProducto}>
-                                <Text style={styles.textTitleProducto}>Lima grano 5</Text>
-                                <Text style={styles.textPrecioProducto}>12.99 $</Text>
-
-                                <View style={styles.containerBotonAnadirProducto}>
-                                    <Pressable style={styles.botonAnadirProducto}>
-                                        <Text style={styles.textBotonAnadirProducto}>Añadir</Text>
-                                    </Pressable>
-                                </View>
-                            </View>
-                        </Pressable>
-                        <Pressable style={styles.containerProducto}>
-                            <Image source={manicurista} style={styles.productoImg}></Image>
-                            <View style={styles.containerInfoProducto}>
-                                <Text style={styles.textTitleProducto}>Lima grano 5</Text>
-                                <Text style={styles.textPrecioProducto}>12.99 $</Text>
-
-                                <View style={styles.containerBotonAnadirProducto}>
-                                    <Pressable style={[styles.botonAnadirProducto, styles.botonEnCarrito]}>
-                                        <Text style={styles.textBotonAnadirProducto}>Este producto ya está en tu carrito</Text>
-                                    </Pressable>
-                                </View>
-                            </View>
-                        </Pressable>
-                        <Pressable style={styles.containerProducto}>
-                            <Image source={manicurista} style={styles.productoImg}></Image>
-                            <View style={styles.containerInfoProducto}>
-                                <Text style={styles.textTitleProducto}>Lima grano 5</Text>
-                                <Text style={styles.textPrecioProducto}>12.99 $</Text>
-
-                                <View style={styles.containerBotonAnadirProducto}>
-                                    <Pressable style={styles.botonAnadirProducto}>
-                                        <Text style={styles.textBotonAnadirProducto}>Añadir</Text>
-                                    </Pressable>
-                                </View>
-                            </View>
-                        </Pressable>
-
+        <Screen enTab={true}>
+            <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <SeccionEnTab
+                        fuenteTextoBold={fuenteTexto.gantariBold}
+                        fuenteTextoRegular={fuenteTexto.gantariRegular}
+                        tituloSeccion={"Tienda"}
+                        textInfo1={"Bienvenid@ a nuestra tienda, aqui encontraras productos sobre manicura y pedicura"}
+                    />
+                    <View style={styles.contenedorProductos}>
+                        <CardProducto
+                            href={"(tabs-cliente)/(tienda)/(screens)/1"}
+                            fuenteTextoBold={fuenteTexto.gantariBold}
+                            fuenteTextoRegular={fuenteTexto.gantariRegular}
+                            productoImg={producto}
+                        />
+                        <CardProducto
+                            href={"(tabs-cliente)/(tienda)/(screens)/1"}
+                            fuenteTextoBold={fuenteTexto.gantariBold}
+                            fuenteTextoRegular={fuenteTexto.gantariRegular}
+                            productoImg={producto}
+                            enCarrito={true}
+                        />
+                        <CardProducto
+                            href={"(tabs-cliente)/(tienda)/(screens)/1"}
+                            fuenteTextoBold={fuenteTexto.gantariBold}
+                            fuenteTextoRegular={fuenteTexto.gantariRegular}
+                            productoImg={producto}
+                            agotado={true}
+                        />
+                        <CardProducto
+                            href={"(tabs-cliente)/(tienda)/(screens)/1"}
+                            fuenteTextoBold={fuenteTexto.gantariBold}
+                            fuenteTextoRegular={fuenteTexto.gantariRegular}
+                            productoImg={producto}
+                        />
+                        <CardProducto
+                            href={"(tabs-cliente)/(tienda)/(screens)/1"}
+                            fuenteTextoBold={fuenteTexto.gantariBold}
+                            fuenteTextoRegular={fuenteTexto.gantariRegular}
+                            productoImg={producto}
+                        />
+                        <CardProducto
+                            href={"(tabs-cliente)/(tienda)/(screens)/1"}
+                            fuenteTextoBold={fuenteTexto.gantariBold}
+                            fuenteTextoRegular={fuenteTexto.gantariRegular}
+                            productoImg={producto}
+                        />
                     </View>
                 </ScrollView>
             </View>
-            <View style={styles.resumeBar}>
-                <View style={[styles.resumenBarContainers, styles.resumenBarContainerLeft]}>
-                    <Link href={"/tienda/pedidosCliente"} asChild>
-                        <Pressable style={styles.resumenBarContainerLeftBoton}>
-                            <Icono IconComponent={MaterialCommunityIcons} name="truck-delivery" onPrimary={false} style={styles.resumenBarContainerLeftIcon} />
-                            <View style={{ flex: 1, justifyContent: "center", alignItems: "center", position: "absolute", top: -2, right: -2, width: 15, height: 15, backgroundColor: "red", borderRadius: 100 }}>
-                                <Text style={{ color: "white", fontSize: 10 }}>3</Text>
-                            </View>
-                        </Pressable>
-                    </Link>
-                </View>
-                <View style={[styles.resumenBarContainers, styles.resumenBarContainerCenter]}>
-                    <Text style={styles.resumenBarContainerCenterTextTitle}>Subtotal</Text>
-                    <Text style={styles.resumenBarContainerCenterTextPrecio}>00.00 $</Text>
-                </View>
-                <View style={[styles.resumenBarContainers, styles.resumenBarContainerRight]}>
-                    <Link href={"/tienda/carritoCliente"} asChild>
-                        <Pressable style={styles.resumenBarContainerLeftBoton}>
-                            <Icono IconComponent={MaterialCommunityIcons} name="cart" onPrimary={false} style={styles.resumenBarContainerLeftIcon} />
-                            <View style={{ flex: 1, justifyContent: "center", alignItems: "center", position: "absolute", top: -2, right: -2, width: 15, height: 15, backgroundColor: "red", borderRadius: 100 }}>
-                                <Text style={{ color: "white", fontSize: 10 }}>3</Text>
-                            </View>
-                        </Pressable>
-                    </Link>
-                </View>
-            </View>
-        </View>
+            <BarraResumen
+                botonCarrito={true}
+                hrefCarrito={"/(clienteScreens)/(pedidosCarrito)/carritoCliente"}
+            />
+        </Screen>
     );
 }

@@ -1,11 +1,18 @@
 import { Stack } from 'expo-router';
-import { Text, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { CitasClienteScreen } from '../../../../screens/CitasClienteScreen';
-//import { CitasClienteScreen } from '../../screens/CitasClienteScreen';
+import BarraSuperior from '../../../../components/BarraSuperior';
 
 export default function CitasCliente() {
     return (
-        <CitasClienteScreen/>
+        <>
+            <BarraSuperior />
+            <Stack.Screen
+                options={{
+                    headerBackVisible: true,
+                }}
+            />
+            <CitasClienteScreen />
+        </>
+
     );
 }

@@ -1,12 +1,8 @@
-import { View, Image, StyleSheet, Text, Pressable } from "react-native";
-import { useLogoPrincipal } from "../hooks/useLogoPrincipal";
+import { StyleSheet, Text, Pressable } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Icono } from "./Icono";
-import { botonIconoTextoStyles } from "../styles/botonIconoTextoStyles";
 import { useThemedStyles } from '../hooks/useThemeStyles';
-import { useContext } from "react";
-import { ThemeContext } from "../contexts/themeContext";
 import { Link } from "expo-router";
 
 export const BotonIconoTexto = (props) => {
@@ -19,22 +15,22 @@ export const BotonIconoTexto = (props) => {
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
-            gap: wp(1),
-            backgroundColor: props.fondo ? tema.primary : tema.background,
+            gap: props.enTab ? wp(2) : wp(1),
+            backgroundColor: props.fondo ? (props.tipoError ? tema.error : tema.primary) : tema.background,
             borderWidth: 1,
-            borderColor: tema.primary,
+            borderColor: props.tipoError ? tema.error : tema.primary,
             borderRadius: 10
         },
         iconoBoton: {
-            color: props.fondo ? tema.onPrimary : tema.onBackground,
+            color: props.fondo ? tema.onPrimary : (props.tipoError ? tema.error : tema.primary),
         },
 
         iconoBotonInicioScreen: {
-            fontSize: hp(4)
+            fontSize: props.enTab ? hp(2.5) : hp(4)
         },
         textBotonInicioScreen: {
-            fontSize: hp(3.5),
-            color: props.fondo ? tema.onPrimary : tema.onBackground,
+            fontSize: props.enTab ? hp(2) : hp(3.5),
+            color: props.fondo ? tema.onPrimary : (props.tipoError ? tema.error : tema.primary),
         },
 
         
@@ -47,15 +43,16 @@ export const BotonIconoTexto = (props) => {
                     style={styles.boton}
                 >
                     <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} style={[styles.iconoBoton, styles.iconoBotonInicioScreen]} />
-                    <Text style={[props.fuenteTexto, styles.textBotonInicioScreen]}>{props.textoBoton}</Text>
+                    <Text style={[props.enTab ? props.fuenteTextoNormal : props.fuenteTexto, styles.textBotonInicioScreen]}>{props.textoBoton}</Text>
                 </Pressable>
             </Link>
         ) : (
             <Pressable
                 style={styles.boton}
+                onPress={props.onPress}
             >
                 <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} style={[styles.iconoBoton, styles.iconoBotonInicioScreen]} />
-                <Text style={[props.fuenteTexto, styles.textBotonInicioScreen]}>{props.textoBoton}</Text>
+                <Text style={[props.enTab ? props.fuenteTextoNormal : props.fuenteTexto, styles.textBotonInicioScreen]}>{props.textoBoton}</Text>
             </Pressable>
         )
     )

@@ -1,8 +1,6 @@
-import { StyleSheet, View, TextInput, Text } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Icono } from "./Icono";
 
 export const SeccionEnTab = (props) => {
 
@@ -10,7 +8,7 @@ export const SeccionEnTab = (props) => {
 
     const styles = StyleSheet.create({
         contenedorSeccion: {
-            marginBottom: hp(1)
+            marginBottom: hp(2)
         },
         textTitulo: {
             color: tema.onBackground,

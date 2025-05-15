@@ -1,6 +1,5 @@
-import { View, Pressable, StyleSheet, Text } from "react-native"
+import { View, StyleSheet, Text } from "react-native"
 import { useThemedStyles } from "../hooks/useThemeStyles"
-import { Link } from "expo-router"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
@@ -12,8 +11,7 @@ export const CardServicioResumen = (props) => {
         contenedorServicio: {
             backgroundColor: tema.secondaryContainer,
             borderRadius: 10,
-            padding: 10,
-            marginBottom: hp(1.2)
+            padding: 10
         },
         textNombreServicio: {
             color: tema.onBackground,

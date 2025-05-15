@@ -1,16 +1,11 @@
-import { Tabs } from "expo-router";
-import { Stack, Link } from 'expo-router';
+import { Stack } from 'expo-router';
 import { tabsMainLabelStyles } from "../styles/tabsMainLabelStyles";
 import { useThemedStyles } from '../hooks/useThemeStyles';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Icono } from './Icono';
 import { View } from "react-native";
 import { LogoTopBar } from './LogoTopBar';
-import { Pressable } from 'react-native';
-import { useContext } from "react";
-import { ThemeContext } from "../contexts/themeContext";
+import { BotonIcono } from "./BotonIcono";
 
-export default function BarraSuperior() {
+export default function BarraSuperior(props) {
 
     const styles = useThemedStyles(tabsMainLabelStyles);
     const colors = useThemedStyles();
@@ -22,23 +17,39 @@ export default function BarraSuperior() {
                 statusBarStyle: "auto",
                 animation: 'none',
                 headerShown: true,
+                headerTitle: "",
                 headerStyle: { backgroundColor: tema.primary },
                 headerShadowVisible: false,
-                headerTintColor: "black",
-                headerTitle: "",
+                headerTintColor: tema.onPrimary,
+                headerBackVisible: props.mostrarVolverAtras ? true : false,
                 headerLeft: () => (
                     <LogoTopBar />
                 ),
                 headerRight: () => (
-                    <Link href={"/(perfil)/"} asChild>
-                        <Pressable>
-                            <Icono
-                                IconComponent={MaterialCommunityIcons}
-                                name="account-circle"
-                                style={styles.iconTabBar}
-                            ></Icono>
-                        </Pressable>
-                    </Link>
+                    props.mostrarCerrarSesion ? (
+                        <View style={[styles.subContenederosBarraResumen, styles.subContenedorRight]}>
+                            <BotonIcono
+                                botonNavegacion={true}
+                                esLink={true}
+                                href={"/(perfil)/perfil"}
+                                fondo={true}
+                                nombreIcono={"logout"}
+                                esPerfil={true}
+                            />
+                        </View>)
+                        :
+                        (
+                            <View style={[styles.subContenederosBarraResumen, styles.subContenedorRight]}>
+                                <BotonIcono
+                                    botonNavegacion={true}
+                                    esLink={true}
+                                    href={"/(perfil)/perfil"}
+                                    fondo={true}
+                                    nombreIcono={"account-circle"}
+                                    esPerfil={true}
+                                />
+                            </View>
+                        )
                 )
             }}
         />

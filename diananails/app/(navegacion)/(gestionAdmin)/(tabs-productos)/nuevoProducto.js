@@ -1,11 +1,7 @@
-import React from 'react';
-import { View, Text } from 'react-native';
-
+import { GestionAgregarScreen } from '../../../../screens/GestionAgregarScreen';
 
 export default function NuevoProducto() {
     return (
-        <View>
-            <Text>NUEVO PRODUCTO</Text>
-        </View>
+        <GestionAgregarScreen tipo={"producto"}/>
     );
 }

@@ -1,19 +1,16 @@
-import { View, Text, StatusBar, Image, useColorScheme, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView, Alert } from "react-native";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { View, Text, useColorScheme, ScrollView, Alert } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Link, Stack } from 'expo-router';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { perfilStyles } from '../styles/perfilStyles';
-import { Icono } from '../components/Icono';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import React, { useState } from "react";
-import { fechaHoraStyles } from "../styles/fechaHoraStyles";
-import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-import { LocaleConfig } from 'react-native-calendars';
-import { Picker } from '@react-native-picker/picker';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { useState } from "react";
 import * as ImagePicker from 'expo-image-picker';
+import { SeccionEnTab } from "../components/SeccionEnTab";
+import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
+import { BotonIconoTexto } from "../components/BotonIconoTexto";
+import { BotonTexto } from "../components/BotonTexto";
+import { TomarEscogerImagen } from "../components/TomarEscogerImagen";
+import { CampoTextoInput } from "../components/CampoTextoInput";
 
 
 //Pantalla de Login
@@ -24,6 +21,9 @@ export const PerfilScreen = () => {
     //Estilos
     const styles = useThemedStyles(perfilStyles);
     const colors = useThemedStyles();
+
+    const fuenteTexto = fuenteTextoStyles();
+
     //Detectamos el tema del sistema para saber que solo mostrar
     const colorScheme = useColorScheme();
     const logo = colorScheme === 'dark'
@@ -65,7 +65,7 @@ export const PerfilScreen = () => {
 
         const result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
-            aspect: [1,1],
+            aspect: [1, 1],
             quality: 1,
         });
 
@@ -75,87 +75,145 @@ export const PerfilScreen = () => {
     };
 
     return (
-        <View style={styles.mainContainer}>
-            <Stack.Screen
-                options={{
-                    headerBackVisible: true,
-                    headerTintColor: colors.onPrimary,
-                    headerRight: () => (
-                        <></>
-                    )
-                }}
-            />
-            <ScrollView style={{ flex: 1, paddingHorizontal: 15 }}>
-                <View>
-                    <Text style={styles.textTitle}>Mi perfil</Text>
-                    <Text style={[styles.textInfo, { paddingHorizontal: 5 }]}>Mira y/o actualiza tus datos personales</Text>
-                    <View style={[styles.containerSeccion, {alignItems: "center"}]}>
-                        <Text style={styles.textTitloSeccion}>Foto de perfil</Text>
-                        <View style={styles.recuadroImagen}>
-                            {imageUri ? (
-                                <Image source={{ uri: imageUri }} style={styles.imagen} />
-                            ) : (
-                                <Image source={perfilImgDefault} style={[styles.imagen, {opacity: 0.7}]} />
-                            )}
+        <Screen enTab={true}>
+            <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <SeccionEnTab
+                        fuenteTextoBold={fuenteTexto.gantariBold}
+                        fuenteTextoRegular={fuenteTexto.gantariRegular}
+                        tituloSeccion={"Mi perfil"}
+                        textInfo1={"Mira y/o actualiza tus datos personales"}
+                    />
+                    <View style={{ gap: 20 }}>
+                        <View style={{ gap: 10 }}>
+                            <Text style={styles.textTituloSeccion}>Foto de perfil</Text>
+                            <TomarEscogerImagen
+                                fuenteTexto={fuenteTexto.gantariBold}
+                                tomarFoto={tomarFoto}
+                                seleccionarDeGaleria={seleccionarDeGaleria}
+                                imageUri={imageUri != null && imageUri}
+                            />
+                            <View style={{ justifyContent: "center", alignItems: "center", gap: 10 }}>
+                                <BotonIconoTexto
+                                    esLink={false}
+                                    
+                                    nombreIcono={"camera"}
+                                    fondo={false}
+                                    fuenteTextoNormal={fuenteTexto.gantariBold}
+                                    textoBoton={"Tomar foto"}
+                                    enTab={true}
+                                    onPress={tomarFoto}
+                                />
+                                <BotonIconoTexto
+                                    esLink={false}
+                                    nombreIcono={"image-multiple"}
+                                    fondo={false}
+                                    fuenteTextoNormal={fuenteTexto.gantariBold}
+                                    textoBoton={"Seleccionar desde mi galeria"}
+                                    enTab={true}
+                                    onPress={seleccionarDeGaleria}
+                                />
+                                <BotonIconoTexto
+                                    esLink={false}
+                                    nombreIcono={"image-remove"}
+                                    fondo={false}
+                                    fuenteTextoNormal={fuenteTexto.gantariBold}
+                                    textoBoton={"Eliminar foto"}
+                                    enTab={true}
+                                    onPress={() => { }}
+                                    tipoError={true}
+                                />
+                                <BotonIconoTexto
+                                    esLink={false}
+                                    nombreIcono={"content-save"}
+                                    fondo={true}
+                                    fuenteTextoNormal={fuenteTexto.gantariBold}
+                                    textoBoton={"Guardar foto"}
+                                    enTab={true}
+                                    onPress={() => { }}
+                                />
+                            </View>
                         </View>
-
-                        <View style={styles.botonesFoto}>
-                            <Pressable onPress={tomarFoto} style={styles.botonFoto}>
-                                <Text style={styles.textoBotonFoto}>Tomar foto</Text>
-                            </Pressable>
-                            <Pressable onPress={seleccionarDeGaleria} style={styles.botonFoto}>
-                                <Text style={styles.textoBotonFoto}>Seleccionar desde mi galeria</Text>
-                            </Pressable>
+                        <View style={{ gap: 10, marginBottom: 15 }}>
+                            <Text style={styles.textTituloSeccion}>Datos personales</Text>
+                            <View style={{gap: 15}}>
+                                <CampoTextoInput
+                                    conIcono={true}
+                                    nombreIcono={"account"}
+                                    fuenteTexto={fuenteTexto.gantariRegular}
+                                    placeHolder={"Nombre"}
+                                    conLabel={true}
+                                    textLabel={"Nombre"}
+                                    labelCentrado={true}
+                                    fuenteTextoLabel={fuenteTexto.gantariBold}
+                                    contrasena={false}
+                                />
+                                <CampoTextoInput
+                                    conIcono={true}
+                                    nombreIcono={"account"}
+                                    fuenteTexto={fuenteTexto.gantariRegular}
+                                    placeHolder={"Apellidos"}
+                                    conLabel={true}
+                                    textLabel={"Apellidos"}
+                                    labelCentrado={true}
+                                    fuenteTextoLabel={fuenteTexto.gantariBold}
+                                    contrasena={false}
+                                />
+                                <CampoTextoInput
+                                    conIcono={true}
+                                    nombreIcono={"phone"}
+                                    fuenteTexto={fuenteTexto.gantariRegular}
+                                    placeHolder={"Telefono"}
+                                    conLabel={true}
+                                    textLabel={"Telefono"}
+                                    labelCentrado={true}
+                                    fuenteTextoLabel={fuenteTexto.gantariBold}
+                                    contrasena={false}
+                                />
+                                <CampoTextoInput
+                                    conIcono={true}
+                                    nombreIcono={"map-marker"}
+                                    fuenteTexto={fuenteTexto.gantariRegular}
+                                    placeHolder={"Direccion de envio"}
+                                    conLabel={true}
+                                    textLabel={"Direccion de envio"}
+                                    labelCentrado={true}
+                                    fuenteTextoLabel={fuenteTexto.gantariBold}
+                                    contrasena={false}
+                                />
+                                <CampoTextoInput
+                                    conIcono={true}
+                                    nombreIcono={"email"}
+                                    fuenteTexto={fuenteTexto.gantariRegular}
+                                    placeHolder={"Email"}
+                                    conLabel={true}
+                                    textLabel={"Email"}
+                                    labelCentrado={true}
+                                    fuenteTextoLabel={fuenteTexto.gantariBold}
+                                    contrasena={false}
+                                />
+                            </View>
+                            <View style={{ justifyContent: "center", alignItems: "center", gap: 10, marginTop: 10 }}>
+                                <BotonTexto
+                                    botonNavegacion={true}
+                                    esLink={false}
+                                    fondo={true}
+                                    fuenteTexto={fuenteTexto.gantariBold}
+                                    textoBoton={"Guardar cambios"}
+                                />
+                                <BotonTexto
+                                    botonNavegacion={true}
+                                    esLink={false}
+                                    fondo={true}
+                                    tipoError={true}
+                                    fuenteTexto={fuenteTexto.gantariBold}
+                                    textoBoton={"Eliminar cuenta"}
+                                />
+                            </View>
                         </View>
                     </View>
-                    <View style={styles.containerSeccion}>
-                        <Text style={styles.textTitloSeccion}>Datos personales</Text>
-                        <View style={styles.containerField}>
-                            <Text style={styles.textTitleInput}>Nombre</Text>
-                            <View style={styles.containerInput}>
-                                <Icono IconComponent={MaterialCommunityIcons} name="account" onPrimary={false} style={styles.iconInput} />
-                                <TextInput style={styles.textInput} placeholder="Nombre" placeholderTextColor={colors.secondary} />
-                            </View>
-                        </View>
-                        <View style={styles.containerField}>
-                            <Text style={styles.textTitleInput}>Apellidos</Text>
-                            <View style={styles.containerInput}>
-                                <Icono IconComponent={MaterialCommunityIcons} name="account" onPrimary={false} style={styles.iconInput} />
-                                <TextInput style={styles.textInput} placeholder="Apellidos" placeholderTextColor={colors.secondary} secureTextEntry />
-                            </View>
-                        </View>
-                        <View style={styles.containerField}>
-                            <Text style={styles.textTitleInput}>Telefono</Text>
-                            <View style={styles.containerInput}>
-                                <Icono IconComponent={MaterialCommunityIcons} name="phone" onPrimary={false} style={styles.iconInput} />
-                                <TextInput style={styles.textInput} placeholder="Telefono" placeholderTextColor={colors.secondary} />
-                            </View>
-                        </View>
-                        <View style={styles.containerField}>
-                            <Text style={styles.textTitleInput}>Direccion de envio</Text>
-                            <View style={styles.containerInput}>
-                                <Icono IconComponent={MaterialCommunityIcons} name="map-marker" onPrimary={false} style={styles.iconInput} />
-                                <TextInput style={styles.textInput} placeholder="Direccion de envio" placeholderTextColor={colors.secondary} />
-                            </View>
-                        </View>
-                        <View style={styles.containerField}>
-                            <Text style={styles.textTitleInput}>Email</Text>
-                            <View style={styles.containerInput}>
-                                <Icono IconComponent={MaterialCommunityIcons} name="email" onPrimary={false} style={styles.iconInput} />
-                                <TextInput style={styles.textInput} placeholder="Email" placeholderTextColor={colors.secondary} />
-                            </View>
-                        </View>
-                        <View style={[styles.containerField, { alignItems: "center" }]}>
-                            <Pressable style={[styles.boton, styles.botonGuardarCambios]}>
-                                <Text style={[styles.textBoton, styles.textBotonGuardarCambios]}>Guardar cambios</Text>
-                            </Pressable>
-                            <Pressable style={[styles.boton, styles.botonEliminarCuenta]}>
-                                <Text style={[styles.textBoton, styles.textBotonEliminarCuenta]}>Eliminar cuenta</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                </View>
-            </ScrollView>
-        </View>
+                </ScrollView>
+            </View>
+        </Screen>
     );
 }

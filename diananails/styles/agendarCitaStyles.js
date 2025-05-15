@@ -7,6 +7,7 @@ export const agendarCitaStyles = (colors) => StyleSheet.create({
         flexDirection: "row", 
         flexWrap: "wrap", 
         padding: 10, 
+        paddingTop: 0,
         paddingBottom: hp(9),
         justifyContent: "space-evenly", 
         gap: hp(2.5)

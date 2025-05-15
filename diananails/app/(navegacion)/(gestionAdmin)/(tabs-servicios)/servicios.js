@@ -1,10 +1,7 @@
-import React from 'react';
-import { View, Text } from 'react-native';
-import { AgendarCitaScreen } from '../../../../screens/AgendarCitaScreen';
-
+import { ServiciosAdminScreen } from '../../../../screens/ServiciosAdminScreen';
 
 export default function Servicios() {
     return (
-        <AgendarCitaScreen/>
+        <ServiciosAdminScreen/>
     );
 }

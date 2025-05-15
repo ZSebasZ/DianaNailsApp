@@ -1,12 +1,9 @@
 import { Tabs } from "expo-router";
-import { Stack, Link } from 'expo-router';
 import { tabsMainLabelStyles } from "../../../styles/tabsMainLabelStyles";
 import { useThemedStyles } from '../../../hooks/useThemeStyles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Icono } from '../../../components/Icono';
 import { View } from "react-native";
-import { LogoTopBar } from '../../../components/LogoTopBar';
-import { Pressable } from 'react-native';
 import BarraSuperior from "../../../components/BarraSuperior";
 
 export default function TabsClienteLayout() {
@@ -58,7 +55,7 @@ export default function TabsClienteLayout() {
                     }}
                 />
                 <Tabs.Screen
-                    name="tienda"
+                    name="(tienda)"
                     options={{
                         title: "Tienda",
                         tabBarLabelStyle: styles.label,

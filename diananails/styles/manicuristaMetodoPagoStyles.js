@@ -6,7 +6,8 @@ export const manicuristaMetodoPagoStyles = (colors) => StyleSheet.create({
         flex: 1, 
         flexDirection: "row", 
         flexWrap: "wrap", 
-        padding: hp(1.5), 
+        padding: 10, 
+        paddingTop: 0,
         justifyContent: "space-evenly", 
         gap: hp(2.5)
     },

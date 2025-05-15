@@ -1,11 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import { Pressable, Text, View, StyleSheet, Button, useColorScheme, Image } from 'react-native';
+import { Text, View } from 'react-native';
 import { useThemedStyles } from '../hooks/useThemeStyles';
-import { Link } from 'expo-router';
 import { inicioStyles } from '../styles/inicioStyles';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Icono } from '../components/Icono';
 import { abrirPerfilInstagram } from '../utils/instagramUtils';
 import { Screen } from '../components/Screen';
 import { LogoPrincipal } from '../components/LogoPrincipal';
@@ -40,14 +36,11 @@ export const InicioScreen = () => {
                 <View style={styles.contenedorBotones}>
                     <BotonIconoTexto
                         esLink={true}
-                        href={"/(auth)/login"}
+                        href={ "/(gestionAdmin)/(tabs-manicuristas)/manicuristas" /*"/(auth)/login"*/}
                         nombreIcono={"account"} 
                         fondo={true} 
-                        colorFondo={[tema.background, tema.primary]} 
-                        colorTexto={[tema.onBackground, tema.onPrimary]}
                         fuenteTexto={fuenteTexto.caveatBold}
                         textoBoton={" Soy cliente "}
-                        textoFuente={fuenteTexto.caveatBold} 
                     />
 
                     <BotonIconoTexto
@@ -55,11 +48,8 @@ export const InicioScreen = () => {
                         href={"/(auth)/login"}
                         nombreIcono={"card-account-details"} 
                         fondo={true} 
-                        colorFondo={[tema.background, tema.primary]} 
-                        colorTexto={[tema.onBackground, tema.onPrimary]}
                         fuenteTexto={fuenteTexto.caveatBold}
                         textoBoton={" Soy manicurista "}
-                        textoFuente={fuenteTexto.caveatBold} 
                     />
                 </View>
                 <View style={styles.contenedorIconoInstagram}>

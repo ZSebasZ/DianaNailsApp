@@ -1,11 +1,10 @@
-import { Tabs, Link } from "expo-router";
-import { Stack } from 'expo-router';
+import { Tabs } from "expo-router";
 import { tabsMainLabelStyles } from "../../../styles/tabsMainLabelStyles";
 import { useThemedStyles } from '../../../hooks/useThemeStyles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Icono } from '../../../components/Icono';
-import { View, Pressable } from "react-native";
-import { LogoTopBar } from "../../../components/LogoTopBar"
+import { View } from "react-native";
+import BarraSuperior from "../../../components/BarraSuperior";
 
 export default function TabsAdminLayout() {
 
@@ -14,31 +13,7 @@ export default function TabsAdminLayout() {
 
     return (
         <View style={{ flex: 1 }}>
-            <Stack.Screen
-                options={{
-                    statusBarStyle: "auto",
-                    animation: 'none',
-                    headerShown: true,
-                    headerStyle: { backgroundColor: colors.primary },
-                    headerShadowVisible: false,
-                    headerTintColor: "black",
-                    headerTitle: "",
-                    headerLeft: () => (
-                        <LogoTopBar />
-                    ),
-                    headerRight: () => (
-                        <Link href={"/(perfil)/"} asChild>
-                            <Pressable>
-                                <Icono
-                                    IconComponent={MaterialCommunityIcons}
-                                    name="account-circle"
-                                    style={styles.iconTabBar}
-                                ></Icono>
-                            </Pressable>
-                        </Link>
-                    )
-                }}
-            />
+            <BarraSuperior />
             <Tabs
                 screenOptions={{
                     headerShown: false,
@@ -49,12 +24,10 @@ export default function TabsAdminLayout() {
                     tabBarActiveBackgroundColor: colors.primary,
                 }}
             >
-
                 <Tabs.Screen
                     name="citas"
                     options={{
                         title: "Citas",
-
                         tabBarLabelStyle: styles.label,
                         tabBarIcon: ({ color }) => (
                             <Icono
@@ -74,6 +47,20 @@ export default function TabsAdminLayout() {
                             <Icono
                                 IconComponent={MaterialCommunityIcons}
                                 name="truck-delivery"
+                                style={[styles.iconTab, { color: color }]}
+                            />
+                        ),
+                    }}
+                />
+                <Tabs.Screen
+                    name="opiniones"
+                    options={{
+                        title: "Opiniones",
+                        tabBarLabelStyle: styles.label,
+                        tabBarIcon: ({ color }) => (
+                            <Icono
+                                IconComponent={MaterialCommunityIcons}
+                                name="message-star"
                                 style={[styles.iconTab, { color: color }]}
                             />
                         ),
