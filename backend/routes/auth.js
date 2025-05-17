@@ -4,6 +4,7 @@ import {login, registerCliente, registerManicurista, getManicuristas} from "./..
 //Creamos el objeto Router para establecer las rutas que vamos a usar
 const router = express.Router()
 
+
 //Creamos la ruta para el LOGIN de la aplicacion
 router.post("/login", login)
 //JSON DE PRUEBA

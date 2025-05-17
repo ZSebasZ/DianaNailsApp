@@ -1,11 +1,11 @@
 import { StyleSheet } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export const registroStyles = (colors) => StyleSheet.create({
     contenedorPrincipal: {
         flex: 1,
         justifyContent: 'center',
-        
+
     },
     textTitulo: {
         fontSize: hp(3.5),
@@ -17,5 +17,5 @@ export const registroStyles = (colors) => StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         gap: hp(2)
-    },
+    }
 });

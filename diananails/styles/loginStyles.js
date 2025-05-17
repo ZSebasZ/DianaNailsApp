@@ -17,4 +17,10 @@ export const loginStyles = (colors) => StyleSheet.create({
         justifyContent: 'center',
         gap: hp(2)
     },
+    credencialesIncorrectas: {
+        color: colors.error,
+        textAlign: "center",
+        fontFamily: "GantariRegular",
+        fontSize: hp(2)
+    }
 });
