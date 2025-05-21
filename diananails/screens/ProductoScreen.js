@@ -7,57 +7,102 @@ import { SeccionEnTab } from "../components/SeccionEnTab";
 import { BarraResumen } from "../components/BarraResumen";
 import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { CardProductoDetalles } from "../components/CardProductoDetalles";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../contexts/authContext";
+import { obtenerProductoDetalles } from "../api/ProductosController";
+import { useCarrito } from "../contexts/carritoContext";
+import { anadirCarritoProducto } from "../api/CarritoController";
 
 //Pantalla de Login
 export const ProductoScreen = (props) => {
 
-    const insets = useSafeAreaInsets();
+    const { usuario } = useContext(AuthContext)
+    const [producto, setProducto] = useState()
+    const [cantidadProducto, setCantidadProducto] = useState(1)
+    const { carritoProductos, dispatch } = useCarrito()
+    const [subtotal, setSubtotal] = useState(0)
 
     const fuenteTexto = fuenteTextoStyles();
 
-    const producto = require("./../assets/images/manicurista.jpg")
-    const manicurista = require("./../assets/images/manicurista.jpg")
+    const productoImgDefault = require("./../assets/images/manicurista.jpg")
     //Estilos
     const styles = useThemedStyles(productoStyles);
-    const colors = useThemedStyles();
-    //Detectamos el tema del sistema para saber que solo mostrar
-    const colorScheme = useColorScheme();
-    const logo = colorScheme === 'dark'
-        ? require('./../assets/images/logoDark.png')
-        : require('./../assets/images/logoLight.png');
+
+    useEffect(() => {
+        const obtenerProducto = async () => {
+            const respuesta = await obtenerProductoDetalles(usuario.datosUsuario.id_carrito, props.idProducto)
+            setProducto(respuesta[0])
+            //console.log(respuesta[0])
+            setSubtotal(calcularTotal(carritoProductos))
+        }
+        obtenerProducto()
+    }, [])
+
+    useEffect(() => {
+        setSubtotal(calcularTotal(carritoProductos))
+    }, [carritoProductos])
+
+    const calcularTotal = (items) => {
+        return items.reduce((total, item) => {
+            return total + item.precio * item.cantidad;
+        }, 0);
+    };
 
     return (
 
 
         <Screen enTab={true}>
-            <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    <SeccionEnTab
-                        fuenteTextoBold={fuenteTexto.gantariBold}
-                        fuenteTextoRegular={fuenteTexto.gantariRegular}
-                        tituloSeccion={props.idProducto == 1 ? "Lima de tipo B cobre 5" : ""}
-                        textInfo1={"Detalles del producto"}
+            {producto && (
+                <>
+                    <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            <SeccionEnTab
+                                fuenteTextoBold={fuenteTexto.gantariBold}
+                                fuenteTextoRegular={fuenteTexto.gantariRegular}
+                                tituloSeccion={producto.nombre}
+                                textInfo1={"Detalles del producto"}
 
-                    />
-                    <View style={styles.contenedorProductos}>
-                        <CardProductoDetalles
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            producto={producto}
-                        /*
-                            enCarrito={true}
-                            agotado={true}
-                        */
-                        />
+                            />
+                            <View style={styles.contenedorProductos}>
+                                <CardProductoDetalles
+                                    fuenteTextoBold={fuenteTexto.gantariBold}
+                                    fuenteTextoRegular={fuenteTexto.gantariRegular}
+                                    producto={productoImgDefault}
+                                    descripcion={producto.descripcion}
+                                    precio={producto.precio}
+                                    enCarrito={producto.enCarrito}
+                                    agotado={producto.agotado}
+                                    stock={producto.stock}
+                                    cantidad={cantidadProducto}
+                                    onIncrementar={() => {
+                                        if (cantidadProducto < producto.stock && cantidadProducto < 5) {
+                                            setCantidadProducto(cantidadProducto + 1)
+                                        }
+                                    }}
+                                    onDecrementar={() => {
+                                        if (cantidadProducto > 1) {
+                                            setCantidadProducto(cantidadProducto - 1)
+                                        }
+                                    }}
+                                    onAnadir={() => {
+                                        setProducto({ ...producto, enCarrito: 1 })
+                                        dispatch({ type: 'ANADIR_PRODUCTO', payload: { ...producto, cantidad: cantidadProducto } })
+                                        anadirCarritoProducto(usuario.datosUsuario.id_carrito, producto.id, cantidadProducto)
+                                    }}
+                                />
+                            </View>
+                        </ScrollView>
                     </View>
-                </ScrollView>
-            </View>
-            <BarraResumen
-                botonVolver={true}
-                hrefAtras={"../"}
-                botonCarrito={true}
-                hrefCarrito={"/(clienteScreens)/(pedidosCarrito)/carritoCliente"}
-            />
+                    <BarraResumen
+                        botonVolver={true}
+                        hrefAtras={"../"}
+                        subtotal={subtotal}
+                        botonCarrito={true}
+                        cantidadProductos={carritoProductos.length}
+                        hrefCarrito={"/(clienteScreens)/(pedidosCarrito)/carritoCliente"}
+                    />
+                </>
+            )}
         </Screen>
     );
 }

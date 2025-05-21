@@ -80,7 +80,7 @@ const getHorasDisponiblesManicuristasDisponibles = (req, res) => {
 
         if (totalCitas > 0) {
             //Sentencia SQL para obtener las horas disponibles junto a su correspodiente manicurista
-            let horasManicuristasDisponibles = `WITH manicuristasLibres AS (SELECT m.id AS id_manicurista, CONCAT(u.nombre, ' ', u.apellidos) AS nombre_manicurista, h.id AS id_hora, h.hora AS hora, h.es_laboral AS esLaboral FROM manicuristas m JOIN usuarios u ON m.id = u.id JOIN horas h ON h.es_laboral = 1 WHERE NOT EXISTS (SELECT 1 FROM citas_horas r JOIN citas c1 ON r.id_cita = c1.id WHERE c1.id_manicurista = m.id AND r.id_hora = h.id AND c1.fecha = '${fecha}') AND h.id NOT IN (SELECT horasYaPedidas FROM (SELECT ch.id_hora AS horasYaPedidas FROM citas_horas AS ch JOIN citas AS c ON c.id = ch.id_cita WHERE c.id_cliente = ${idCliente} AND c.fecha = '${fecha}') AS subquery) AND (CASE WHEN '${fechaActual}' = '${fecha}' THEN h.hora > '${horaActual}' ELSE TRUE END) ORDER BY id_manicurista, id_hora) SELECT DISTINCT p1.id_manicurista, p1.nombre_manicurista, p1.id_hora, p1.hora FROM manicuristasLibres AS p1 `
+            let horasManicuristasDisponibles = `WITH manicuristasLibres AS (SELECT m.id AS id_manicurista, CONCAT(u.nombre, ' ', u.apellidos) AS nombre_manicurista, u.url_imagen AS url_imagen, h.id AS id_hora, h.hora AS hora, h.es_laboral AS esLaboral FROM manicuristas m JOIN usuarios u ON m.id = u.id JOIN horas h ON h.es_laboral = 1 WHERE NOT EXISTS (SELECT 1 FROM citas_horas r JOIN citas c1 ON r.id_cita = c1.id WHERE c1.id_manicurista = m.id AND r.id_hora = h.id AND c1.fecha = '${fecha}') AND h.id NOT IN (SELECT horasYaPedidas FROM (SELECT ch.id_hora AS horasYaPedidas FROM citas_horas AS ch JOIN citas AS c ON c.id = ch.id_cita WHERE c.id_cliente = ${idCliente} AND c.fecha = '${fecha}') AS subquery) AND (CASE WHEN '${fechaActual}' = '${fecha}' THEN h.hora > '${horaActual}' ELSE TRUE END) ORDER BY id_manicurista, id_hora) SELECT DISTINCT p1.id_manicurista, p1.nombre_manicurista, p1.url_imagen, p1.id_hora, p1.hora FROM manicuristasLibres AS p1 `
 
             //Variable para ir formando la otra parte de la sentencia
             let serMismaManicurista = ""
@@ -120,9 +120,11 @@ const getHorasDisponiblesManicuristasDisponibles = (req, res) => {
                         if (!horas[row.id_hora]) {
                             //Si no existe, la creamos con la estructura basica
                             horas[row.id_hora] = {
+                                idHora: row.id_hora,
                                 hora: row.hora,
                                 manicuristas: [
                                     {
+                                        url_imagen: row.url_imagen,
                                         id: row.id_manicurista,
                                         nombre: row.nombre_manicurista
                                     }
@@ -131,6 +133,7 @@ const getHorasDisponiblesManicuristasDisponibles = (req, res) => {
                         } else {
                             //Si ya existe, añadimos la nuevo manicurista a la lista
                             horas[row.id_hora].manicuristas.push({
+                                url_imagen: row.url_imagen,
                                 id: row.id_manicurista,
                                 nombre: row.nombre_manicurista
                             });
@@ -149,7 +152,7 @@ const getHorasDisponiblesManicuristasDisponibles = (req, res) => {
 
         } else {
             //Sentencia SQL para obtener las horas disponibles junto a su correspodiente manicurista
-            let horasManicuristasDisponibles = `WITH manicuristasLibres AS (SELECT m.id AS id_manicurista, CONCAT(u.nombre, ' ', u.apellidos) AS nombre_manicurista, h.id AS id_hora, h.hora AS hora, h.es_laboral AS esLaboral FROM manicuristas m JOIN usuarios u ON m.id = u.id JOIN horas h ON h.es_laboral = 1 WHERE h.id NOT IN (SELECT horasYaPedidas FROM (SELECT ch.id_hora AS horasYaPedidas FROM citas_horas AS ch JOIN citas AS c ON c.id = ch.id_cita WHERE c.id_cliente = ${idCliente} AND c.fecha = '${fecha}') AS subquery) AND (CASE WHEN '${fechaActual}' = '${fecha}' THEN h.hora > '${horaActual}' ELSE TRUE END) ORDER BY id_manicurista, id_hora) SELECT DISTINCT p1.id_manicurista, p1.nombre_manicurista, p1.id_hora, p1.hora FROM manicuristasLibres AS p1 `
+            let horasManicuristasDisponibles = `WITH manicuristasLibres AS (SELECT m.id AS id_manicurista, CONCAT(u.nombre, ' ', u.apellidos) AS nombre_manicurista, u.url_imagen AS url_imagen, h.id AS id_hora, h.hora AS hora, h.es_laboral AS esLaboral FROM manicuristas m JOIN usuarios u ON m.id = u.id JOIN horas h ON h.es_laboral = 1 WHERE h.id NOT IN (SELECT horasYaPedidas FROM (SELECT ch.id_hora AS horasYaPedidas FROM citas_horas AS ch JOIN citas AS c ON c.id = ch.id_cita WHERE c.id_cliente = ${idCliente} AND c.fecha = '${fecha}') AS subquery) AND (CASE WHEN '${fechaActual}' = '${fecha}' THEN h.hora > '${horaActual}' ELSE TRUE END) ORDER BY id_manicurista, id_hora) SELECT DISTINCT p1.id_manicurista, p1.nombre_manicurista, p1.url_imagen, p1.id_hora, p1.hora FROM manicuristasLibres AS p1 `
 
             for (let i = 1; i <= horsReqs; i++) {
                 if (i > 1) {
@@ -180,9 +183,11 @@ const getHorasDisponiblesManicuristasDisponibles = (req, res) => {
                         if (!horas[row.id_hora]) {
                             //Si no existe, la creamos con la estructura basica
                             horas[row.id_hora] = {
+                                idHora: row.id_hora,
                                 hora: row.hora,
                                 manicuristas: [
                                     {
+                                        url_imagen: row.url_imagen,
                                         id: row.id_manicurista,
                                         nombre: row.nombre_manicurista
                                     }
@@ -191,6 +196,7 @@ const getHorasDisponiblesManicuristasDisponibles = (req, res) => {
                         } else {
                             //Si ya existe, añadimos la nuevo manicurista a la lista
                             horas[row.id_hora].manicuristas.push({
+                                url_imagen: row.url_imagen,
                                 id: row.id_manicurista,
                                 nombre: row.nombre_manicurista
                             });
@@ -236,9 +242,10 @@ const nuevaCita = (req, res) => {
         connection.query(queryObtenerHorsReqs, (error, results) => {
             //Si surge algun error, avisamos con un mensaje
             if (error) {
-                return connection.rollback(() => {
-                    res.status(500).json({ mensaje: "Error al ejecutar: " + queryObtenerHorsReqs });
+                connection.rollback(() => {
+                    
                 })
+                return res.status(500).json({ mensaje: "Error al ejecutar: " + queryObtenerHorsReqs });
             }
 
             //De lo contrario, guardamos las horas requeridas en una variable
@@ -258,15 +265,17 @@ const nuevaCita = (req, res) => {
 
                 //Si ocurre algun error mostramos un mensaje
                 if (error) {
-                    return connection.rollback(() => {
-                        res.status(500).json({ mensaje: "Error al ejecutar: " + queryManicuristaOcupada });
+                    connection.rollback(() => {
+                        
                     })
+                    return res.status(500).json({ mensaje: "Error al ejecutar: " + queryManicuristaOcupada });
                 }
 
                 if (results.length > 0) {
-                    return connection.rollback(() => {
-                        res.status(409).json({ mensaje: "La cita ya está reservada." });
+                    connection.rollback(() => {
+                        
                     })
+                    return res.status(409).json({ mensaje: "La cita ya está reservada." });
                 }
 
                 //Sentencia SQL para insertar una nueva cita
@@ -276,9 +285,10 @@ const nuevaCita = (req, res) => {
                 connection.query(insertNuevaCita, [idManicurista, idCliente, fecha, precio], (error, result) => {
                     //Si ocurre algun error mostramos un mensaje
                     if (error) {
-                        return connection.rollback(() => {
-                            res.status(500).json({ mensaje: "Error al ejecutar: " + insertNuevaCita });
+                        connection.rollback(() => {
+                            
                         })
+                        return res.status(500).json({ mensaje: "Error al ejecutar: " + insertNuevaCita });
                     }
 
                     const idNuevaCita = result.insertId
@@ -289,9 +299,10 @@ const nuevaCita = (req, res) => {
                     connection.query(queryIdsHorsReqs, (error, resultsIdsHoras) => {
                         //Si ocurre algun error mostramos un mensaje
                         if (error) {
-                            return connection.rollback(() => {
-                                res.status(500).json({ mensaje: "Error al ejecutar: " + queryIdsHorsReqs });
+                            connection.rollback(() => {
+                               
                             })
+                            return res.status(500).json({ mensaje: "Error al ejecutar: " + queryIdsHorsReqs });
                         }
 
                         //Preparamos la sentencia SQL para insertar los datos en la tabla citas_horas
@@ -310,9 +321,11 @@ const nuevaCita = (req, res) => {
                         connection.query(insertCitaHoras, paramsIdsHoras, (error, result) => {
                             //Si ocurre algun error mostramos un mensaje
                             if (error) {
-                                return connection.rollback(() => {
-                                    res.status(500).json({ mensaje: "Error al ejecutar: " + insertCitaHoras });
+                                connection.rollback(() => {
+
                                 })
+
+                                return res.status(500).json({ mensaje: "Error al ejecutar: " + insertCitaHoras });
                             }
 
                             //Preparamos la sentencia SQL para insertar los datos en la tabla citas_servicios
@@ -327,17 +340,19 @@ const nuevaCita = (req, res) => {
                             connection.query(insertCitaServicios, servicios, (error, result) => {
                                 //Si ocurre algun error mostramos un mensaje
                                 if (error) {
-                                    return connection.rollback(() => {
-                                        res.status(500).json({ mensaje: "Error al ejecutar: " + insertCitaServicios });
+                                    connection.rollback(() => {
                                     })
+                                    return res.status(500).json({ mensaje: "Error al ejecutar: " + insertCitaServicios });
+
                                 }
 
                                 // Si todo salió bien, confirmamos la transacción
                                 connection.commit((error) => {
                                     if (error) {
-                                        return connection.rollback(() => {
-                                            res.status(500).json({ mensaje: "Error al confirmar la transacción" });
+                                        connection.rollback(() => {
+
                                         });
+                                        return res.status(500).json({ mensaje: "Error al confirmar la transacción" });
                                     }
 
                                     res.status(201).json({ mensaje: "Cita registrada exitosamente. ID cita: " + idNuevaCita });

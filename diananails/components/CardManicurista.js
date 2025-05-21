@@ -14,6 +14,8 @@ export const CardManicurista = (props) => {
             borderColor: tema.primary,
             borderWidth: 2,
             borderRadius: 10,
+            width: wp(40),
+            flex: props.enVistaResumen ? 0 : 1
         },
         manicuristaImg: {
             width: "100%",
@@ -34,17 +36,27 @@ export const CardManicurista = (props) => {
         props.esLink ? (
             <View>
                 <Link href={props.href} asChild>
-                    <Pressable style={styles.contenedorManicurista}>
-                        <Image source={props.manicuristaImg} style={styles.manicuristaImg}></Image>
-                        <Text style={[props.fuenteTextoBold, styles.textTituloManicurista]}>{props.nombreManicurista}</Text>
+                    <Pressable
+                        style={styles.contenedorManicurista}
+                        onPress={props.onPress}
+                    >
+                        <Image source={{ uri: props.manicuristaImg }} style={styles.manicuristaImg}></Image>
+                        <View style={{ flex: 1, justifyContent: "center" }}>
+                            <Text style={[props.fuenteTextoBold, styles.textTituloManicurista]}>{props.nombreManicurista}</Text>
+                        </View>
                     </Pressable>
                 </Link>
             </View>
         ) : (
             <View>
-                <Pressable style={styles.contenedorManicurista}>
-                    <Image source={props.manicuristaImg} style={styles.manicuristaImg}></Image>
-                    <Text style={[props.fuenteTextoBold, styles.textTituloManicurista]}>{props.nombreManicurista}</Text>
+                <Pressable
+                    style={styles.contenedorManicurista}
+                    onPress={props.onPress}
+                >
+                    <Image source={{ uri: props.manicuristaImg }} style={styles.manicuristaImg}></Image>
+                    <View style={{ flex: 1, justifyContent: "center" }}>
+                        <Text style={[props.fuenteTextoBold, styles.textTituloManicurista]}>{props.nombreManicurista}</Text>
+                    </View>
                 </Pressable>
             </View>
         )

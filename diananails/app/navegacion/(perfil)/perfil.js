@@ -6,11 +6,6 @@ export default function Perfil() {
     return (
         <>
             <BarraSuperior mostrarCerrarSesion={true}/>
-            <Stack.Screen
-                options={{
-                    headerBackVisible: true,
-                }}
-            />
             <PerfilScreen />
         </>
 

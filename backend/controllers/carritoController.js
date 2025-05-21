@@ -95,7 +95,7 @@ const getCarritoProductos = (req, res) => {
 
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!idCarrito || !idCliente) {
-        return res.status(400).json({ mensaje: "Campos incompletos" })
+        return res.status(200).json({ mensaje: "Campos incompletos" })
     }
 
     //Obtenemos el subtotal del carrito
@@ -113,7 +113,7 @@ const getCarritoProductos = (req, res) => {
             return res.status(200).json({ mensaje: "No hay productos en el carrito" });
         } else {
             //De lo contrario, obtenemos todos los productos del carrito
-            const queryCarritoProductos = "SELECT cp.id_producto, p.nombre, cp.cantidad, ROUND(cp.cantidad*p.precio, 2) as totalPrecio FROM carritos_productos as cp, productos as p WHERE cp.id_producto = p.id AND cp.id_carrito = ?"
+            const queryCarritoProductos = "SELECT cp.id_producto, p.nombre, cp.cantidad, p.precio FROM carritos_productos as cp, productos as p WHERE cp.id_producto = p.id AND cp.id_carrito = ?"
             connection.query(queryCarritoProductos, [idCarrito], (error, results) => {
                 //Si ocurre algun error mostramos un mensaje
                 if (error) {
@@ -128,17 +128,15 @@ const getCarritoProductos = (req, res) => {
 
                 results.forEach(row => {
                     carritoProductos.carritoProductos.push({
-                        producto: {
                             id: row.id_producto,
                             nombre: row.nombre,
                             cantidad: row.cantidad,
                             totalPrecio: row.totalPrecio
-                        }
                     });
                 });
 
                 //Si todo salio bien, enviamos los datos
-                res.status(200).json(carritoProductos)
+                res.status(200).json(results)
 
             })
 

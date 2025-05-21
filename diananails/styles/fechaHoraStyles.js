@@ -13,6 +13,10 @@ export const fechaHoraStyles = (colors) => StyleSheet.create({
         gap: hp(2.5)
     },
     contenedorCalendarioPicker: {
-        marginHorizontal: wp(2),
+        marginHorizontal: 10,
+        borderColor: colors.primary,
+        borderWidth: 2,
+        borderRadius: 10,
+        overflow: "hidden"
     },
 });

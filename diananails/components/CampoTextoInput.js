@@ -5,7 +5,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Icono } from "./Icono";
 import { ContadorCantidadProducto } from "./ContadorCantidadProducto";
 import { useEffect, useState, useRef } from "react";
-import { validacionOnBlur } from "../validaciones/onBlurValidacion";
+//import { validacionOnBlur } from "../validaciones/onBlurValidacion";
 
 export const CampoTextoInput = (props) => {
 
@@ -15,7 +15,7 @@ export const CampoTextoInput = (props) => {
     const [errorOnBlur, setErrorOnBlur] = useState(null)
     const inputRef = useRef(null);
 
-    
+
 
     useEffect(() => {
 
@@ -57,9 +57,9 @@ export const CampoTextoInput = (props) => {
 
     const onBlur = () => {
         if (props.verificarContrasena) {
-            setErrorOnBlur(validacionOnBlur(props.nombreCampo, props.valorCampo, props.verificarContrasena))
+            setErrorOnBlur(props.onBlurValidacion(props.nombreCampo, props.valorCampo, props.verificarContrasena))
         } else {
-            setErrorOnBlur(validacionOnBlur(props.nombreCampo, props.valorCampo))
+            setErrorOnBlur(props.onBlurValidacion(props.nombreCampo, props.valorCampo))
         }
 
         if (errorOnBlur == 0) {
@@ -80,6 +80,7 @@ export const CampoTextoInput = (props) => {
             alignItems: 'center',
             padding: 10,
             height: hp(6),
+            opacity: props.deshabilitado ? 0.5 : 1
         },
         icono: {
             marginRight: 10,
@@ -107,10 +108,10 @@ export const CampoTextoInput = (props) => {
                 {props.conLabel &&
                     <Text style={[props.fuenteTextoLabel, styles.textLabel, props.labelCentrado && { textAlign: "center" }]}>{props.textLabel}</Text>
                 }
-                <View style={[styles.contenedorInputs, props.esTextArea && { height: 120, alignItems: "flex-start" }]}>
+                <View style={[styles.contenedorInputs, props.esTextArea && { height: "auto", minHeight: 120, alignItems: "flex-start" }]}>
                     <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} onPrimary={false} style={styles.icono} />
                     <TextInput
-                        style={[props.fuenteTexto, styles.textInput, props.esTextArea && { textAlignVertical: 'top' }]}
+                        style={[props.fuenteTexto, styles.textInput, props.esTextArea && { textAlignVertical: 'top', height: "auto", minHeight: 120 }]}
                         {...(props.esTextArea ? { multiline: true, numberOfLines: 6 } : {})}
                         placeholder={props.placeHolder}
                         placeholderTextColor={tema.secondary}
@@ -121,6 +122,7 @@ export const CampoTextoInput = (props) => {
                         }}
                         onBlur={onBlur}
                         ref={inputRef}
+                        editable={props.deshabilitado && false}
                     />
                 </View>
                 {mostrarError &&
@@ -135,21 +137,27 @@ export const CampoTextoInput = (props) => {
                 {props.esTiempoRequerido ?
                     <ContadorCantidadProducto esTiempoRequerido={true} />
                     :
-                    <View style={[styles.contenedorInputs, props.esTextArea && { height: 120, alignItems: "flex-start" }]}>
-                        <TextInput
-                            style={[props.fuenteTexto, styles.textInput, props.esTextArea && { textAlignVertical: 'top' }]}
-                            {...(props.esTextArea ? { multiline: true, numberOfLines: 6 } : {})}
-                            placeholder={props.placeHolder}
-                            placeholderTextColor={tema.secondary}
-                            secureTextEntry={props.contrasena}
-                            value={props.valorCampo}
-                            onChangeText={(text) => {
-                                props.onValueChange(props.nombreCampo, text)
-                            }}
-                            onBlur={onBlur}
-                            ref={inputRef}
-                        />
-                    </View>
+                    <>
+                        <View style={[styles.contenedorInputs, props.esTextArea && { height: "auto", minHeight: 120, alignItems: "flex-start" }]}>
+                            <TextInput
+                                style={[props.fuenteTexto, styles.textInput, props.esTextArea && { textAlignVertical: 'top', height: "auto", minHeight: 120 }]}
+                                {...(props.esTextArea ? { multiline: true, numberOfLines: 6 } : {})}
+                                placeholder={props.placeHolder}
+                                placeholderTextColor={tema.secondary}
+                                secureTextEntry={props.contrasena}
+                                value={props.valorCampo}
+                                onChangeText={(text) => {
+                                    props.onValueChange(props.nombreCampo, text)
+                                }}
+                                onBlur={onBlur}
+                                ref={inputRef}
+                                editable={props.deshabilitado && false}
+                            />
+                        </View>
+                        {mostrarError &&
+                            <Text style={[props.fuenteTexto, styles.textError]}>{errorOnBlur ? errorOnBlur : (props.errorValidacion && !errorOnBlur) && props.errorValidacion}</Text>
+                        }
+                    </>
                 }
 
             </View>

@@ -1,6 +1,42 @@
 import { regex, estaVacio } from "../utils/regexCamposUtils";
 
-export const validacionOnBlur = (campo, valor, confirmarContrasena="") => {
+export const validacionUpdateDatos = (valoresCampos) => {
+    const textCampoObligatorio = "Este campo es obligatorio"
+
+    const errores = {}
+
+    const camposObligatorios = [
+        "nombre",
+        "apellidos",
+        "telefono",
+        "direccionEnvio"
+    ];
+
+    camposObligatorios.forEach((campo) => {
+        if (estaVacio(valoresCampos[campo])) {
+            errores[campo] = textCampoObligatorio;
+        }
+    });
+
+    if (!estaVacio(valoresCampos.nombre) && !regex.nombre.test(valoresCampos.nombre)) {
+        errores.nombre = "Nombre invalido, solo caracteres albaticos y 50 como maximo"
+    }
+    if (!estaVacio(valoresCampos.apellidos) && !regex.apellidos.test(valoresCampos.apellidos)) {
+        errores.apellidos = "Apellidos invalidos, solo caracteres albaticos y 100 como maximo"
+    }
+    if (!estaVacio(valoresCampos.telefono) && !regex.telefono.test(valoresCampos.telefono)) {
+        errores.telefono = "Telefono invalido, solo numeros telefonicos de España"
+    }
+    if (!estaVacio(valoresCampos.direccionEnvio) && !regex.direccionEnvio.test(valoresCampos.direccionEnvio)) {
+        errores.direccionEnvio = "Direccion de envio invalida, solo caracteres alfanumericos"
+    }
+
+    return errores
+
+
+}
+
+export const updateDatosValidacionOnBlur = (campo, valor) => {
 
     const textCampoObligatorio = "Este campo es obligatorio"
 
@@ -51,41 +87,7 @@ export const validacionOnBlur = (campo, valor, confirmarContrasena="") => {
                 }
             }
             break;
-        case "email":
-            if (estaVacio(valor)) {
-                error = textCampoObligatorio;
-            } else {
-                if (!regex.email.test(valor)) {
-                    error = "Email invalido"
-                } else {
-                    error = 0
-                }
-            }
-            break;
-        case "contrasena":
-            if (estaVacio(valor)) {
-                error = textCampoObligatorio;
-            } else {
-                if (!regex.contrasena.test(valor)) {
-                    error = "Contraseña invalida, minimo 6 caracteres, una letra mayuscula y caracterer especial"
-                } else {
-                    error = 0
-                }
-            }
-            break;
-        case "confirmarContrasena":
-            if (estaVacio(valor)) {
-                error = textCampoObligatorio;
-            } else {
-                if(valor != confirmarContrasena) {
-                    error = "Las contraseñas no coinciden"
-                } else {
-                    error = 0
-                }
-                
-            }
-            break;
     }
-
+    
     return error
 }

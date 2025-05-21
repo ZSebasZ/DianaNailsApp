@@ -1,4 +1,4 @@
-import { View, useColorScheme } from "react-native";
+import { View, useColorScheme, FlatList, ScrollView } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
@@ -9,12 +9,18 @@ import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
 import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerServicios";
 import { BarraResumen } from "../components/BarraResumen";
 import { ListaDropdown } from "../components/ListaDropdown";
-
+import { useContext, useEffect, useState } from "react";
+import { AgendarCitaContext } from "../contexts/agendarCitaContext";
+import { BotonTexto } from "../components/BotonTexto";
+import { obtenerHorasManicuristasDisponibles } from "../api/AgendarCitaController";
+import { AuthContext } from "../contexts/authContext";
 
 //Pantalla de Login
 export const FechaHoraCitaScreen = () => {
 
-    const insets = useSafeAreaInsets();
+    const { usuario } = useContext(AuthContext)
+    const { serviciosSeleccionados, subtotal, fecha, seleccionarFecha, hora, manicuristas, seleccionarHora, resetHoraManicuristas } = useContext(AgendarCitaContext)
+
 
     const items = [
         { label: 'Javaaa', value: 'java' },
@@ -27,21 +33,80 @@ export const FechaHoraCitaScreen = () => {
         { label: 'Rubyyyy', value: 'rubyYYYY' },
     ];
 
-
     const fuenteTexto = fuenteTextoStyles();
     //Estilos
     const styles = useThemedStyles(fechaHoraStyles);
-    const colors = useThemedStyles();
-    //Detectamos el tema del sistema para saber que solo mostrar
-    const colorScheme = useColorScheme();
-    const logo = colorScheme === 'dark'
-        ? require('./../assets/images/logoDark.png')
-        : require('./../assets/images/logoLight.png');
+    const tema = useThemedStyles()
+
+    const [horasManicuristas, setHorasManicuristas] = useState()
+
+    const diaSeleccionado = async (dia) => {
+        const fecha = new Date(dia.dateString);
+        const diaSemana = fecha.getDay(); // 0: Domingo, 6: Sábado
+
+        /*
+        if (diaSemana === 0 || diaSemana === 6) {
+            return;
+        }
+        */
+        // day.dateString tiene la fecha en formato 'YYYY-MM-DD'
+        //console.log('Fecha seleccionada:', dia.dateString);
+        //setFechaSeleccionada(day.dateString);
+        seleccionarFecha(dia.dateString)
+    };
+
+    useEffect(() => {
+        if (fecha != null) {
+            const cargarHoras = async () => {
+                const idsServicios = serviciosSeleccionados.map(servicio => servicio.id);
+                const respuesta = await obtenerHorasManicuristasDisponibles({ idCliente: usuario.datosUsuario.id, fecha: fecha, servicios: idsServicios }) // esto ya es el array correcto
+                setHorasManicuristas(Object.values(respuesta));
+                //console.log(respuesta)
+            };
+
+            cargarHoras();
+            resetHoraManicuristas()
+        }
+    }, [fecha])
+
+    useEffect(() => {
+        if (fecha == null) {
+            seleccionarFecha(obtenerFechaActual())
+        }
+    }, [])
+
+
+    const obtenerFechaActual = () => {
+        const hoy = new Date();
+        const yyyy = hoy.getFullYear();
+        const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+        const dd = String(hoy.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    };
+
+
+    const hoy = new Date();
+
+    const yyyy = hoy.getFullYear();
+    const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+    const dd = String(hoy.getDate()).padStart(2, '0');
+
+    const fechaMin = `${yyyy}-${mm}-${dd}`; // hoy
+
+    // Fecha max 30 días después
+    const fechaMaxDate = new Date(hoy);
+    fechaMaxDate.setDate(hoy.getDate() + 30);
+
+    const yyyyMax = fechaMaxDate.getFullYear();
+    const mmMax = String(fechaMaxDate.getMonth() + 1).padStart(2, '0');
+    const ddMax = String(fechaMaxDate.getDate()).padStart(2, '0');
+
+    const fechaMax = `${yyyyMax}-${mmMax}-${ddMax}`;
 
     return (
         <Screen enTab={true}>
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                <View>
+                <ScrollView showsVerticalScrollIndicator={false}>
                     <SeccionEnTab
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
@@ -49,7 +114,24 @@ export const FechaHoraCitaScreen = () => {
                         textInfo1={"Selecciona la fecha de la cita"}
                     />
                     <View style={styles.contenedorCalendarioPicker}>
-                        <Calendar/>
+                        <Calendar
+                            minDate={fechaMin}
+                            maxDate={fechaMax}
+                            onDayPress={diaSeleccionado}
+                            theme={{
+                                arrowColor: tema.primary,
+                                textSectionTitleColor: tema.primary,
+                                todayTextColor: tema.primary,
+                                monthTextColor: tema.primary,
+                                selectedDayTextColor: tema.onPrimary,
+                                selectedDayBackgroundColor: tema.primary
+                            }}
+                            markedDates={{
+                                [fecha]: {
+                                    selected: true,
+                                },
+                            }}
+                        />
                     </View>
                     <SeccionEnTab
                         fuenteTextoBold={fuenteTexto.gantariBold}
@@ -57,18 +139,45 @@ export const FechaHoraCitaScreen = () => {
                         tituloSeccion={"Hora"}
                         textInfo1={"Selecciona la hora de la cita"}
                     />
-                    <ListaDropdown
+                    <FlatList
+                        data={horasManicuristas}
+                        numColumns={4}
+
+                        contentContainerStyle={{
+                            gap: 20,
+                            marginBottom: 80,
+                        }}
+                        columnWrapperStyle={{
+                            justifyContent: "center",
+                            gap: 20
+                        }}
+                        renderItem={({ item }) =>
+                            <BotonTexto
+                                botonNavegacion={true}
+                                esLink={false}
+                                fondo={hora.idHora === item.idHora}
+                                fuenteTexto={fuenteTexto.gantariRegular}
+                                textoBoton={item.hora}
+                                onPress={() => seleccionarHora(item, item.manicuristas)}
+                            />
+                        }
+                        scrollEnabled={false}
+
+                    ></FlatList>
+                    {/*<ListaDropdown
                         items={items}
                         fuenteTexto={fuenteTexto.gantariRegular}
-                    />
-                </View>
+                    />*/}
+                </ScrollView>
             </View>
             <BotonesCancelarVerServicios />
             <BarraResumen
                 botonVolver={true}
                 hrefAtras={"../"}
                 botonSiguiente={true}
-                hrefSiguiente={"./elegirManicuristaMetodoPago"}
+                btnSiguienteDeshabilitado={hora.hora == null ? true : false}
+                subtotal={subtotal}
+                hrefSiguiente={"/navegacion/(tabs-cliente)/(agendarCita)/(screens)/elegirManicuristaMetodoPago"}
             />
         </Screen>
     );

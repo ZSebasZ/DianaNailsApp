@@ -18,11 +18,49 @@ const getCitasCliente = (req, res) => {
     const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
     //Obtenemos todas las citas del cliente, a partir de la fecha y hora actuales
-    const getCitasCliente = `SELECT c.id_cliente, c.id AS id_cita, c.fecha AS fecha_cita, c.precio, s.nombre, (SELECT h.hora FROM citas_horas AS ch, horas AS h WHERE ch.id_cita = c.id AND h.id = ch.id_hora LIMIT 1) AS horaInicio, (SELECT h2.hora FROM citas_horas AS ch, horas AS h, horas AS h2 WHERE ch.id_hora = h.id AND h2.id = h.id + 1 AND ch.id_cita = c.id ORDER BY ch.id_hora DESC LIMIT 1) AS horaFin FROM citas AS c, citas_servicios AS cs, servicios AS s WHERE cs.id_servicio = s.id AND c.id = cs.id_cita AND c.id_cliente = ${idCliente} AND c.id IN (SELECT id FROM (SELECT id FROM citas WHERE id_cliente = ${idCliente} AND fecha >= '${fechaActual}') AS maxFilas) AND (c.fecha > '${fechaActual}' OR (c.fecha = '${fechaActual}' AND (SELECT h.hora FROM citas_horas AS ch, horas AS h WHERE ch.id_cita = c.id AND h.id = ch.id_hora LIMIT 1) > '${horaActual}')) ORDER BY c.fecha ASC, horaInicio ASC;`
+    const getCitasCliente = `SELECT
+                                c.id_cliente,
+                                c.id AS id_cita,
+                                c.fecha AS fecha_cita,
+                                c.precio,
+                                s.nombre,
+                                CONCAT(u.nombre, ' ', u.apellidos) AS manicurista,
+                                u.url_imagen AS manicuristaImg,
+                                h_inicio.hora AS horaInicio,
+                                h_fin.hora AS horaFin
+                            FROM citas c
+                            JOIN citas_servicios cs ON c.id = cs.id_cita
+                            JOIN servicios s ON cs.id_servicio = s.id
+                            JOIN manicuristas m ON c.id_manicurista = m.id
+                            JOIN usuarios u ON m.id = u.id
+                            LEFT JOIN (
+                                SELECT ch.id_cita, MIN(h.hora) AS hora
+                                FROM citas_horas ch
+                                JOIN horas h ON ch.id_hora = h.id
+                                GROUP BY ch.id_cita
+                            ) h_inicio ON h_inicio.id_cita = c.id
+                            LEFT JOIN (
+                                SELECT ch.id_cita, MAX(h2.hora) AS hora
+                                FROM citas_horas ch
+                                JOIN horas h ON ch.id_hora = h.id
+                                JOIN horas h2 ON h2.id = h.id + 1
+                                GROUP BY ch.id_cita
+                            ) h_fin ON h_fin.id_cita = c.id
+                            WHERE
+                                c.id_cliente = ${idCliente}
+                                AND (
+                                    c.fecha > '${fechaActual}' OR (
+                                        c.fecha = '${fechaActual}' AND h_inicio.hora > '${horaActual}'
+                                    )
+                                )
+                            ORDER BY
+                                c.fecha ASC,
+                                h_inicio.hora ASC;
+`
     connection.query(getCitasCliente, (error, results) => {
         //Si ocurre algun error en la actualizacion, mostramos un mensaje
         if (error) {
-            return res.status(500).json({ mensaje: "Error al obtener las citas" });
+            return res.status(500).json({ mensaje: error });
         }
 
         //Formamos el JSON que vamos a enviar
@@ -42,7 +80,9 @@ const getCitasCliente = (req, res) => {
                             precio: row.precio,
                             servicios: [row.nombre],
                             horaInicio: row.horaInicio,
-                            horaFin: row.horaFin
+                            horaFin: row.horaFin,
+                            manicurista: row.manicurista,
+                            manicuristaImg: row.manicuristaImg
                         }
                     });
                     citaAnterior = row.id_cita;

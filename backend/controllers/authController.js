@@ -55,11 +55,11 @@ const login = (req, res) => {
                             tipoUsuario: tipoUsuario,
                             usuario: {
                                 id: usuario.id,
-                                url_umagen: usuario.url_imagen,
+                                url_imagen: usuario.url_imagen,
                                 nombre: usuario.nombre,
                                 apellidos: usuario.apellidos,
                                 telefono: usuario.telefono,
-                                //email: usuario.email,
+                                email: usuario.email,
                             }
                         })
                         break;
@@ -82,7 +82,7 @@ const login = (req, res) => {
                                     nombre: usuario.nombre,
                                     apellidos: usuario.apellidos,
                                     telefono: usuario.telefono,
-                                    //email: usuario.email,
+                                    email: usuario.email,
                                     dni: results[0].dni,
                                 }
                             })
@@ -103,7 +103,7 @@ const login = (req, res) => {
                                 tipoUsuario: tipoUsuario,
                                 usuario: {
                                     id: usuario.id,
-                                    url_umagen: usuario.url_imagen,
+                                    url_imagen: usuario.url_imagen,
                                     nombre: usuario.nombre,
                                     apellidos: usuario.apellidos,
                                     telefono: usuario.telefono,

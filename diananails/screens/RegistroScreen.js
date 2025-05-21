@@ -7,7 +7,7 @@ import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
 import { ContenedorInputs } from "../components/ContenedorInputs";
 import { CampoTextoInput } from "../components/CampoTextoInput";
 import { BotonTexto } from "../components/BotonTexto";
-import { validacionRegistro } from "../validaciones/registroValidacion";
+import { validacionRegistro, registroValidacionOnBlur } from "../validaciones/registroValidacion";
 import { useEffect, useState } from "react";
 import { registroCliente } from "../api/AuthController";
 import { Colors } from "react-native/Libraries/NewAppScreen";
@@ -80,6 +80,10 @@ export const RegistroScreen = () => {
             />
 
             <ModalFeedback
+                titulo={"Registro completado"}
+                feedback={"Te ha registrado con exito, ahora inicia sesion"}
+                navegacion={true}
+                href={"../"}
                 visible={modalFeedbackVisible}
                 fuenteTexto={fuenteTexto.gantariBold}
                 cerrar={() => setModalFeedbackVisible(false)}
@@ -101,6 +105,7 @@ export const RegistroScreen = () => {
                                 valorCampo={valoresCampos.nombre}
                                 onValueChange={onValueChange}
                                 errorValidacion={errores.nombre}
+                                onBlurValidacion={registroValidacionOnBlur}
                             />
                             <CampoTextoInput
                                 conIcono={true}
@@ -112,6 +117,7 @@ export const RegistroScreen = () => {
                                 valorCampo={valoresCampos.apellidos}
                                 onValueChange={onValueChange}
                                 errorValidacion={errores.apellidos}
+                                onBlurValidacion={registroValidacionOnBlur}
                             />
                             <CampoTextoInput
                                 conIcono={true}
@@ -123,6 +129,7 @@ export const RegistroScreen = () => {
                                 valorCampo={valoresCampos.telefono}
                                 onValueChange={onValueChange}
                                 errorValidacion={errores.telefono}
+                                onBlurValidacion={registroValidacionOnBlur}
                             />
                             <CampoTextoInput
                                 conIcono={true}
@@ -134,6 +141,7 @@ export const RegistroScreen = () => {
                                 valorCampo={valoresCampos.direccionEnvio}
                                 onValueChange={onValueChange}
                                 errorValidacion={errores.direccionEnvio}
+                                onBlurValidacion={registroValidacionOnBlur}
                             />
                             <CampoTextoInput
                                 conIcono={true}
@@ -145,6 +153,7 @@ export const RegistroScreen = () => {
                                 valorCampo={valoresCampos.email}
                                 onValueChange={onValueChange}
                                 errorValidacion={errores.email}
+                                onBlurValidacion={registroValidacionOnBlur}
                             />
                             <CampoTextoInput
                                 conIcono={true}
@@ -156,6 +165,7 @@ export const RegistroScreen = () => {
                                 valorCampo={valoresCampos.contrasena}
                                 onValueChange={onValueChange}
                                 errorValidacion={errores.contrasena}
+                                onBlurValidacion={registroValidacionOnBlur}
                             />
                             <CampoTextoInput
                                 conIcono={true}
@@ -168,6 +178,7 @@ export const RegistroScreen = () => {
                                 onValueChange={onValueChange}
                                 errorValidacion={errores.confirmarContrasena}
                                 verificarContrasena={valoresCampos.contrasena}
+                                onBlurValidacion={registroValidacionOnBlur}
                             />
                         </ContenedorInputs>
                         <View style={styles.contenedorBotones}>

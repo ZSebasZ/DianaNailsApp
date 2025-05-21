@@ -10,18 +10,43 @@ import { ThemeContext } from "../contexts/themeContext";
 import { ContenedorInputs } from "../components/ContenedorInputs";
 import { CampoTextoInput } from "../components/CampoTextoInput";
 import { BotonTexto } from "../components/BotonTexto";
-import { validacionLogin } from "../validaciones/loginValidacion";
+import { validacionLogin, loginValidacionOnBlur } from "../validaciones/loginValidacion";
 import { loginCliente } from "../api/AuthController";
 import { ModalLoader } from "../components/ModalLoader";
 import { ModalFeedback } from "../components/ModalFeedback";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthContext } from "../contexts/authContext";
 
 //Pantalla de Login
 export const LoginScreen = () => {
 
-    useEffect(() => {
+    const {login} = useContext(AuthContext)
 
-    }, [])
+    useEffect(() => {
+        const verificarSesion = async () => {
+            try {
+                const email = await AsyncStorage.getItem("email");
+                const contrasena = await AsyncStorage.getItem("contrasena");
+
+
+
+                if (email && contrasena) {
+                    //const respuesta = await loginCliente({ email, contrasena });
+                    login({ email, contrasena })
+                    //console.log("Inicio de sesión exitoso:", respuesta);
+                    setCredencialesIncorrectas(false);
+                    router.replace("/navegacion/(tabs-cliente)/(agendarCita)/");
+                } else {
+                    console.log("No hay datos guardados para email o contraseña");
+                }
+            } catch (error) {
+                console.log("Error al verificar la sesión:", error);
+            }
+        };
+
+        verificarSesion();
+    }, []);
+
 
 
     //Estilos
@@ -34,7 +59,7 @@ export const LoginScreen = () => {
         email: "prueba@gmail.com",
         contrasena: "Abc123."
     })
-
+    
     const [errores, setErrores] = useState({})
     const [credencialesIncorrectas, setCredencialesIncorrectas] = useState(false)
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
@@ -51,16 +76,12 @@ export const LoginScreen = () => {
         if (Object.keys(validacionErrores).length == 0) {
             try {
                 setModalLoaderVisible(true)
+                login(valoresCampos)
 
-                const respuesta = await loginCliente(valoresCampos)
-                console.log("Inicio de sesion exitoso:", respuesta)
-
-                await AsyncStorage.setItem('tipoUsuario', respuesta.tipoUsuario)
-                await AsyncStorage.setItem('email', valoresCampos.email)
-                await AsyncStorage.setItem('contrasena', valoresCampos.contrasena)
 
                 setCredencialesIncorrectas(false)
-                router.replace("/(tabs-cliente)/(agendarCita)/")
+                router.push("/navegacion/(tabs-cliente)/(agendarCita)/")
+                
             } catch (error) {
                 const mensajeError = error.response?.data?.mensaje || 'Ocurrió un error inesperado';
                 console.log(mensajeError)
@@ -102,6 +123,7 @@ export const LoginScreen = () => {
                             valorCampo={valoresCampos.email}
                             onValueChange={onValueChange}
                             errorValidacion={errores.email}
+                            onBlurValidacion={loginValidacionOnBlur}
                         />
                         <CampoTextoInput
                             conIcono={true}
@@ -113,6 +135,7 @@ export const LoginScreen = () => {
                             valorCampo={valoresCampos.contrasena}
                             onValueChange={onValueChange}
                             errorValidacion={errores.contrasena}
+                            onBlurValidacion={loginValidacionOnBlur}
                         />
                         {credencialesIncorrectas && (
                             <Text style={styles.credencialesIncorrectas}>Credenciales incorrectas, intentelo de nuevo</Text>

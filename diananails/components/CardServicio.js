@@ -36,24 +36,48 @@ export const CardServicio = (props) => {
 
     })
 
+    const calcularTiempoRequerido = (lapsos) => {
+        const totalMinutos = lapsos * 15;
+        const horas = Math.floor(totalMinutos / 60);
+        const minutos = totalMinutos % 60;
+
+        let resultado = "";
+        if (horas > 0) {
+            resultado += `${horas} hora${horas > 1 ? "s" : ""}`;
+        }
+        if (minutos > 0) {
+            if (horas > 0) resultado += " y ";
+            resultado += `${minutos} minuto${minutos > 1 ? "s" : ""}`;
+        }
+
+        return resultado || "0 minutos";
+    };
+
+
+    //console.log(props.servicio)
+
     return (
         props.esLink ? (
             <Link href={props.href} asChild style={[styles.contenedorServicio]}>
-                <Pressable>
-                    <Text style={[props.fuenteTextoBold, styles.textTituloServicio]}>{props.tituloServicio}</Text>
+                <Pressable
+                    onPress={props.onPress}
+                >
+                    <Text style={[props.fuenteTextoBold, styles.textTituloServicio]}>{props.servicio.nombre}</Text>
                     <Text style={[props.fuenteTextoBold, styles.textTituloInfo]}>Tiempo requerido</Text>
-                    <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{props.tiempoServicio}</Text>
+                    <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{calcularTiempoRequerido(props.servicio.horas_requeridas)}</Text>
                     <Text style={[props.fuenteTextoBold, styles.textTituloInfo]}>Precio</Text>
-                    <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{props.precioServicio}</Text>
+                    <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{props.servicio.precio} €</Text>
                 </Pressable>
             </Link>
         ) : (
-            <Pressable style={[styles.contenedorServicio]}>
-                <Text style={[props.fuenteTextoBold, styles.textTituloServicio]}>{props.tituloServicio}</Text>
+            <Pressable style={[styles.contenedorServicio]}
+                onPress={props.onPress}
+            >
+                <Text style={[props.fuenteTextoBold, styles.textTituloServicio]}>{props.servicio.nombre}</Text>
                 <Text style={[props.fuenteTextoBold, styles.textTituloInfo]}>Tiempo requerido</Text>
-                <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{props.tiempoServicio}</Text>
+                <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{calcularTiempoRequerido(props.servicio.horas_requeridas)}</Text>
                 <Text style={[props.fuenteTextoBold, styles.textTituloInfo]}>Precio</Text>
-                <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{props.precioServicio}</Text>
+                <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{props.servicio.precio} €</Text>
             </Pressable>
         )
     )

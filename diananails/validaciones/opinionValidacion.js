@@ -1,13 +1,13 @@
 import { regex, estaVacio } from "../utils/regexCamposUtils";
 
-export const validacionLogin = (valoresCampos) => {
+export const validacionOpinion = (valoresCampos) => {
     const textCampoObligatorio = "Este campo es obligatorio"
 
     const errores = {}
 
     const camposObligatorios = [
-        "email",
-        "contrasena"
+        "titulo",
+        "descripcion"
     ];
 
     camposObligatorios.forEach((campo) => {
@@ -16,41 +16,41 @@ export const validacionLogin = (valoresCampos) => {
         }
     });
 
-    if (!estaVacio(valoresCampos.email) && !regex.email.test(valoresCampos.email)) {
-        errores.email = "Email invalido"
+    if (!estaVacio(valoresCampos.titulo) && !regex.tituloOpinion.test(valoresCampos.titulo)) {
+        errores.titulo = "Titulo invalido, solo caracteres alfabeticos y maximo 50"
     }
-    if (!estaVacio(valoresCampos.contrasena) && !regex.contrasena.test(valoresCampos.contrasena)) {
-        errores.contrasena = "Contraseña invalida, minimo 6 caracteres, una letra mayuscula y caracterer especial"
+    if (!estaVacio(valoresCampos.descripcion) && !regex.descripcionOpinion.test(valoresCampos.descripcion)) {
+        errores.descripcion = "Descripcion invalida, maximo 500 caracteres"
     }
 
     return errores
 
 }
 
-export const loginValidacionOnBlur = (campo, valor) => {
+export const opinionValidacionOnBlur = (campo, valor) => {
 
     const textCampoObligatorio = "Este campo es obligatorio"
 
     let error = null
 
     switch (campo) {
-        case "email":
+        case "titulo":
             if (estaVacio(valor)) {
                 error = textCampoObligatorio;
             } else {
-                if (!regex.email.test(valor)) {
-                    error = "Email invalido"
+                if (!regex.tituloOpinion.test(valor)) {
+                    error = "Titulo invalido, solo caracteres alfabeticos y maximo 50"
                 } else {
                     error = 0
                 }
             }
             break;
-        case "contrasena":
+        case "descripcion":
             if (estaVacio(valor)) {
                 error = textCampoObligatorio;
             } else {
-                if (!regex.contrasena.test(valor)) {
-                    error = "Contraseña invalida, minimo 6 caracteres, una letra mayuscula y caracterer especial"
+                if (!regex.descripcionOpinion.test(valor)) {
+                    error = "Descripcion invalida, maximo 500 caracteres"
                 } else {
                     error = 0
                 }

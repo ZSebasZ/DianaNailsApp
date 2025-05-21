@@ -37,7 +37,7 @@ router.delete("/delete-carrito-producto", deleteCarritoProducto)
 */
 
 //Creamos la ruta que OBTIENE todos los PRODUCTOS del CARRITO de un CLIENTE
-router.get("/get-carrito-productos", getCarritoProductos)
+router.post("/get-carrito-productos", getCarritoProductos)
 //JSON DE PRUEBA
 /*
     {

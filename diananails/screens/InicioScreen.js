@@ -12,30 +12,39 @@ import { ThemeContext } from "../contexts/themeContext";
 import { BotonIcono } from '../components/BotonIcono';
 import { useEffect } from 'react';
 import { fetchFromApi } from '../api/ApiService';
+import { BackHandler } from 'react-native';
+import { useRootNavigationState } from "expo-router";
 
 //Pantalla de bienvenida a la aplicacion
 export const InicioScreen = () => {
+
+    const rootState = useRootNavigationState();
+
+    useEffect(() => {
+        const onBackPress = () => {
+            if (!rootState) return false;
+
+            const currentRoute = rootState.routes[rootState.index];
+
+            // Ajusta esto según tu ruta real
+            if (currentRoute.name === "index") {
+                BackHandler.exitApp(); // salir de la app
+                return true;
+            }
+
+            return false; // permite navegación normal hacia atrás
+        };
+
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+        return () => backHandler.remove();
+    }, [rootState]);
 
     //Estilos
     const styles = useThemedStyles(inicioStyles);
     const fuenteTexto = fuenteTextoStyles();
 
     const tema = useContext(ThemeContext); // Acceder al contexto
-
-    /*
-    useEffect(() => {
-        // Función async para llamar a la API
-        const cargarUsuario = async () => {
-            try {
-                const data = await fetchFromApi('get-servicios'); // llamamos tu función
-                console.log(data)
-            } catch (err) {
-                setError('No se pudo cargar el usuario');
-            }
-        };
-        cargarUsuario();
-    }, []);
-    */
 
     //Devolvemos la vista de la pantalla de bienvenida
     return (
@@ -53,7 +62,7 @@ export const InicioScreen = () => {
                 <View style={styles.contenedorBotones}>
                     <BotonIconoTexto
                         esLink={true}
-                        href={"/login" /*"/(auth)/login"*/}
+                        href={"./navegacion/(auth)/login" /*"/(auth)/login"*/}
                         nombreIcono={"account"}
                         fondo={true}
                         fuenteTexto={fuenteTexto.caveatBold}

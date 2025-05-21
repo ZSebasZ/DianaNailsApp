@@ -7,7 +7,10 @@ import { BotonTexto } from "./BotonTexto";
 
 
 export const CardProducto = (props) => {
+    
     const tema = useThemedStyles()
+
+    const productoImgDefault = require("./../assets/images/producto.png");
 
     const styles = StyleSheet.create({
         contenedorProducto: {
@@ -41,32 +44,49 @@ export const CardProducto = (props) => {
         },
         contenedorBotonAccionProducto: {
             flex: 1,
-            justifyContent: "center",
+            justifyContent: "flex-end",
         },
     })
+
+    function formatearPrecio(num) {
+        // Formatear con dos decimales fijos
+        let precio = num.toFixed(2);
+
+        // Separar parte entera y decimal
+        let [entero, decimal] = precio.split('.');
+
+        // Asegurar que la parte entera tenga al menos dos dígitos
+        if (entero.length < 2) {
+            entero = '0' + entero;
+        }
+
+        return `${entero}.${decimal}`;
+    }
 
     return (
         <View>
             <Link href={props.href} asChild>
                 <Pressable style={styles.contenedorProducto}>
-                    <Image source={props.productoImg} style={styles.productoImg}></Image>
+                    <Image source={ props.productoImg ? {uri: productoImg} : productoImgDefault} style={styles.productoImg}></Image>
                     <View style={styles.contenedorInfoProducto}>
-                        <Text style={[props.fuenteTextoBold, styles.textTituloProducto]}>Lima grano 5</Text>
-                        <Text style={[props.fuenteTextoRegular, styles.textPrecioProducto]}>12.99 $</Text>
+                        <Text style={[props.fuenteTextoBold, styles.textTituloProducto]}>{props.nombre}</Text>
+                        <Text style={[props.fuenteTextoRegular, styles.textPrecioProducto]}>{formatearPrecio(props.precio)} €</Text>
 
                         <View style={styles.contenedorBotonAccionProducto}>
                             <BotonTexto
                                 botonNavegacion={true}
                                 esLink={false}
                                 fondo={true}
-                                enCarrito={props.enCarrito == null ? false : true}
-                                agotado={props.agotado == null ? false : true}
+                                deshabilitado={props.enCarrito != 0 || props.agotado != 0}
+                                enCarrito={props.enCarrito == 0 ? false : true}
+                                agotado={props.agotado == 0 ? false : true}
                                 fuenteTexto={props.fuenteTextoBold}
                                 textoBoton={
-                                    props.enCarrito != null || props.agotado != null
-                                        ? (props.agotado != null ? "Agotado" : "Producto en carrito")
+                                    props.enCarrito != 0 || props.agotado != 0
+                                        ? (props.agotado != 0 ? "Agotado" : "Producto en carrito")
                                         : "Añadir"
                                 }
+                                onPress={props.onAnadir}
                             />
                         </View>
                     </View>

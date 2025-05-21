@@ -5,6 +5,7 @@ import { useThemedStyles } from '../../../../hooks/useThemeStyles';
 import { tabsMainLabelStyles } from "../../../../styles/tabsMainLabelStyles";
 import { LogoTopBar } from '../../../../components/LogoTopBar';
 import { Pressable } from 'react-native';
+import { AgendarCitaProvider } from '../../../../contexts/agendarCitaContext';
 
 export default function AgendarCitaLayout() {
 
@@ -12,7 +13,7 @@ export default function AgendarCitaLayout() {
   const colors = useThemedStyles();
 
   return (
-    <>
+    <AgendarCitaProvider>
       <Stack
         screenOptions={{
           statusBarStyle: "auto",
@@ -38,6 +39,6 @@ export default function AgendarCitaLayout() {
           )
         }}
       />
-    </>
+    </AgendarCitaProvider>
   )
 }

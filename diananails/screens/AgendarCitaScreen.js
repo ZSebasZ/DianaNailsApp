@@ -1,4 +1,4 @@
-import { View, useColorScheme, ScrollView } from "react-native";
+import { View, useColorScheme, ScrollView, FlatList } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
@@ -8,25 +8,68 @@ import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
 import { CardServicio } from "../components/CardServicio";
 import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerServicios";
 import { BarraResumen } from "../components/BarraResumen";
+import { useContext, useEffect, useState } from 'react';
+import { fetchFromApi } from '../api/ApiService';
+import { BackHandler } from 'react-native';
+import { router } from "expo-router";
+import { useRootNavigationState } from "expo-router";
+import { obtenerServicios } from "../api/ServiciosController";
+import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 
 //Pantalla de Login
 export const AgendarCitaScreen = () => {
 
-    const insets = useSafeAreaInsets();
+    const rootState = useRootNavigationState();
+
+    useEffect(() => {
+        const onBackPress = () => {
+            if (!rootState) return false;
+
+            const currentRoute = rootState.routes[rootState.index];
+
+            // Ajusta esto según tu ruta real
+            if (currentRoute.name === "navegacion/(tabs-cliente)") {
+                BackHandler.exitApp(); // salir de la app
+                return true;
+            }
+
+            return false; // permite navegación normal hacia atrás
+        };
+
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+        return () => backHandler.remove();
+    }, [rootState]);
+
+    const { serviciosSeleccionados, alternarSeleccionServicio, fecha, resetHoraManicuristas, subtotal } = useContext(AgendarCitaContext)
 
     const fuenteTexto = fuenteTextoStyles();
     //Estilos
     const styles = useThemedStyles(agendarCitaStyles);
-    const colors = useThemedStyles();
-    //Detectamos el tema del sistema para saber que solo mostrar
-    const colorScheme = useColorScheme();
-    const logo = colorScheme === 'dark'
-        ? require('./../assets/images/logoDark.png')
-        : require('./../assets/images/logoLight.png');
+
+    const [servicios, setServicios] = useState()
+
+    useEffect(() => {
+        const cargarServicios = async () => {
+            const respuesta = await obtenerServicios(); // esto ya es el array correcto
+            setServicios(respuesta);
+        };
+
+        cargarServicios();
+    }, [])
+
+    useEffect(() => {
+        if(fecha != null) {
+            resetHoraManicuristas()
+        }
+    }, [serviciosSeleccionados])
+
+
 
     return (
         <Screen enTab={true}>
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
+
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <SeccionEnTab
                         fuenteTextoBold={fuenteTexto.gantariBold}
@@ -35,104 +78,42 @@ export const AgendarCitaScreen = () => {
                         textInfo1={"Selecciona los servicios deseados"}
                         textInfo2={"3 como máximo"}
                     />
-                    <View style={styles.contenedorServicios}>
-                        <CardServicio
-                            esLink={true}
-                            href={""}
-                            estaSeleccionado={false}
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            tituloServicio={"Pedicura completa con decoración"}
-                            tiempoServicio={"1 hora y 45 minutos"}
-                            precioServicio={"12.00 $"}
-                        />
-                        <CardServicio
-                            esLink={true}
-                            href={""}
-                            estaSeleccionado={false}
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            tituloServicio={"Pedicura completa con decoración"}
-                            tiempoServicio={"1 hora y 45 minutos"}
-                            precioServicio={"12.00 $"}
-                        />
-                        <CardServicio
-                            esLink={true}
-                            href={""}
-                            estaSeleccionado={false}
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            tituloServicio={"Pedicura completa con decoración"}
-                            tiempoServicio={"1 hora y 45 minutos"}
-                            precioServicio={"12.00 $"}
-                        />
-                        <CardServicio
-                            esLink={true}
-                            href={""}
-                            estaSeleccionado={false}
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            tituloServicio={"Pedicura completa con decoración"}
-                            tiempoServicio={"1 hora y 45 minutos"}
-                            precioServicio={"12.00 $"}
-                        />
-                        <CardServicio
-                            esLink={true}
-                            href={""}
-                            estaSeleccionado={false}
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            tituloServicio={"Pedicura completa con decoración"}
-                            tiempoServicio={"1 hora y 45 minutos"}
-                            precioServicio={"12.00 $"}
-                        />
-                        <CardServicio
-                            esLink={true}
-                            href={""}
-                            estaSeleccionado={false}
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            tituloServicio={"Pedicura completa con decoración"}
-                            tiempoServicio={"1 hora y 45 minutos"}
-                            precioServicio={"12.00 $"}
-                        />
-                        <CardServicio
-                            esLink={true}
-                            href={""}
-                            estaSeleccionado={false}
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            tituloServicio={"Pedicura completa con decoración"}
-                            tiempoServicio={"1 hora y 45 minutos"}
-                            precioServicio={"12.00 $"}
-                        />
-                        <CardServicio
-                            esLink={true}
-                            href={""}
-                            estaSeleccionado={false}
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            tituloServicio={"Pedicura completa con decoración"}
-                            tiempoServicio={"1 hora y 45 minutos"}
-                            precioServicio={"12.00 $"}
-                        />
-                        <CardServicio
-                            esLink={true}
-                            href={""}
-                            estaSeleccionado={false}
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            tituloServicio={"Pedicura completa con decoración"}
-                            tiempoServicio={"1 hora y 45 minutos"}
-                            precioServicio={"12.00 $"}
-                        />
-                    </View>
+
+
+                    <FlatList
+                        data={servicios}
+                        numColumns={2}
+
+                        contentContainerStyle={{
+                            gap: 20,
+                            marginBottom: 80
+                        }}
+                        columnWrapperStyle={{
+                            justifyContent: "center",
+                            gap: 20
+                        }}
+                        renderItem={({ item }) =>
+                            <CardServicio
+                                estaSeleccionado={serviciosSeleccionados.some(s => s.id === item.id)}
+                                fuenteTextoBold={fuenteTexto.gantariBold}
+                                fuenteTextoRegular={fuenteTexto.gantariRegular}
+                                servicio={item}
+                                onPress={() => alternarSeleccionServicio(item)}
+                            />
+                        }
+                        scrollEnabled={false}
+
+                    >
+                    </FlatList>
+
                 </ScrollView>
             </View>
-            <BotonesCancelarVerServicios/>
+            <BotonesCancelarVerServicios />
             <BarraResumen
                 botonSiguiente={true}
-                hrefSiguiente={"/(tabs-cliente)/(agendarCita)/(screens)/elegirFechaHora"}
+                btnSiguienteDeshabilitado={serviciosSeleccionados.length == 0 ? true : false}
+                subtotal={subtotal}
+                hrefSiguiente={"/navegacion/(tabs-cliente)/(agendarCita)/(screens)/elegirFechaHora"}
             />
         </Screen>
     );

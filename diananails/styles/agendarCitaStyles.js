@@ -3,13 +3,11 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 export const agendarCitaStyles = (colors) => StyleSheet.create({
     contenedorServicios: {
-        flex: 1, 
-        flexDirection: "row", 
-        flexWrap: "wrap", 
+        
         padding: 10, 
         paddingTop: 0,
         paddingBottom: hp(9),
-        justifyContent: "space-evenly", 
+        alignItems: "center",
         gap: hp(2.5)
     }
 });

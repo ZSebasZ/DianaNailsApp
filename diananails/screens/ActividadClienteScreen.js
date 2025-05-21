@@ -11,18 +11,9 @@ import { BotonIconoTexto } from "../components/BotonIconoTexto";
 //Pantalla de Login
 export const ActividadClienteScreen = () => {
 
-    const insets = useSafeAreaInsets();
-
     const fuenteTexto = fuenteTextoStyles();
-
     //Estilos
     const styles = useThemedStyles(gestionStyles);
-    const colors = useThemedStyles();
-    //Detectamos el tema del sistema para saber que solo mostrar
-    const colorScheme = useColorScheme();
-    const logo = colorScheme === 'dark'
-        ? require('./../assets/images/logoDark.png')
-        : require('./../assets/images/logoLight.png');
 
     return (
         <Screen enTab={true}>
@@ -37,7 +28,7 @@ export const ActividadClienteScreen = () => {
                     <View style={styles.containerSeccion}>
                         <BotonIconoTexto
                             esLink={true}
-                            href={"/(clienteScreens)/(citasOpiniones)/citasCliente"}
+                            href={"/navegacion/(clienteScreens)/(citasOpiniones)/citasCliente"}
                             nombreIcono={"calendar-month"}
                             fondo={true}
                             fuenteTextoNormal={fuenteTexto.gantariBold}
@@ -46,7 +37,7 @@ export const ActividadClienteScreen = () => {
                         />
                         <BotonIconoTexto
                             esLink={true}
-                            href={"/(clienteScreens)/(pedidosCarrito)/pedidosCliente"}
+                            href={"/navegacion/(clienteScreens)/(pedidosCarrito)/pedidosCliente"}
                             nombreIcono={"truck-delivery"}
                             fondo={true}
                             fuenteTextoNormal={fuenteTexto.gantariBold}
@@ -55,7 +46,7 @@ export const ActividadClienteScreen = () => {
                         />
                         <BotonIconoTexto
                             esLink={true}
-                            href={"/(clienteScreens)/(citasOpiniones)/opiniones"}
+                            href={"/navegacion/(clienteScreens)/(citasOpiniones)/opiniones"}
                             nombreIcono={"message-star"}
                             fondo={true}
                             fuenteTextoNormal={fuenteTexto.gantariBold}

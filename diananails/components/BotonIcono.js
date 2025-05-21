@@ -12,7 +12,7 @@ export const BotonIcono = (props) => {
     const styles = StyleSheet.create({
         boton: {
             padding: props.esPerfil ? 0 : 10,
-            
+
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 100,
@@ -60,7 +60,7 @@ export const BotonIcono = (props) => {
                     <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} style={[styles.iconoBoton, props.esEliminar && styles.iconoBotonEliminar]} />
                     {props.conBurbuja && (
                         <View style={styles.burbuja}>
-                            <Text style={[props.fuenteTexto, styles.textBurbuja]}>0</Text>
+                            <Text style={[props.fuenteTexto, styles.textBurbuja]}>{props.cantidad}</Text>
                         </View>
                     )}
                 </Pressable>
@@ -73,7 +73,7 @@ export const BotonIcono = (props) => {
                 <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} style={[styles.iconoBoton, props.esEliminar && styles.iconoBotonEliminar]} />
                 {props.conBurbuja && (
                     <View style={styles.burbuja}>
-                        <Text style={[props.fuenteTexto, styles.textBurbuja]}>0</Text>
+                        <Text style={[props.fuenteTexto, styles.textBurbuja]}>{props.cantidad}</Text>
                     </View>
                 )}
             </Pressable>

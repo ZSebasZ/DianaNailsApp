@@ -14,7 +14,7 @@ router.get("/get-preciot-horsreqs", getPrecioTotalHorasRequeridas)
 */
 
 //Creamos la ruta para la OBTENCION de las HORAS y MANICURISTAS disponibles para la CITA
-router.get("/get-hors-mancrts-disponibles", getHorasDisponiblesManicuristasDisponibles)
+router.post("/get-hors-mancrts-disponibles", getHorasDisponiblesManicuristasDisponibles)
 //JSON DE PRUEBA
 /*
     {

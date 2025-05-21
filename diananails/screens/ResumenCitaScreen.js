@@ -1,4 +1,4 @@
-import { View, Text, useColorScheme, ScrollView } from "react-native";
+import { View, Text, useColorScheme, ScrollView, FlatList } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
@@ -10,33 +10,62 @@ import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerSer
 import { BarraResumen } from "../components/BarraResumen";
 import { CardManicurista } from "../components/CardManicurista";
 import { CardServicioResumen } from "../components/CardServicioResumen";
-
-
+import { useContext } from "react";
+import { AgendarCitaContext } from "../contexts/agendarCitaContext";
+import { AuthContext } from "../contexts/authContext";
+import { agendarCita } from "../api/AgendarCitaController";
+import { router } from "expo-router";
 
 
 //Pantalla de Login
 export const ResumenCitaScreen = () => {
 
-    const insets = useSafeAreaInsets();
+    const {usuario} = useContext(AuthContext)
+    const { subtotal, serviciosSeleccionados, tiempoTotal, fecha, hora, manicurista, metodoPago, reiniciarContexto  } = useContext(AgendarCitaContext)
 
-    const [open, setOpen] = useState(false); // Estado para abrir/cerrar el dropdown
-    const [value, setValue] = useState(null); // Estado para el valor seleccionado
-    const [items, setItems] = useState([
-        { label: 'Efectivo (pagar en el local)', value: 'efectivo' },
-        { label: 'Tarjeta', value: 'tarjeta' }
-    ]);
-
-    const manicurista = require("./../assets/images/manicurista.jpg")
+    const manicuristaImg = "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
     const fuenteTexto = fuenteTextoStyles();
-
     //Estilos
     const styles = useThemedStyles(resumenCitaStyles);
-    const colors = useThemedStyles();
-    //Detectamos el tema del sistema para saber que solo mostrar
-    const colorScheme = useColorScheme();
-    const logo = colorScheme === 'dark'
-        ? require('./../assets/images/logoDark.png')
-        : require('./../assets/images/logoLight.png');
+
+    const calcularTiempoRequerido = (lapsos) => {
+        const totalMinutos = lapsos * 15;
+        const horas = Math.floor(totalMinutos / 60);
+        const minutos = totalMinutos % 60;
+
+        let resultado = "";
+        if (horas > 0) {
+            resultado += `${horas} hora${horas > 1 ? "s" : ""}`;
+        }
+        if (minutos > 0) {
+            if (horas > 0) resultado += " y ";
+            resultado += `${minutos} minuto${minutos > 1 ? "s" : ""}`;
+        }
+
+        return resultado || "0 minutos";
+    };
+
+    const [enviando, setEnviando] = useState(false);
+
+    const agendarCitaCliente = async () => {
+        try {
+            const idsServicios = serviciosSeleccionados.map(servicio => servicio.id);
+            const respuesta = await agendarCita({
+                idCliente: usuario.datosUsuario.id,
+                servicios: idsServicios,
+                fecha: fecha,
+                idHora: hora.idHora,
+                idManicurista: manicurista.idManicurista,
+                precio: subtotal
+            })
+            reiniciarContexto()
+            router.replace("/navegacion/(tabs-cliente)/(agendarCita)/")
+            console.log(respuesta)
+        }catch (error) {
+            console.error("Error al agendar cita:", error)
+        }
+    }
+
 
     return (
         <Screen enTab={true}>
@@ -50,7 +79,28 @@ export const ResumenCitaScreen = () => {
                     />
                     <View style={styles.contenedorSeccionDetalle}>
                         <Text style={styles.textTituloSubSeccion}>Servicios</Text>
-                        <View style={styles.contenedorServiciosSeleccionados}>
+
+                        <FlatList
+                            data={serviciosSeleccionados}
+                            numColumns={1}
+                            contentContainerStyle={{
+                                gap: 10,
+                            }}
+                            keyExtractor={item => item.id}
+                            renderItem={({ item }) =>
+                                <CardServicioResumen
+                                    fuenteTextoBold={fuenteTexto.gantariBold}
+                                    fuenteTextoRegular={fuenteTexto.gantariRegular}
+                                    nombreServicio={item.nombre}
+                                    tiempoServicio={item.horas_requeridas}
+                                    precioServicio={item.precio}
+                                />
+                            }
+                            scrollEnabled={false}
+                        >
+                        </FlatList>
+
+                        {/*<View style={styles.contenedorServiciosSeleccionados}>
                             <CardServicioResumen
                                 fuenteTextoBold={fuenteTexto.gantariBold}
                                 fuenteTextoRegular={fuenteTexto.gantariRegular}
@@ -72,21 +122,21 @@ export const ResumenCitaScreen = () => {
                                 tiempoServicio={"1 hora y 30 minutos"}
                                 precioServicio={"19.99 $"}
                             />
-                        </View>
+                        </View>*/}
                     </View>
                     <View style={styles.contenedorSeccionDetalle}>
                         <Text style={styles.textTituloSubSeccion}>Tiempo total</Text>
-                        <Text style={styles.textInfoSubSeccion}>1 hora y 30 minutos</Text>
+                        <Text style={styles.textInfoSubSeccion}>{calcularTiempoRequerido(tiempoTotal)}</Text>
                     </View>
                     <View style={styles.contenedorSeccionDetalle}>
                         <Text style={styles.textTituloSubSeccion}>Fecha y hora</Text>
                         <View style={styles.contenedorFechaHora}>
                             <Text style={styles.textSubTituloSubSeccion}>Fecha: </Text>
-                            <Text style={styles.textInfoSubSeccion}>10/10/2025</Text>
+                            <Text style={styles.textInfoSubSeccion}>{fecha}</Text>
                         </View>
                         <View style={styles.contenedorFechaHora}>
                             <Text style={styles.textSubTituloSubSeccion}>Hora: </Text>
-                            <Text style={styles.textInfoSubSeccion}>19:30</Text>
+                            <Text style={styles.textInfoSubSeccion}>{hora.hora}</Text>
                         </View>
                     </View>
                     <View style={styles.contenedorSeccionDetalle}>
@@ -95,25 +145,29 @@ export const ResumenCitaScreen = () => {
                             <CardManicurista
                                 estaSeleccionada={true}
                                 fuenteTextoBold={fuenteTexto.gantariBold}
-                                manicuristaImg={manicurista}
-                                nombreManicurista={"Sofia Ramirez"}
+                                manicuristaImg={manicurista.urlImagen}
+                                nombreManicurista={manicurista.manicurista}
+                                enVistaResumen={true}
                             />
                         </View>
                     </View>
                     <View style={[styles.contenedorSeccionDetalle, { paddingBottom: 70 }]}>
                         <Text style={styles.textTituloSubSeccion}>Metodo de pago</Text>
-                        <Text style={styles.textInfoSubSeccion}>Efectivo (pagar en el local)</Text>
+                        <Text style={styles.textInfoSubSeccion}>{metodoPago.metodoPago}</Text>
                     </View>
 
                 </ScrollView>
             </View>
-            <BotonesCancelarVerServicios />
+            <BotonesCancelarVerServicios 
+                esResumenScreen={true}
+            />
             <BarraResumen
                 botonVolver={true}
                 hrefAtras={"../"}
                 botonAgendarCita={true}
-                hrefAgendarCita={"./../../../"}
+                onPress={agendarCitaCliente}
                 esTotal={true}
+                subtotal={subtotal}
             />
         </Screen>
     );

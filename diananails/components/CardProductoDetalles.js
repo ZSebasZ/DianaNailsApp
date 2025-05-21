@@ -7,6 +7,8 @@ import { ContadorCantidadProducto } from "./ContadorCantidadProducto"
 export const CardProductoDetalles = (props) => {
     const tema = useThemedStyles()
 
+    const productoImgDefault = require("./../assets/images/producto.png");
+
     const styles = StyleSheet.create({
         productoImg: {
             width: "90%",
@@ -33,38 +35,60 @@ export const CardProductoDetalles = (props) => {
 
     })
 
+    function formatearPrecio(num) {
+        // Formatear con dos decimales fijos
+        let precio = num.toFixed(2);
+
+        // Separar parte entera y decimal
+        let [entero, decimal] = precio.split('.');
+
+        // Asegurar que la parte entera tenga al menos dos dígitos
+        if (entero.length < 2) {
+            entero = '0' + entero;
+        }
+
+        return `${entero}.${decimal}`;
+    }
+
     return (
         <View>
             <View style={{ alignItems: "center" }}>
-                <Image source={props.producto} style={styles.productoImg}></Image>
+                <Image source={props.productoImg ? { uri: productoImg } : productoImgDefault} style={styles.productoImg}></Image>
             </View>
             <View style={styles.lineaDivisora}></View>
             <View>
                 <View style={styles.contenedorSeccionInfo}>
                     <Text style={[props.fuenteTextoBold, styles.textTituloInfoProducto]}>Descripcion</Text>
-                    <Text style={[props.fuenteTextoRegular, styles.textInfoProducto]}>Hklklfj sd fd sflsd lkjsdlk fj djfks d fsda flsjd fds sd kjhg kd fkjsd kfjsdfkjhds kjhfdskj hfksjd fjksd jk jk sdjkfsdkjfsd jkfjk sdjk hfjksd hfjk sdjksdf jksdfjk hsdkj fhsdkj hfsdjk fkjsd fkjds</Text>
+                    <Text style={[props.fuenteTextoRegular, styles.textInfoProducto]}>{props.descripcion}</Text>
                 </View>
                 <View style={styles.contenedorSeccionInfo}>
                     <Text style={[props.fuenteTextoBold, styles.textTituloInfoProducto]}>Precio</Text>
-                    <Text style={[props.fuenteTextoRegular, styles.textInfoProducto]}>12.99 $</Text>
+                    <Text style={[props.fuenteTextoRegular, styles.textInfoProducto]}>{formatearPrecio(props.precio)} €</Text>
                 </View>
                 <View style={styles.contenedorSeccionInfo}>
                     <Text style={[props.fuenteTextoBold, styles.textTituloInfoProducto, { textAlign: "center" }]}>Cantidad</Text>
-                    <ContadorCantidadProducto />
+                    <ContadorCantidadProducto
+                        stock={props.stock}
+                        enCarrito={props.enCarrito}
+                        onIncrementar={props.onIncrementar}
+                        onDecrementar={props.onDecrementar}
+                        cantidad={props.cantidad}
+                    />
                 </View>
-                <View style={[styles.contenedorSeccionInfo, {marginTop: hp(2)}]}>
+                <View style={[styles.contenedorSeccionInfo, { marginTop: hp(2) }]}>
                     <BotonTexto
                         botonNavegacion={true}
                         esLink={false}
                         fondo={true}
-                        enCarrito={props.enCarrito == null ? false : true}
-                        agotado={props.agotado == null ? false : true}
+                        enCarrito={props.enCarrito == 0 ? false : true}
+                        agotado={props.agotado == 0 ? false : true}
                         fuenteTexto={props.fuenteTextoBold}
                         textoBoton={
-                            props.enCarrito != null || props.agotado != null
-                                ? (props.agotado != null ? "Agotado" : "Este producto ya está en tu carrito")
+                            props.enCarrito != 0 || props.agotado != 0
+                                ? (props.agotado != 0 ? "Agotado" : "Este producto ya está en tu carrito")
                                 : "Añadir al carrito"
                         }
+                        onPress={props.onAnadir}
                     />
                 </View>
             </View>

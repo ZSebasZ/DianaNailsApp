@@ -4,6 +4,8 @@ import { useThemedStyles } from '../hooks/useThemeStyles';
 import { BotonIcono } from "./BotonIcono";
 import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { BotonTexto } from "./BotonTexto";
+import { useContext } from "react";
+import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 
 export const BarraResumen = (props) => {
 
@@ -48,6 +50,22 @@ export const BarraResumen = (props) => {
 
     })
 
+    function formatearPrecio(num) {
+        // Formatear con dos decimales fijos
+        let precio = num.toFixed(2);
+
+        // Separar parte entera y decimal
+        let [entero, decimal] = precio.split('.');
+
+        // Asegurar que la parte entera tenga al menos dos dígitos
+        if (entero.length < 2) {
+            entero = '0' + entero;
+        }
+
+        return `${entero}.${decimal}`;
+    }
+
+
     return (
         <View style={styles.cotenedorBarraResumen}>
             {props.botonVolver && (
@@ -65,7 +83,7 @@ export const BarraResumen = (props) => {
 
             <View style={[styles.subContenederosBarraResumen, styles.subContenedorCenter]}>
                 <Text style={[fuenteTexto.gantariBold, styles.textTituloContenedorCenter]}>{props.esTotal ? "Total" : "Subtotal"}</Text>
-                <Text style={[fuenteTexto.gantariRegular, styles.textInfoContenedorCenter]}>00.00 $</Text>
+                <Text style={[fuenteTexto.gantariRegular, styles.textInfoContenedorCenter]}>{formatearPrecio(props.subtotal)} €</Text>
             </View>
 
             {props.botonCarrito && (
@@ -77,6 +95,7 @@ export const BarraResumen = (props) => {
                         fondo={true}
                         nombreIcono={"cart"}
                         conBurbuja={true}
+                        cantidad={props.cantidadProductos}
                         fuenteTexto={fuenteTexto.gantariRegular}
                     />
                 </View>
@@ -91,6 +110,7 @@ export const BarraResumen = (props) => {
                         fondo={true}
                         fuenteTexto={fuenteTexto.gantariBold}
                         textoBoton={props.esRealizarPedido ? "Realizar pedido" : "Siguiente"}
+                        deshabilitado={props.btnSiguienteDeshabilitado}
                     />
                 </View>
             )}
@@ -98,12 +118,11 @@ export const BarraResumen = (props) => {
                 <View style={[styles.subContenederosBarraResumen, styles.subContenedorRight]}>
                     <BotonTexto
                         botonNavegacion={true}
-                        esLink={true}
-                        replae={true}
-                        href={props.hrefAgendarCita}
+                        esLink={false}
                         fondo={true}
                         fuenteTexto={fuenteTexto.gantariBold}
                         textoBoton={"Agendar cita"}
+                        onPress={props.onPress}
                     />
                 </View>
             )}

@@ -4,7 +4,7 @@ import connection from "./../db/connection.js"; //Importamos nuestra conexion
 const getServicios = (req, res) => {
 
     //DE PRUEBA
-    return res.status(200).json({"mensaje": "exito"})
+    //return res.status(200).json({"mensaje": "exito"})
 
     //Sentencia SQL para la obtencion de los datos
     const queryObtenerServicios = "SELECT id, url_imagen, nombre, precio, horas_requeridas FROM servicios"

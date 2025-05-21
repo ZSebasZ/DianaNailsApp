@@ -1,5 +1,76 @@
 import connection from "./../db/connection.js"; //Importamos nuestra conexion
 
+//Creamos la funcion que se encarga de la OBTENCION de las de los del USUARIO
+const getDatosPerfil = (req, res) => {
+    //Obtenemos el id del usuario
+    let { idUsuario, tipoUsuario } = req.body;
+
+    //Si alguno de los datos está vació o no se envia, mandamos un error
+    if (!idUsuario && !tipoUsuario) {
+        return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    idUsuario = parseInt(idUsuario)
+    tipoUsuario = parseInt(tipoUsuario)
+
+    //Obtenemos los datos del usuario
+    let getDatosPerfil = ""
+    switch (tipoUsuario) {
+        //Perfil admin
+        case 0:
+            getDatosPerfil = `SELECT us.url_imagen, us.nombre, us.apellidos, us.telefono, us.email, admin.dni FROM usuarios AS us, administradores AS admin WHERE us.id = admin.id AND us.id = ?`
+            break;
+        //Perfil manicurista
+        case 1:
+            getDatosPerfil = `SELECT us.url_imagen, us.nombre, us.apellidos, us.telefono, us.email, mani.dni FROM usuarios AS us, manicuristas AS mani WHERE us.id = mani.id AND mani.id = ?`
+            break;
+        //Perfil cliente
+        case 2:
+            getDatosPerfil = `SELECT us.url_imagen, us.nombre, us.apellidos, us.telefono, us.email, cli.direccion_envio FROM usuarios AS us, clientes AS cli WHERE us.id = cli.id AND us.id = ?`
+            break
+    }
+    connection.query(getDatosPerfil, [idUsuario], (error, results) => {
+        //Si ocurre algun error en la actualizacion, mostramos un mensaje
+        if (error) {
+            return res.status(500).json({ mensaje: "Error al obtener los datos del usuario" });
+        }
+        //Si todo salio bien, enviamos los datos
+        res.status(200).json(results[0])
+    })
+
+}
+
+//Creamos la funcion que se encarga de la ACTUALIZACION de los datos personales de un CLIENTE
+const updateFotoUsuario = (req, res) => {
+
+    //Obtenemos el el id y la nueva imagen del usuario
+    const { idUsuario, urlImagen } = req.body
+
+    //Si alguno de los datos está vació o no se envia, mandamos un error
+    if (!idUsuario) {
+        return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    //Setencia SQL para actualizar la foto del usuario
+    const updateFotoUsuario = "UPDATE usuarios SET url_imagen = ? WHERE id = ?"
+    //Hacemos la actualizacion 
+    connection.query(updateFotoUsuario, [urlImagen, idUsuario], (error, result) => {
+        //Si ocurre algun error en la actualizacion, mostramos un mensaje
+        if (error) {
+            return res.status(500).json({ mensaje: "Error al actualizar la foto del usuario" });
+        }
+
+        //Comprobamos si alguna fila se actualizó
+        if (result.affectedRows == 0) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
+        //Si todo el proceso fue exitoso, monstramos un mensaje
+        res.status(200).json({ message: "Foto del usuario actualizada", urlImagen: urlImagen });
+
+    })
+}
+
 //Creamos la funcion que se encarga de la ACTUALIZACION de los datos personales de una MANICURISTA
 const updateDatosPersManicurista = (req, res) => {
 
@@ -40,7 +111,7 @@ const updateDatosPersCliente = (req, res) => {
     const { id } = req.params
 
     //Obtenemos los datos enviados
-    const { url_imagen, nombre, apellidos, telefono, direccion_envio } = req.body;
+    const { nombre, apellidos, telefono, direccion_envio } = req.body;
 
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!nombre || !apellidos || !telefono) {
@@ -48,9 +119,9 @@ const updateDatosPersCliente = (req, res) => {
     }
 
     //Setencia SQL para actualizar los datos personales del cliente
-    const updateDatosPersCliente = "UPDATE usuarios SET url_imagen = ?, nombre = ?, apellidos = ?, telefono = ? WHERE id = ?"
+    const updateDatosPersCliente = "UPDATE usuarios SET nombre = ?, apellidos = ?, telefono = ? WHERE id = ?"
     //Hacemos la actualizacion 
-    connection.query(updateDatosPersCliente, [url_imagen, nombre, apellidos, telefono, id], (error, result) => {
+    connection.query(updateDatosPersCliente, [nombre, apellidos, telefono, id], (error, result) => {
         //Si ocurre algun error en la actualizacion, mostramos un mensaje
         if (error) {
             return res.status(500).json({ mensaje: "Error al actualizar los datos del cliente" });
@@ -265,4 +336,4 @@ const deleteCliente = (req, res) => {
 
 //PENDIENTE actualiza contraseña
 
-export { updateDatosPersManicurista, updateDatosPersCliente, deleteCliente }
+export { getDatosPerfil, updateFotoUsuario, updateDatosPersManicurista, updateDatosPersCliente, deleteCliente }

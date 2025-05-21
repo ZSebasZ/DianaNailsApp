@@ -52,19 +52,22 @@ export const CardOpinion = (props) => {
     return (
         <View style={styles.contenedorOpinion}>
             <Text style={styles.textTituloOpinion}>{props.titulo}</Text>
-            <ImagenNombre 
+            <ImagenNombre
                 imagen={props.clienteImg}
                 nombre={props.clienteNombre}
             />
-            <Text style={styles.textFechaOpinion}>{props.fecha}</Text>
+            <Text style={styles.textFechaOpinion}>{props.fecha.split('T')[0]}</Text>
             <Text style={styles.textTextoOpinion}>{props.opinion}</Text>
             <View style={[styles.contenedorEstrellas, { justifyContent: "flex-start" }]}>
-                {/*SEGUN DEL NUMERO DE ESTRELLAS PASADO EN LA PROP, HACER EL BUCLE*/}
-                <Icono IconComponent={MaterialCommunityIcons} name="star" onPrimary={false} style={styles.iconoEstrellaOpiniones} />
-                <Icono IconComponent={MaterialCommunityIcons} name="star" onPrimary={false} style={styles.iconoEstrellaOpiniones} />
-                <Icono IconComponent={MaterialCommunityIcons} name="star" onPrimary={false} style={styles.iconoEstrellaOpiniones} />
-                <Icono IconComponent={MaterialCommunityIcons} name="star-outline" onPrimary={false} style={styles.iconoEstrellaOpiniones} />
-                <Icono IconComponent={MaterialCommunityIcons} name="star-outline" onPrimary={false} style={styles.iconoEstrellaOpiniones} />
+                {[...Array(5)].map((_, i) => (
+                    <Icono
+                        key={i}
+                        IconComponent={MaterialCommunityIcons}
+                        name={i < props.estrellas ? "star" : "star-outline"}
+                        onPrimary={false}
+                        style={styles.iconoEstrellaOpiniones}
+                    />
+                ))}
             </View>
         </View>
     )

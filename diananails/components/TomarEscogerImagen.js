@@ -1,9 +1,12 @@
 import { StyleSheet, Image, View } from "react-native"
 import { useThemedStyles } from "../hooks/useThemeStyles"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { useContext } from "react";
+import { AuthContext } from "../contexts/authContext";
 
 export const TomarEscogerImagen = (props) => {
     const tema = useThemedStyles()
+    const {usuario} = useContext(AuthContext)
 
     const perfilImgDefault = require("./../assets/images/perfilDefault.png");
 
@@ -29,14 +32,18 @@ export const TomarEscogerImagen = (props) => {
             alignItems: "center"
         },
     })
-
+    
     return (
         <View style={{ alignItems: "center" }}>
             <View style={styles.recuadroImagen}>
                 {props.imageUri ? (
                     <Image source={{ uri: props.imageUri }} style={styles.imagen} />
+                ) : (props.urlImagen ? (
+                    <Image source={{ uri: props.urlImagen }} style={styles.imagen} />
                 ) : (
                     <Image source={perfilImgDefault} style={[styles.imagen, { opacity: 0.7 }]} />
+                )
+                    
                 )}
             </View>
         </View>

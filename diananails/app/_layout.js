@@ -3,6 +3,8 @@ import { Stack } from "expo-router";
 import { ThemeProvider } from './../contexts/themeContext';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { AuthProvider } from '../contexts/authContext';
+import { CarritoProvider } from '../contexts/carritoContext';
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
@@ -22,13 +24,18 @@ export default function Layout() {
     return null; // o un splash temporal
   }
   return (
-    <ThemeProvider>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          animation: 'slide_from_right',
-        }}
-      />
-    </ThemeProvider>
+    <AuthProvider>
+      <CarritoProvider>
+        <ThemeProvider>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              animation: 'slide_from_right',
+            }}
+          />
+        </ThemeProvider>
+      </CarritoProvider>
+    </AuthProvider>
+
   );
 }

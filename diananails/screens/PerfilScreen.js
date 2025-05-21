@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { perfilStyles } from '../styles/perfilStyles';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import * as ImagePicker from 'expo-image-picker';
 import { SeccionEnTab } from "../components/SeccionEnTab";
 import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
@@ -11,27 +11,60 @@ import { BotonIconoTexto } from "../components/BotonIconoTexto";
 import { BotonTexto } from "../components/BotonTexto";
 import { TomarEscogerImagen } from "../components/TomarEscogerImagen";
 import { CampoTextoInput } from "../components/CampoTextoInput";
+import { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { datosPerfilUsuario, fotoUsuario } from "../api/AuthController";
+import { AuthContext } from "../contexts/authContext";
+import { Stack } from "expo-router";
+import { Keyboard } from "react-native";
+import { validacionUpdateDatos, updateDatosValidacionOnBlur } from "../validaciones/updateDatosValidacion";
 
+const IMGUR_CLIENT_ID = "fe29c6d3f1dde1a";
 
 //Pantalla de Login
 export const PerfilScreen = () => {
 
-    const insets = useSafeAreaInsets();
+    const { usuario, actualizarFotoUsuario, updateDatos } = useContext(AuthContext)
 
     //Estilos
     const styles = useThemedStyles(perfilStyles);
-    const colors = useThemedStyles();
-
     const fuenteTexto = fuenteTextoStyles();
 
-    //Detectamos el tema del sistema para saber que solo mostrar
-    const colorScheme = useColorScheme();
-    const logo = colorScheme === 'dark'
-        ? require('./../assets/images/logoDark.png')
-        : require('./../assets/images/logoLight.png');
-    const perfilImgDefault = require("./../assets/images/perfilDefault.png");
+    const [deshabilitadoBtnGuardarFoto, setDeshabilitadoBtnGuardarFoto] = useState(true)
+    const [errores, setErrores] = useState({})
+    const [valoresCampos, setValoresCampos] = useState({
+        nombre: usuario.datosUsuario.nombre,
+        apellidos: usuario.datosUsuario.apellidos,
+        telefono: usuario.datosUsuario.telefono,
+        ...(usuario.tipoUsuario == 2 && {
+            direccionEnvio: usuario.datosUsuario.direccion_envio
+        }),
+        
+        ...((usuario.tipoUsuario == 0 || usuario.tipoUsuario == 1) && {
+            dni: usuario.datosUsuario.dni
+        })
+    })
+
+    const onValueChange = (nombreCampo, valor) => {
+        setValoresCampos({ ...valoresCampos, [nombreCampo]: valor })
+    }
+
+    const onSubmit = async () => {
+            Keyboard.dismiss()
+            const validacionErrores = validacionUpdateDatos(valoresCampos)
+            setErrores(validacionErrores)
+            if (Object.keys(validacionErrores).length == 0) {
+                try {
+                    updateDatos(valoresCampos)
+                } catch (error) {
+                    const mensajeError = error.response?.data?.mensaje || 'Ocurrió un error inesperado';
+                    console.log(mensajeError)
+                }
+            }
+        }
 
     const [imageUri, setImageUri] = useState(null);
+    const [imageBase64, setImageBase64] = useState(null);
 
     const pedirPermisos = async () => {
         const permisoCamara = await ImagePicker.requestCameraPermissionsAsync();
@@ -50,12 +83,18 @@ export const PerfilScreen = () => {
 
         const result = await ImagePicker.launchCameraAsync({
             allowsEditing: true,
+            base64: true,
             aspect: [1, 1],
             quality: 1,
         });
 
         if (!result.canceled) {
-            setImageUri(result.assets[0].uri);
+            const { uri, base64 } = result.assets[0]
+            setImageUri(uri);
+            setImageBase64(base64)
+            setDeshabilitadoBtnGuardarFoto(false)
+        } else {
+            setDeshabilitadoBtnGuardarFoto(true)
         }
     };
 
@@ -65,17 +104,60 @@ export const PerfilScreen = () => {
 
         const result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
+            base64: true,
             aspect: [1, 1],
             quality: 1,
         });
 
         if (!result.canceled) {
-            setImageUri(result.assets[0].uri);
+            const { uri, base64 } = result.assets[0]
+            setImageUri(uri);
+            setImageBase64(base64)
+            setDeshabilitadoBtnGuardarFoto(false)
+        } else {
+            setDeshabilitadoBtnGuardarFoto(true)
+        }
+    };
+
+    const eliminarFotoUsuario = async () => {
+        try {
+            await fotoUsuario({ idUsuario: usuario.datosUsuario.id, imagenBase64: null });
+            actualizarFotoUsuario(null);
+            setImageUri(null);
+            setImageBase64(null)
+        } catch (error) {
+            console.error("Error al eliminar la foto del usuario:", error);
+        }
+    };
+
+    const nuevaFotoUsuario = async () => {
+        console.log("boton guardar")
+        if (imageUri != null) {
+            try {
+                const respuesta = await fotoUsuario({
+                    idUsuario: usuario.datosUsuario.id,
+                    imagenBase64: imageBase64,
+                });
+
+                actualizarFotoUsuario(respuesta.urlImagen);
+                setDeshabilitadoBtnGuardarFoto(true)
+                setImageUri(null);
+                setImageBase64(null)
+            } catch (error) {
+                console.error("Error al subir la nueva foto del usuario:", error);
+            }
+        } else {
+
         }
     };
 
     return (
         <Screen enTab={true}>
+            <Stack.Screen
+                options={{
+                    headerBackVisible: true,
+                }}
+            />
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <SeccionEnTab
@@ -92,11 +174,11 @@ export const PerfilScreen = () => {
                                 tomarFoto={tomarFoto}
                                 seleccionarDeGaleria={seleccionarDeGaleria}
                                 imageUri={imageUri != null && imageUri}
+                                urlImagen={usuario.datosUsuario.url_imagen}
                             />
                             <View style={{ justifyContent: "center", alignItems: "center", gap: 10 }}>
                                 <BotonIconoTexto
                                     esLink={false}
-                                    
                                     nombreIcono={"camera"}
                                     fondo={false}
                                     fuenteTextoNormal={fuenteTexto.gantariBold}
@@ -113,16 +195,19 @@ export const PerfilScreen = () => {
                                     enTab={true}
                                     onPress={seleccionarDeGaleria}
                                 />
-                                <BotonIconoTexto
-                                    esLink={false}
-                                    nombreIcono={"image-remove"}
-                                    fondo={false}
-                                    fuenteTextoNormal={fuenteTexto.gantariBold}
-                                    textoBoton={"Eliminar foto"}
-                                    enTab={true}
-                                    onPress={() => { }}
-                                    tipoError={true}
-                                />
+                                {usuario.tipoUsuario == 2 &&
+                                    <BotonIconoTexto
+                                        esLink={false}
+                                        nombreIcono={"image-remove"}
+                                        fondo={false}
+                                        fuenteTextoNormal={fuenteTexto.gantariBold}
+                                        textoBoton={"Eliminar foto"}
+                                        enTab={true}
+                                        onPress={eliminarFotoUsuario}
+                                        tipoError={true}
+
+                                    />
+                                }
                                 <BotonIconoTexto
                                     esLink={false}
                                     nombreIcono={"content-save"}
@@ -130,13 +215,14 @@ export const PerfilScreen = () => {
                                     fuenteTextoNormal={fuenteTexto.gantariBold}
                                     textoBoton={"Guardar foto"}
                                     enTab={true}
-                                    onPress={() => { }}
+                                    onPress={nuevaFotoUsuario}
+                                    deshabilitado={deshabilitadoBtnGuardarFoto}
                                 />
                             </View>
                         </View>
                         <View style={{ gap: 10, marginBottom: 15 }}>
                             <Text style={styles.textTituloSeccion}>Datos personales</Text>
-                            <View style={{gap: 15}}>
+                            <View style={{ gap: 15 }}>
                                 <CampoTextoInput
                                     conIcono={true}
                                     nombreIcono={"account"}
@@ -147,6 +233,11 @@ export const PerfilScreen = () => {
                                     labelCentrado={true}
                                     fuenteTextoLabel={fuenteTexto.gantariBold}
                                     contrasena={false}
+                                    nombreCampo={"nombre"}
+                                    valorCampo={valoresCampos.nombre}
+                                    onValueChange={onValueChange}
+                                    errorValidacion={errores.nombre}
+                                    onBlurValidacion={updateDatosValidacionOnBlur}
                                 />
                                 <CampoTextoInput
                                     conIcono={true}
@@ -158,6 +249,11 @@ export const PerfilScreen = () => {
                                     labelCentrado={true}
                                     fuenteTextoLabel={fuenteTexto.gantariBold}
                                     contrasena={false}
+                                    nombreCampo={"apellidos"}
+                                    valorCampo={valoresCampos.apellidos}
+                                    onValueChange={onValueChange}
+                                    errorValidacion={errores.apellidos}
+                                    onBlurValidacion={updateDatosValidacionOnBlur}
                                 />
                                 <CampoTextoInput
                                     conIcono={true}
@@ -169,18 +265,30 @@ export const PerfilScreen = () => {
                                     labelCentrado={true}
                                     fuenteTextoLabel={fuenteTexto.gantariBold}
                                     contrasena={false}
+                                    nombreCampo={"telefono"}
+                                    valorCampo={valoresCampos.telefono}
+                                    onValueChange={onValueChange}
+                                    errorValidacion={errores.telefono}
+                                    onBlurValidacion={updateDatosValidacionOnBlur}
                                 />
-                                <CampoTextoInput
-                                    conIcono={true}
-                                    nombreIcono={"map-marker"}
-                                    fuenteTexto={fuenteTexto.gantariRegular}
-                                    placeHolder={"Direccion de envio"}
-                                    conLabel={true}
-                                    textLabel={"Direccion de envio"}
-                                    labelCentrado={true}
-                                    fuenteTextoLabel={fuenteTexto.gantariBold}
-                                    contrasena={false}
-                                />
+                                {usuario.tipoUsuario == 2 &&
+                                    <CampoTextoInput
+                                        conIcono={true}
+                                        nombreIcono={"map-marker"}
+                                        fuenteTexto={fuenteTexto.gantariRegular}
+                                        placeHolder={"Direccion de envio"}
+                                        conLabel={true}
+                                        textLabel={"Direccion de envio"}
+                                        labelCentrado={true}
+                                        fuenteTextoLabel={fuenteTexto.gantariBold}
+                                        contrasena={false}
+                                        nombreCampo={"direccionEnvio"}
+                                        valorCampo={valoresCampos.direccionEnvio}
+                                        onValueChange={onValueChange}
+                                        errorValidacion={errores.direccionEnvio}
+                                        onBlurValidacion={updateDatosValidacionOnBlur}
+                                    />
+                                }
                                 <CampoTextoInput
                                     conIcono={true}
                                     nombreIcono={"email"}
@@ -191,6 +299,11 @@ export const PerfilScreen = () => {
                                     labelCentrado={true}
                                     fuenteTextoLabel={fuenteTexto.gantariBold}
                                     contrasena={false}
+                                    nombreCampo={"email"}
+                                    valorCampo={usuario.datosUsuario.email}
+                                    onValueChange={onValueChange}
+                                    deshabilitado={true}
+                                    valorCampoDeshabilitado={usuario.datosUsuario.email}
                                 />
                             </View>
                             <View style={{ justifyContent: "center", alignItems: "center", gap: 10, marginTop: 10 }}>
@@ -200,20 +313,24 @@ export const PerfilScreen = () => {
                                     fondo={true}
                                     fuenteTexto={fuenteTexto.gantariBold}
                                     textoBoton={"Guardar cambios"}
+                                    onPress={onSubmit}
                                 />
-                                <BotonTexto
-                                    botonNavegacion={true}
-                                    esLink={false}
-                                    fondo={true}
-                                    tipoError={true}
-                                    fuenteTexto={fuenteTexto.gantariBold}
-                                    textoBoton={"Eliminar cuenta"}
-                                />
+                                {usuario.tipoUsuario == 2 &&
+                                    <BotonTexto
+                                        botonNavegacion={true}
+                                        esLink={false}
+                                        fondo={true}
+                                        tipoError={true}
+                                        fuenteTexto={fuenteTexto.gantariBold}
+                                        textoBoton={"Eliminar cuenta"}
+                                    />
+                                }
+
                             </View>
                         </View>
                     </View>
                 </ScrollView>
             </View>
-        </Screen>
+        </Screen >
     );
 }

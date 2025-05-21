@@ -19,7 +19,8 @@ export const BotonIconoTexto = (props) => {
             backgroundColor: props.fondo ? (props.tipoError ? tema.error : tema.primary) : tema.background,
             borderWidth: 1,
             borderColor: props.tipoError ? tema.error : tema.primary,
-            borderRadius: 10
+            borderRadius: 10,
+            opacity: props.deshabilitado ? 0.5 : 1
         },
         iconoBoton: {
             color: props.fondo ? tema.onPrimary : (props.tipoError ? tema.error : tema.primary),
@@ -41,6 +42,8 @@ export const BotonIconoTexto = (props) => {
             <Link href={props.href} asChild>
                 <Pressable
                     style={styles.boton}
+                    onPress={props.onPress}
+                    disabled={props.deshabilitado && true}
                 >
                     <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} style={[styles.iconoBoton, styles.iconoBotonInicioScreen]} />
                     <Text style={[props.enTab ? props.fuenteTextoNormal : props.fuenteTexto, styles.textBotonInicioScreen]}>{props.textoBoton}</Text>
@@ -50,6 +53,7 @@ export const BotonIconoTexto = (props) => {
             <Pressable
                 style={styles.boton}
                 onPress={props.onPress}
+                disabled={props.deshabilitado && true}
             >
                 <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} style={[styles.iconoBoton, styles.iconoBotonInicioScreen]} />
                 <Text style={[props.enTab ? props.fuenteTextoNormal : props.fuenteTexto, styles.textBotonInicioScreen]}>{props.textoBoton}</Text>
