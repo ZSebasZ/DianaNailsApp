@@ -1,5 +1,10 @@
 import axios from 'axios';
 
+//WIFI MOVIL
+//const API_URL = 'http://192.168.229.163:5001/api';
+
+
+//WIFI CASA
 const API_URL = 'http://192.168.1.145:5001/api';
 
 export const api = async (metodo, endpoint, datos) => {
@@ -16,7 +21,7 @@ export const api = async (metodo, endpoint, datos) => {
         respuesta = await axios.put(`${API_URL}/${endpoint}`, datos);
         break;
       case "DELETE":
-        respuesta = await axios.delete(`${API_URL}/${endpoint}`, datos);
+        respuesta = await axios.delete(`${API_URL}/${endpoint}`, {data: datos});
         break;
       case "PATCH":
         respuesta = await axios.patch(`${API_URL}/${endpoint}`, datos);

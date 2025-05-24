@@ -191,52 +191,6 @@ const registerCliente = (req, res) => {
     })
 }
 
-//Creamos la funcion que se encarga del REGISTRO de USUARIOS-MANICURISTAS
-const registerManicurista = (req, res) => {
-
-    //Obtenemos el email y contraseña que el frontend nos envia
-    const { url_imagen, nombre, apellidos, telefono, email, contrasena, dni } = req.body;
-
-    //Si alguno de los datos está vació o no se envia, mandamos un error
-    if (!nombre || !apellidos || !telefono || !email || !contrasena || !dni) {
-        return res.status(400).json({ mensaje: "Campos incompletos" })
-    }
-
-    //Hacemos la query en la base de datos para saber si el email ya existe
-    const queryEmailExiste = "SELECT email FROM usuarios WHERE email = ?"
-    connection.query(queryEmailExiste, [email], (error, results) => {
-
-        //Si existe enviamos un mensaje de aviso
-        if (results.length != 0) {
-            return res.status(401).json({ mensaje: "Un usuario con este correo ya existe" })
-        }
-
-        //De lo contrario insertamos el nuevo usuario-manicurista
-        const insertNuevoUsuario = "INSERT INTO usuarios(url_imagen, nombre, apellidos, telefono, email, contrasena) VALUES (?, ?, ?, ?, ?, ?)"
-        connection.query(insertNuevoUsuario, [url_imagen, nombre, apellidos, telefono, email, contrasena], (error, result) => {
-            //Si ocurre algun error en la insercion, mostramos un mensaje
-            if (error) {
-                return res.status(500).json({ mensaje: "Error al registrar el usuario" });
-            }
-
-            //Obtenemos el id del usuario insertado
-            const idUsuarioInsertado = result.insertId;
-
-            //Hacemos la insercion de la nueva manicurista
-            const insertNuevoCliente = "INSERT INTO manicuristas(id, dni) VALUES (?, ?)"
-            connection.query(insertNuevoCliente, [idUsuarioInsertado, dni], (error, result) => {
-                //Si ocurre algun error en la insercion, mostramos un mensaje
-                if (error) {
-                    return res.status(500).json({ mensaje: "Error al registrar la manicurista" });
-                }
-
-                //Si todo el proceso fue exitoso, monstramos un mensaje
-                res.status(201).json({ mensaje: "Manicurista registrada con exito. ID usuario: " + idUsuarioInsertado + " - ID manicurista: " + idUsuarioInsertado });
-            })
-        })
-    })
-}
-
 //Creamos la funcion que se encarga de la OBTENCION de las MANICURISTAS
 const getManicuristas = (req, res) => {
     //Obtenemos el id del admin
@@ -260,4 +214,36 @@ const getManicuristas = (req, res) => {
 
 }
 
-export { login, registerCliente, registerManicurista, getManicuristas }
+const resetContrasena = (req, res) => {
+    const { id } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ mensaje: "ID de usuario requerido" });
+    }
+
+    const nuevaContrasena = "Abc123.";
+
+    // Encriptamos la nueva contraseña
+    bcrypt.hash(nuevaContrasena, 10, (error, hash) => {
+        if (error) {
+            return res.status(500).json({ mensaje: "Error al encriptar la nueva contraseña" });
+        }
+
+        // Actualizamos la contraseña en la base de datos
+        const query = "UPDATE usuarios SET contrasena = ? WHERE id = ?";
+        connection.query(query, [hash, id], (error, result) => {
+            if (error) {
+                return res.status(500).json({ mensaje: "Error al actualizar la contraseña" });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ mensaje: "Usuario no encontrado" });
+            }
+
+            res.status(200).json({ mensaje: "Contraseña actualizada correctamente" });
+        });
+    });
+};
+
+
+export { login, registerCliente, getManicuristas, resetContrasena }

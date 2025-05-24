@@ -188,7 +188,7 @@ const deleteCitaCliente = (req, res) => {
 //Creamos la funcion que OBTIENE las proximas CITAS de un CLIENTE
 const getCitasClientes = (req, res) => {
     //Obtenemos el id del admin
-    const { idAdmin } = req.params;
+    const { idAdmin } = req.body;
 
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!idAdmin && idAdmin == 1) {
@@ -202,17 +202,73 @@ const getCitasClientes = (req, res) => {
     //Obtener la hora actual en formato 'H:i' (hora:minuto)
     const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    //Obtenemos todas las citas de los clientes, a partir de la fecha y hora actuales
-    const getCitasClientes = `SELECT CONCAT(u.nombre, ' ', u.Apellidos) AS cliente, c.id AS id_cita, c.fecha AS fecha_cita, c.precio, s.nombre, (SELECT h.hora FROM citas_horas AS ch, horas AS h WHERE ch.id_cita = c.id AND h.id = ch.id_hora LIMIT 1) AS horaInicio, (SELECT h2.hora FROM citas_horas AS ch, horas AS h, horas AS h2 WHERE ch.id_hora = h.id AND h2.id = h.id + 1 AND ch.id_cita = c.id ORDER BY ch.id_hora DESC LIMIT 1) AS horaFin FROM clientes AS cl, usuarios AS u, citas AS c, citas_servicios AS cs, servicios AS s WHERE cl.id = c.id_cliente AND cs.id_servicio = s.id AND c.id = cs.id_cita AND u.id = cl.id AND c.id IN (SELECT id FROM (SELECT id FROM citas WHERE fecha >= '${fechaActual}') AS maxFilas) AND (c.fecha > '${fechaActual}' OR (c.fecha = '${fechaActual}' AND (SELECT h.hora FROM citas_horas AS ch, horas AS h WHERE ch.id_cita = c.id AND h.id = ch.id_hora LIMIT 1) > '${horaActual}')) ORDER BY c.fecha ASC, horaInicio ASC;`
-    connection.query(getCitasClientes, (error, results) => {
+    //Obtenemos todas las citas del cliente, a partir de la fecha y hora actuales
+    const getCitasCliente = `SELECT
+                                c.id_cliente,
+                                c.id AS id_cita,
+                                c.fecha AS fecha_cita,
+                                c.precio,
+                                s.nombre,
+                                
+                                -- Manicurista
+                                CONCAT(u.nombre, ' ', u.apellidos) AS manicurista,
+                                u.url_imagen AS manicuristaImg,
+                                
+                                -- Cliente
+                                CONCAT(uc.nombre, ' ', uc.apellidos) AS cliente,
+                                uc.url_imagen AS clienteImg,
+
+                                h_inicio.hora AS horaInicio,
+                                h_fin.hora AS horaFin
+
+                            FROM citas c
+
+                            -- Servicios
+                            JOIN citas_servicios cs ON c.id = cs.id_cita
+                            JOIN servicios s ON cs.id_servicio = s.id
+
+                            -- Manicurista
+                            JOIN manicuristas m ON c.id_manicurista = m.id
+                            JOIN usuarios u ON m.id = u.id
+
+                            -- Cliente (nuevo JOIN)
+                            JOIN clientes cl ON c.id_cliente = cl.id
+                            JOIN usuarios uc ON cl.id = uc.id  -- uc = usuario cliente
+
+                            -- Horas de inicio y fin
+                            LEFT JOIN (
+                                SELECT ch.id_cita, MIN(h.hora) AS hora
+                                FROM citas_horas ch
+                                JOIN horas h ON ch.id_hora = h.id
+                                GROUP BY ch.id_cita
+                            ) h_inicio ON h_inicio.id_cita = c.id
+                            LEFT JOIN (
+                                SELECT ch.id_cita, MAX(h2.hora) AS hora
+                                FROM citas_horas ch
+                                JOIN horas h ON ch.id_hora = h.id
+                                JOIN horas h2 ON h2.id = h.id + 1
+                                GROUP BY ch.id_cita
+                            ) h_fin ON h_fin.id_cita = c.id
+
+                            -- Condiciones de fecha y hora
+                            WHERE (
+                                c.fecha > '${fechaActual}' OR (
+                                    c.fecha = '${fechaActual}' AND h_inicio.hora > '${horaActual}'
+                                )
+                            )
+
+                            ORDER BY
+                                c.fecha ASC,
+                                h_inicio.hora ASC;`
+    connection.query(getCitasCliente, (error, results) => {
         //Si ocurre algun error en la actualizacion, mostramos un mensaje
         if (error) {
-            return res.status(500).json({ mensaje: "Error al obtener las citas" });
+            return res.status(500).json({ mensaje: error });
         }
 
         //Formamos el JSON que vamos a enviar
         if (results.length > 0) {
-            let citasClientes = {
+            let citasCliente = {
                 citas: []
             };
             let citaAnterior = "";
@@ -220,27 +276,30 @@ const getCitasClientes = (req, res) => {
 
             results.forEach(row => {
                 if (row.id_cita !== citaAnterior) {
-                    citasClientes.citas.push({
+                    citasCliente.citas.push({
                         cita: {
-                            cliente: row.cliente,
                             id: row.id_cita,
                             fecha: row.fecha_cita,
                             precio: row.precio,
                             servicios: [row.nombre],
                             horaInicio: row.horaInicio,
-                            horaFin: row.horaFin
+                            horaFin: row.horaFin,
+                            manicurista: row.manicurista,
+                            manicuristaImg: row.manicuristaImg,
+                            cliente: row.cliente,
+                            clienteImg: row.clienteImg
                         }
                     });
                     citaAnterior = row.id_cita;
                     cont++;
                 } else {
-                    citasClientes.citas[cont].cita.servicios.push(row.nombre);
+                    citasCliente.citas[cont].cita.servicios.push(row.nombre);
                 }
             });
 
 
             //Si todo salio bien, enviamos los datos
-            res.status(200).json(citasClientes)
+            res.status(200).json(citasCliente)
 
         } else {
             res.status(200).json({ message: "No hay citas" });
@@ -249,4 +308,117 @@ const getCitasClientes = (req, res) => {
 
 }
 
-export { getCitasCliente, deleteCitaCliente, getCitasClientes }
+//Creamos la funcion que OBTIENE las proximas CITAS asignadas a una MANICURISTA
+const getCitasClientesPorManicurista = (req, res) => {
+    //Obtenemos el id del admin
+    const { idManicurista } = req.body;
+
+    //Si alguno de los datos está vació o no se envia, mandamos un error
+    if (!idManicurista) {
+        return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    //Guardamos la fecha y hora actuales
+    //Ffecha actual en formato 'Y-m-d' (año-mes-dia)
+    const fechaActual = new Date().toISOString().split('T')[0];
+
+    //Obtener la hora actual en formato 'H:i' (hora:minuto)
+    const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    //Obtenemos todas las citas del cliente, a partir de la fecha y hora actuales
+    const getCitasCliente = `SELECT
+                                c.id_cliente,
+                                c.id AS id_cita,
+                                c.fecha AS fecha_cita,
+                                c.precio,
+                                s.nombre,
+                                
+                                -- Cliente
+                                CONCAT(uc.nombre, ' ', uc.apellidos) AS cliente,
+                                uc.url_imagen AS clienteImg,
+
+                                h_inicio.hora AS horaInicio,
+                                h_fin.hora AS horaFin
+
+                            FROM citas c
+
+                            -- Servicios
+                            JOIN citas_servicios cs ON c.id = cs.id_cita
+                            JOIN servicios s ON cs.id_servicio = s.id
+
+                            -- Cliente (nuevo JOIN)
+                            JOIN clientes cl ON c.id_cliente = cl.id
+                            JOIN usuarios uc ON cl.id = uc.id  -- uc = usuario cliente
+
+                            -- Horas de inicio y fin
+                            LEFT JOIN (
+                                SELECT ch.id_cita, MIN(h.hora) AS hora
+                                FROM citas_horas ch
+                                JOIN horas h ON ch.id_hora = h.id
+                                GROUP BY ch.id_cita
+                            ) h_inicio ON h_inicio.id_cita = c.id
+                            LEFT JOIN (
+                                SELECT ch.id_cita, MAX(h2.hora) AS hora
+                                FROM citas_horas ch
+                                JOIN horas h ON ch.id_hora = h.id
+                                JOIN horas h2 ON h2.id = h.id + 1
+                                GROUP BY ch.id_cita
+                            ) h_fin ON h_fin.id_cita = c.id
+
+                            -- Condiciones de fecha y hora
+                            WHERE c.id_manicurista = ? AND (
+                                c.fecha > '${fechaActual}' OR (
+                                    c.fecha = '${fechaActual}' AND h_inicio.hora > '${horaActual}'
+                                )
+                            )
+
+                            ORDER BY
+                                c.fecha ASC,
+                                h_inicio.hora ASC;`
+    connection.query(getCitasCliente, [idManicurista], (error, results) => {
+        //Si ocurre algun error en la actualizacion, mostramos un mensaje
+        if (error) {
+            return res.status(500).json({ mensaje: error });
+        }
+
+        //Formamos el JSON que vamos a enviar
+        if (results.length > 0) {
+            let citasCliente = {
+                citas: []
+            };
+            let citaAnterior = "";
+            let cont = -1;
+
+            results.forEach(row => {
+                if (row.id_cita !== citaAnterior) {
+                    citasCliente.citas.push({
+                        cita: {
+                            id: row.id_cita,
+                            fecha: row.fecha_cita,
+                            precio: row.precio,
+                            servicios: [row.nombre],
+                            horaInicio: row.horaInicio,
+                            horaFin: row.horaFin,
+                            cliente: row.cliente,
+                            clienteImg: row.clienteImg
+                        }
+                    });
+                    citaAnterior = row.id_cita;
+                    cont++;
+                } else {
+                    citasCliente.citas[cont].cita.servicios.push(row.nombre);
+                }
+            });
+
+
+            //Si todo salio bien, enviamos los datos
+            res.status(200).json(citasCliente)
+
+        } else {
+            res.status(200).json({ message: "No hay citas" });
+        }
+    })
+
+}
+
+export { getCitasCliente, deleteCitaCliente, getCitasClientes, getCitasClientesPorManicurista }

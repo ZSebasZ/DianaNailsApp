@@ -19,3 +19,23 @@ export const anadirCarritoProducto = async (carrito, producto, cantidad) => {
         throw error;
     }
 };
+
+export const actualizarCarritoCantidadProducto = async (carrito, producto, cantidad) => {
+    try {
+        //console.log(`get-productos?carrito=${carrito}`)
+        const productoAnadido = await api("PATCH", `update-carrito-producto`, { idCarrito: carrito, idProducto: producto, cantidad: cantidad }); // Llamamos al servicio
+        return productoAnadido;  // Devolvemos los datos para ser usados por las pantallas
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const hacerPedidoCarrito = async (carrito, cliente, metodoPago, total) => {
+    try {
+        //console.log(`get-productos?carrito=${carrito}`)
+        const productoAnadido = await api("PATCH", `nuevo-pedido-cliente`, {idCarrito: carrito, idCliente: cliente, idMetodoPago: metodoPago, total: total}); // Llamamos al servicio
+        return productoAnadido;  // Devolvemos los datos para ser usados por las pantallas
+    } catch (error) {
+        throw error;
+    }
+};

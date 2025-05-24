@@ -105,12 +105,13 @@ export const BarraResumen = (props) => {
                 <View style={[styles.subContenederosBarraResumen, styles.subContenedorRight]}>
                     <BotonTexto
                         botonNavegacion={true}
-                        esLink={true}
+                        esLink={props.esRealizarPedido ? false : true}
                         href={props.hrefSiguiente}
                         fondo={true}
                         fuenteTexto={fuenteTexto.gantariBold}
                         textoBoton={props.esRealizarPedido ? "Realizar pedido" : "Siguiente"}
                         deshabilitado={props.btnSiguienteDeshabilitado}
+                        onPress={props.onPress}
                     />
                 </View>
             )}

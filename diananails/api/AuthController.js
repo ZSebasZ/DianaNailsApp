@@ -73,3 +73,12 @@ export const updateDatosUsuario = async (id, datos) => {
     }
 };
 
+export const eliminarCuentaCliente = async (cliente) => {
+    try {
+        const cuentaEliminada = await api("DELETE", "delete-cliente", {idCliente: cliente}); // Llamamos al servicio
+        return cuentaEliminada;  // Devolvemos los datos para ser usados por las pantallas
+    } catch (error) {
+        throw error;
+    }
+};
+

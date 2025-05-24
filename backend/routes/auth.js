@@ -1,5 +1,5 @@
 import express from "express"; //Importamos la libreria 'express'
-import {login, registerCliente, registerManicurista, getManicuristas} from "./../controllers/authController.js"
+import {login, registerCliente, getManicuristas, resetContrasena} from "./../controllers/authController.js"
 
 //Creamos el objeto Router para establecer las rutas que vamos a usar
 const router = express.Router()
@@ -30,22 +30,10 @@ router.post("/register-cliente", registerCliente)
     }
 */
 
-//Creamos la ruta para el REGISTER-CLIENTE de la aplicacion
-router.post("/register-manicurista", registerManicurista)
-//JSON DE PRUEBA
-/*
-    {
-        "url_imagen": "",
-        "nombre": "Manicurista Prueba",
-        "apellidos": "Manicurita Apellidos",
-        "telefono": "666666660",
-        "email": "mprueba1@diananails.com",
-        "contrasena": "abc123.",
-        "dni": "11111111A"
-    }
-*/
-
 //Creamos la ruta para OBTENER las MANICURISTAS
 router.get("/get-manicuristas/:idAdmin", getManicuristas)
+
+//Creamos la ruta para OBTENER las MANICURISTAS
+router.put("/reset-contrasena", resetContrasena)
 
 export default router;

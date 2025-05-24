@@ -20,6 +20,21 @@ export const CardProductoPedido = (props) => {
         },
     })
 
+    function formatearPrecio(num) {
+        // Formatear con dos decimales fijos
+        let precio = num.toFixed(2);
+
+        // Separar parte entera y decimal
+        let [entero, decimal] = precio.split('.');
+
+        // Asegurar que la parte entera tenga al menos dos dígitos
+        if (entero.length < 2) {
+            entero = '0' + entero;
+        }
+
+        return `${entero}.${decimal}`;
+    }
+
     return (
         <View>
             <View style={{ flexDirection: "row" }}>
@@ -32,11 +47,11 @@ export const CardProductoPedido = (props) => {
             </View>
             <View style={{ flexDirection: "row" }}>
                 <Text style={styles.textSubTitleInfoPedido}>Precio: </Text>
-                <Text style={styles.textInfoPedido}>{props.precio}</Text>
+                <Text style={styles.textInfoPedido}>{formatearPrecio(props.precio)} €</Text>
             </View>
             <View style={{ flexDirection: "row" }}>
                 <Text style={styles.textSubTitleInfoPedido}>Subtotal: </Text>
-                <Text style={styles.textInfoPedido}>{props.subtotal}</Text>
+                <Text style={styles.textInfoPedido}>{formatearPrecio(props.subtotal)} €</Text>
             </View>
         </View>
 

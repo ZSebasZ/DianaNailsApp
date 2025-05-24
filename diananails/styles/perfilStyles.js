@@ -8,4 +8,11 @@ export const perfilStyles = (colors) => StyleSheet.create({
         textAlign: "center",
         fontSize: hp(3),
     },
+
+    textImagenRequerida: {
+        color: colors.error,
+        textAlign: "center",
+        fontFamily: "GantariRegular",
+        
+    }
 });

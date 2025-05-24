@@ -36,7 +36,7 @@ const insertPedidoCliente = (req, res) => {
 //Creamos la funcion que se encarga de CANCELAR(borrar) un PEDIDO
 const deletePedidoCliente = (req, res) => {
     //Obtenemos los datos del nuevo producto en el carrito
-    const { idPedido } = req.params;
+    const { idPedido } = req.body;
 
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!idPedido) {
@@ -90,10 +90,10 @@ const deletePedidoCliente = (req, res) => {
 //Creamos la funcion que se encarga de OBTENER todos los PEDIDOS de un CLIENTE
 const getPedidosCliente = (req, res) => {
     //Obtenemos el id del cliente
-    const { idCliente } = req.body;
+    const { idCliente, filtro } = req.body;
 
     //Si alguno de los datos está vació o no se envia, mandamos un error
-    if (!idCliente) {
+    if (!idCliente || !filtro) {
         return res.status(400).json({ mensaje: "Campos incompletos" })
     }
 
@@ -112,17 +112,15 @@ const getPedidosCliente = (req, res) => {
             return res.status(200).json({ mensaje: "No hay pedidos" });
         } else {
             //De lo contrario, obtenemos todos los pedidos del cliente
-            const queryPedidosCliente = "SELECT p.id AS idPedido, p.fecha as fechaPedido, p.estado as estadoPedido, pr.nombre as productoNombre, pp.cantidad as productoCantidad, ROUND(p.total, 2) AS totalPedido FROM pedidos AS p JOIN pedidos_productos AS pp ON p.id = pp.id_pedido JOIN productos AS pr ON pp.id_producto = pr.id WHERE p.id_cliente = ?"
-            connection.query(queryPedidosCliente, [idCliente], (error, results) => {
+            const queryPedidosCliente = "SELECT p.id AS idPedido, p.fecha as fechaPedido, p.estado as estadoPedido, pr.nombre as productoNombre, pr.precio as productoPrecio, pp.cantidad as productoCantidad, ROUND(p.total, 2) AS totalPedido FROM pedidos AS p JOIN pedidos_productos AS pp ON p.id = pp.id_pedido JOIN productos AS pr ON pp.id_producto = pr.id WHERE p.id_cliente = ? AND p.estado = ?"
+            connection.query(queryPedidosCliente, [idCliente, filtro], (error, results) => {
                 //Si ocurre algun error mostramos un mensaje
                 if (error) {
                     return res.status(500).json({ mensaje: "Error al obtener los pedidos" });
                 }
 
                 // Creamos el JSON de los pedidos del cliente
-                const pedidosCliente = {
-                    pedidosCliente: [],
-                };
+                const pedidosCliente = [];
 
                 // Creamos un mapa temporal para agrupar pedidos
                 const pedidosMap = {};
@@ -133,25 +131,26 @@ const getPedidosCliente = (req, res) => {
                     // Si el pedido no existe en el mapa, lo creamos
                     if (!pedidosMap[idPedido]) {
                         pedidosMap[idPedido] = {
-                            pedido: {
-                                id: idPedido,
-                                fecha: row.fechaPedido,
-                                estado: row.estadoPedido,
-                                total: row.totalPedido,
-                                productos: []
-                            }
+
+                            id: idPedido,
+                            fecha: row.fechaPedido,
+                            estado: row.estadoPedido,
+                            total: row.totalPedido,
+                            productos: []
+
                         };
 
                         // Lo añadimos al array principal
-                        pedidosCliente.pedidosCliente.push(pedidosMap[idPedido]);
+                        pedidosCliente.push(pedidosMap[idPedido]);
                     }
 
                     // Añadimos el producto actual al pedido correspondiente
-                    pedidosMap[idPedido].pedido.productos.push({
-                        producto: {
-                            nombre: row.productoNombre,
-                            cantidad: row.productoCantidad
-                        }
+                    pedidosMap[idPedido].productos.push({
+
+                        nombre: row.productoNombre,
+                        precio: row.productoPrecio,
+                        cantidad: row.productoCantidad
+
                     });
                 });
 
@@ -177,7 +176,7 @@ const getDetallesPedidosCliente = (req, res) => {
 
     //Obtenemos todos los pedidos del cliente
     let queryDetallesPedidoCliente = ""
-    if(idAdmin == 1) {
+    if (idAdmin == 1) {
         queryDetallesPedidoCliente = "SELECT CONCAT(u.nombre, ' ', u.apellidos) AS cliente, p.id AS idPedido, p.fecha AS fechaPedido, p.estado AS estadoPedido, pr.nombre AS productoNombre, pp.cantidad AS productoCantidad, ROUND(p.total, 2) AS totalPedido, pr.url_imagen AS urlImgProducto, ROUND((pp.cantidad * pr.precio), 2) AS totalProducto FROM pedidos AS p JOIN clientes AS cl ON p.id_cliente = cl.id JOIN usuarios AS u ON cl.id = u.id JOIN pedidos_productos AS pp ON p.id = pp.id_pedido JOIN productos AS pr ON pp.id_producto = pr.id WHERE p.id_cliente = ? AND p.id = ?"
     } else {
         queryDetallesPedidoCliente = "SELECT p.id AS idPedido, p.fecha as fechaPedido, p.estado as estadoPedido, pr.nombre as productoNombre, pp.cantidad as productoCantidad, ROUND(p.total, 2) AS totalPedido, pr.url_imagen as urlImgProducto, ROUND((pp.cantidad * pr.precio), 2) as totalProducto FROM pedidos AS p JOIN pedidos_productos AS pp ON p.id = pp.id_pedido JOIN productos AS pr ON pp.id_producto = pr.id WHERE p.id_cliente = ? AND p.id = ?"
@@ -197,7 +196,7 @@ const getDetallesPedidosCliente = (req, res) => {
         // Tomamos el primer resultado para los datos generales del pedido
         const pedidoInfo = results[0];
 
-        if(idAdmin == 1) {
+        if (idAdmin == 1) {
             detallesPedidoCliente.pedido = {
                 cliente: pedidoInfo.cliente,
                 id: pedidoInfo.idPedido,
@@ -216,7 +215,7 @@ const getDetallesPedidosCliente = (req, res) => {
             };
         }
 
-        
+
 
         // Recorremos todos los productos asociados al pedido
         results.forEach(row => {
@@ -241,10 +240,10 @@ const getDetallesPedidosCliente = (req, res) => {
 //Creamos la funcion que se encarga de OBTENER todos los PEDIDOS de un CLIENTE
 const getPedidosClientes = (req, res) => {
     //Obtenemos el id del admin
-    const { idAdmin } = req.body;
+    const { idAdmin, filtro } = req.body;
 
     //Si alguno de los datos está vació o no se envia, mandamos un error
-    if (!idAdmin) {
+    if (!idAdmin || !filtro) {
         return res.status(400).json({ mensaje: "Campos incompletos" })
     }
 
@@ -263,17 +262,40 @@ const getPedidosClientes = (req, res) => {
             return res.status(200).json({ mensaje: "No hay pedidos" });
         } else {
             //De lo contrario, obtenemos todos los pedidos
-            const queryPedidosClientes = "SELECT cl.id AS idCliente, CONCAT(u.nombre, ' ', u.apellidos) AS cliente, p.id AS idPedido, p.fecha AS fechaPedido, p.estado AS estadoPedido, pr.nombre AS productoNombre, pp.cantidad AS productoCantidad, ROUND(p.total, 2) AS totalPedido FROM clientes AS cl JOIN usuarios AS u ON u.id = cl.id JOIN pedidos AS p ON cl.id = p.id_cliente JOIN pedidos_productos AS pp ON p.id = pp.id_pedido JOIN productos AS pr ON pp.id_producto = pr.id;"
-            connection.query(queryPedidosClientes, (error, results) => {
+            const queryPedidosClientes = `
+                SELECT
+    CONCAT(u.nombre, ' ', u.apellidos) AS cliente,
+    u.url_imagen AS clienteImg,
+    p.id AS idPedido,
+    p.fecha AS fechaPedido,
+    p.estado AS estadoPedido,
+    pr.nombre AS productoNombre,
+    pr.precio AS productoPrecio,
+    pp.cantidad AS productoCantidad,
+    ROUND(p.total, 2) AS totalPedido
+
+FROM pedidos AS p
+
+-- JOIN con productos del pedido
+JOIN pedidos_productos AS pp ON p.id = pp.id_pedido
+JOIN productos AS pr ON pp.id_producto = pr.id
+
+-- JOIN con cliente y usuario
+JOIN clientes AS c ON p.id_cliente = c.id
+JOIN usuarios AS u ON c.id = u.id
+
+-- Filtro por estado
+WHERE p.estado = ?
+
+            `
+            connection.query(queryPedidosClientes, [filtro], (error, results) => {
                 //Si ocurre algun error mostramos un mensaje
                 if (error) {
                     return res.status(500).json({ mensaje: "Error al obtener los pedidos" });
                 }
 
-                // Creamos el JSON de los pedidos del cliente
-                const pedidosClientes = {
-                    pedidosClientes: [],
-                };
+                /// Creamos el JSON de los pedidos del cliente
+                const pedidosClientes = [];
 
                 // Creamos un mapa temporal para agrupar pedidos
                 const pedidosMap = {};
@@ -284,27 +306,28 @@ const getPedidosClientes = (req, res) => {
                     // Si el pedido no existe en el mapa, lo creamos
                     if (!pedidosMap[idPedido]) {
                         pedidosMap[idPedido] = {
-                            pedido: {
-                                idCliente: row.idCliente,
-                                cliente: row.cliente,
-                                id: idPedido,
-                                fecha: row.fechaPedido,
-                                estado: row.estadoPedido,
-                                total: row.totalPedido,
-                                productos: []
-                            }
+
+                            id: idPedido,
+                            cliente: row.cliente,
+                            clienteImg: row.clienteImg,
+                            fecha: row.fechaPedido,
+                            estado: row.estadoPedido,
+                            total: row.totalPedido,
+                            productos: []
+
                         };
 
                         // Lo añadimos al array principal
-                        pedidosClientes.pedidosClientes.push(pedidosMap[idPedido]);
+                        pedidosClientes.push(pedidosMap[idPedido]);
                     }
 
                     // Añadimos el producto actual al pedido correspondiente
-                    pedidosMap[idPedido].pedido.productos.push({
-                        producto: {
-                            nombre: row.productoNombre,
-                            cantidad: row.productoCantidad
-                        }
+                    pedidosMap[idPedido].productos.push({
+
+                        nombre: row.productoNombre,
+                        precio: row.productoPrecio,
+                        cantidad: row.productoCantidad
+
                     });
                 });
 
@@ -322,15 +345,24 @@ const getPedidosClientes = (req, res) => {
 const updateEstadoPedido = (req, res) => {
 
     //Obtenemos los datos del nuevo producto en el carrito
-    const { idPedido } = req.body;
+    const { idPedido, filtro } = req.body;
 
     //Si alguno de los datos está vació o no se envia, mandamos un error
-    if (!idPedido) {
+    if (!idPedido || !filtro) {
         return res.status(400).json({ mensaje: "Campos incompletos" })
     }
 
-    //Actualizamos el estado del pedido
-    const updateEstadoPedido = "UPDATE pedidos SET estado = 'enviado' WHERE id = ?"
+    let updateEstadoPedido = ""
+
+    switch (filtro) {
+        case "Pendiente de envío":
+            updateEstadoPedido = "UPDATE pedidos SET estado = 'Enviado' WHERE id = ?"
+            break;
+        case "Enviado":
+            updateEstadoPedido = "UPDATE pedidos SET estado = 'Recibido' WHERE id = ?"
+            break;
+    }
+
     connection.query(updateEstadoPedido, [idPedido], (error, result) => {
         //Si ocurre algun error en la actualizacion, mostramos un mensaje
         if (error) {

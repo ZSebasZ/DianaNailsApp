@@ -11,6 +11,7 @@ import opinionesRoutes from "./routes/opiniones.js" //Importamos la ruta de OPIN
 import productosRoutes from "./routes/productos.js" //Importamos la ruta de PRODUCTOS
 import carritoRoutes from "./routes/carrito.js" //Importamos la ruta de CARRITO
 import pedidoRoutes from "./routes/pedido.js" //Importamos la ruta de PEDIDO
+import manicuristasRoutes from "./routes/manicuristas.js" //Importamos la ruta de MANICURISTAS
 
 
 //Cargamos las variables de entorno
@@ -49,6 +50,9 @@ app.use("/api", carritoRoutes);
 
 //Usamos la ruta de PEDIDO
 app.use("/api", pedidoRoutes);
+
+//Usamos la ruta de MANICUROISTAS
+app.use("/api", manicuristasRoutes);
 
 //Puerto del servidor
 const PORT = process.env.PORT;

@@ -14,6 +14,7 @@ export function carritoReducer(carrito, action) {
             };
 
         case 'ANADIR_PRODUCTO':
+            console.log('Añadir producto:', action.payload);
             const existingItem = carrito.items.find(item => item.id_producto === action.payload.id_producto);
             if (existingItem) {
                 // Si ya existe, no agregar otra entrada, solo aumentar cantidad
@@ -33,35 +34,24 @@ export function carritoReducer(carrito, action) {
                 };
             }
 
-        case 'INCREMENT_QUANTITY':
+        case 'QUITAR_CANTIDAD':
             return {
                 ...carrito,
                 items: carrito.items.map(item =>
-                    item.id === action.payload
-                        ? { ...item, quantity: item.quantity + 1 }
+                    item.id_producto === action.payload.id_producto
+                        ? { ...item, cantidad: item.cantidad - 1 }
                         : item
                 ),
             };
 
-        case 'DECREMENT_QUANTITY':
+        case 'ELIMINAR_PRODUCTO':
+            console.log(action.payload)
             return {
                 ...carrito,
-                items: carrito.items
-                    .map(item =>
-                        item.id === action.payload
-                            ? { ...item, quantity: item.quantity - 1 }
-                            : item
-                    )
-                    .filter(item => item.quantity > 0), // si llega a 0, lo elimina
+                items: carrito.items.filter(item => item.id_producto !== action.payload),
             };
 
-        case 'REMOVE_FROM_CART':
-            return {
-                ...carrito,
-                items: carrito.items.filter(item => item.id !== action.payload),
-            };
-
-        case 'CLEAR_CART':
+        case 'HACER_PEDIDO':
             return {
                 ...carrito,
                 items: [],

@@ -9,6 +9,7 @@ export const TomarEscogerImagen = (props) => {
     const {usuario} = useContext(AuthContext)
 
     const perfilImgDefault = require("./../assets/images/perfilDefault.png");
+    const productoImgDefault = require("./../assets/images/sinImagen.png");
 
     const styles = StyleSheet.create({
         recuadroImagen: {
@@ -41,7 +42,7 @@ export const TomarEscogerImagen = (props) => {
                 ) : (props.urlImagen ? (
                     <Image source={{ uri: props.urlImagen }} style={styles.imagen} />
                 ) : (
-                    <Image source={perfilImgDefault} style={[styles.imagen, { opacity: 0.7 }]} />
+                    <Image source={props.esProducto ? productoImgDefault : perfilImgDefault} style={[styles.imagen, { opacity: 0.7 }]} />
                 )
                     
                 )}

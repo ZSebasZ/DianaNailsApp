@@ -17,10 +17,10 @@ router.patch("/nuevo-pedido-cliente", insertPedidoCliente)
 */
 
 //Creamos la ruta para el BORRADO(cancelar) de un PEDIDO
-router.delete("/delete-pedido-cliente/:idPedido", deletePedidoCliente)
+router.delete("/delete-pedido-cliente", deletePedidoCliente)
 
 //Creamos la ruta para la OBTENCION de los PEDIDOS del CLIENTE
-router.get("/get-pedidos-cliente", getPedidosCliente)
+router.post("/get-pedidos-cliente", getPedidosCliente)
 //JSON DE PRUEBA
 /*
     {
@@ -46,7 +46,7 @@ router.get("/get-detalles-pedido-cliente", getDetallesPedidosCliente)
 */
 
 //Creamos la ruta para la OBTENCION de los PEDIDOS
-router.get("/get-pedidos-clientes", getPedidosClientes)
+router.post("/get-pedidos-clientes", getPedidosClientes)
 //JSON DE PRUEBA
 /*
     {

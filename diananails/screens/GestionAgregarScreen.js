@@ -1,4 +1,4 @@
-import { View, Text, useColorScheme, ScrollView, Alert } from "react-native";
+import { View, Text, useColorScheme, ScrollView, Alert, Keyboard } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
@@ -11,27 +11,25 @@ import { BotonIconoTexto } from "../components/BotonIconoTexto";
 import { BotonTexto } from "../components/BotonTexto";
 import { TomarEscogerImagen } from "../components/TomarEscogerImagen";
 import { CampoTextoInput } from "../components/CampoTextoInput";
+import { servicioValidacionOnBlur, validacionServicio } from "../validaciones/servicioValidacion";
+import { ModalLoader } from "../components/ModalLoader";
+import { ModalFeedback } from "../components/ModalFeedback";
+import { nuevoServicio } from "../api/ServiciosController";
+import { productoValidacionOnBlur, validacionProducto } from "../validaciones/productoValidacion";
+import { nuevoProducto, subirImagenImgur } from "../api/ProductosController";
+import { manicuristaValidacionOnBlur, validacionManicurista } from "../validaciones/manicuristaValidacion";
+import { nuevaManicurista } from "../api/ManicuristasController";
 
 
 //Pantalla de Login
 export const GestionAgregarScreen = (props) => {
 
-    const insets = useSafeAreaInsets();
-
     //Estilos
     const styles = useThemedStyles(perfilStyles);
-    const colors = useThemedStyles();
-
     const fuenteTexto = fuenteTextoStyles();
 
-    //Detectamos el tema del sistema para saber que solo mostrar
-    const colorScheme = useColorScheme();
-    const logo = colorScheme === 'dark'
-        ? require('./../assets/images/logoDark.png')
-        : require('./../assets/images/logoLight.png');
-    const perfilImgDefault = require("./../assets/images/perfilDefault.png");
-
     const [imageUri, setImageUri] = useState(null);
+    const [imageBase64, setImageBase64] = useState(null);
 
     const pedirPermisos = async () => {
         const permisoCamara = await ImagePicker.requestCameraPermissionsAsync();
@@ -50,12 +48,21 @@ export const GestionAgregarScreen = (props) => {
 
         const result = await ImagePicker.launchCameraAsync({
             allowsEditing: true,
+            base64: true,
             aspect: [1, 1],
             quality: 1,
         });
 
         if (!result.canceled) {
-            setImageUri(result.assets[0].uri);
+            const { uri, base64 } = result.assets[0]
+            setImageUri(uri);
+            setImageBase64(base64)
+            setValoresCampos({ ...valoresCampos, imagen: base64 })
+            const nuevosErrores = { ...errores };
+            delete nuevosErrores.imagen;
+            setErrores(nuevosErrores);
+        } else {
+            setErrores({ ...errores, imagen: "La imagen del producto es obligatoria" })
         }
     };
 
@@ -65,17 +72,231 @@ export const GestionAgregarScreen = (props) => {
 
         const result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
+            base64: true,
             aspect: [1, 1],
             quality: 1,
         });
 
         if (!result.canceled) {
-            setImageUri(result.assets[0].uri);
+            const { uri, base64 } = result.assets[0]
+            setImageUri(uri);
+            setImageBase64(base64)
+            setValoresCampos({ ...valoresCampos, imagen: base64 })
+            const nuevosErrores = { ...errores };
+            delete nuevosErrores.imagen;
+            setErrores(nuevosErrores);
+        } else {
+            setErrores({ ...errores, imagen: "La imagen del producto es obligatoria" })
         }
     };
 
+    const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
+    const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
+
+    const [errores, setErrores] = useState({});
+    const [valoresCampos, setValoresCampos] = useState(
+        props.tipo === "servicio"
+            ? {
+                nombre: null,
+                precio: null,
+                tiempo: 1,
+            }
+            : props.tipo == "producto" ? {
+                imagen: null,
+                nombre: "Prueba producto",
+                descripcion: "Descrpcion del prioeucto de prueba",
+                precio: "10.99",
+                stock: "10"
+            } : props.tipo == "manicurista" && {
+                imagen: null,
+                dniNie: "98789878A",
+                nombre: "PruebaM",
+                apellidos: "Apellidos M",
+                telefono: "675757686",
+                email: "pruebam1@diananails.com",
+                contrasena: "Abc123.",
+                confirmarContrasena: "Abc123."
+            }
+    );
+
+    //En caso de sea un SERVICIO
+    const [tiempoContador, setTiempoContador] = useState(1);
+    const MAX_TIEMPO = 8;
+
+    const incrementarTiempo = () => {
+        if (tiempoContador < MAX_TIEMPO) {
+            setTiempoContador(tiempoContador + 1);
+            setValoresCampos({ ...valoresCampos, tiempo: tiempoContador + 1 })
+        }
+    };
+
+    const decrementarTiempo = () => {
+        if (tiempoContador > 1) {
+            setTiempoContador(tiempoContador - 1);
+            setValoresCampos({ ...valoresCampos, tiempo: tiempoContador - 1 })
+        }
+    };
+
+    const resetFormulario = () => {
+        setValoresCampos(
+            props.tipo === "servicio"
+                ? {
+                    nombre: null,
+                    precio: null,
+                    tiempo: 1,
+                }
+                : props.tipo == "producto" ? {
+                    imagen: null,
+                    nombre: null,
+                    descripcion: null,
+                    precio: null,
+                    stock: null
+                } : props.tipo == "manicurista" && {
+                    imagen: null,
+                    dniNie: null,
+                    nombre: null,
+                    apellidos: null,
+                    telefono: null,
+                    email: null,
+                    contrasena: null,
+                    confirmarContrasena: null
+                }
+        )
+
+        switch (props.tipo) {
+            case "servicio":
+                setTiempoContador(1)
+                break;
+            case "producto":
+                setImageUri(null);
+                setImageBase64(null)
+                break;
+            case "manicurista":
+                setImageUri(null);
+                setImageBase64(null)
+                break;
+        }
+
+    }
+
+    const onValueChange = (nombreCampo, valor) => {
+        setValoresCampos({ ...valoresCampos, [nombreCampo]: valor })
+    }
+
+    const onSubmitServicio = async () => {
+        Keyboard.dismiss()
+
+        const validacionErrores = validacionServicio(valoresCampos)
+
+        setErrores(validacionErrores)
+        if (Object.keys(validacionErrores).length == 0) {
+            try {
+                setModalLoaderVisible(true)
+                await nuevoServicio(valoresCampos.nombre, valoresCampos.precio, valoresCampos.tiempo)
+                resetFormulario()
+                setModalLoaderVisible(false)
+                setModalFeedbackVisible(true)
+            } catch (error) {
+                console.error("error al añadir el servicio", error)
+            }
+        }
+    }
+
+    const onSubmitProducto = async () => {
+        Keyboard.dismiss()
+        //console.log("entra")
+        //console.log(valoresCampos)
+        const validacionErrores = validacionProducto(valoresCampos)
+        //console.log("termina validaciones")
+        setErrores(validacionErrores)
+        if (Object.keys(validacionErrores).length == 0) {
+            try {
+
+                setModalLoaderVisible(true)
+                const imagenUrl = await subirImagen()
+                await nuevoProducto(imagenUrl, valoresCampos.nombre, valoresCampos.descripcion, valoresCampos.precio, valoresCampos.stock)
+                resetFormulario()
+                setModalLoaderVisible(false)
+                setModalFeedbackVisible(true)
+
+            } catch (error) {
+
+                console.error("error al añadir el servicio", error)
+            }
+        } else {
+            console.log("hay errores")
+        }
+    }
+
+    const onSubmitManicurista = async () => {
+        Keyboard.dismiss()
+        //console.log("entra")
+        //console.log(valoresCampos)
+        const validacionErrores = validacionManicurista(valoresCampos)
+        //console.log("termina validaciones")
+        console.log(validacionErrores)
+        setErrores(validacionErrores)
+        if (Object.keys(validacionErrores).length == 0) {
+            try {
+                setModalLoaderVisible(true)
+                const imagenUrl = await subirImagen()
+                await nuevaManicurista(imagenUrl, valoresCampos.dniNie, valoresCampos.nombre, valoresCampos.apellidos, valoresCampos.telefono, valoresCampos.email, valoresCampos.contrasena)
+                resetFormulario()
+                setModalLoaderVisible(false)
+                setModalFeedbackVisible(true)
+
+            } catch (error) {
+
+                console.error("error al añadir el servicio", error)
+            }
+        } else {
+            console.log("hay errores")
+        }
+    }
+
+    const subirImagen = async () => {
+        if (imageUri != null) {
+            try {
+                const respuesta = await subirImagenImgur({
+                    imagenBase64: imageBase64,
+                });
+                //actualizarFotoUsuario(respuesta.urlImagen);
+                //setDeshabilitadoBtnGuardarFoto(true)
+                setValoresCampos({ ...valoresCampos, imagen: respuesta })
+                return respuesta
+            } catch (error) {
+                console.error("Error al subir la nueva foto del usuario:", error);
+            }
+        }
+    };
+
+
+
     return (
         <Screen enTab={true}>
+
+            <ModalLoader
+                visible={modalLoaderVisible}
+            />
+
+            <ModalFeedback
+                titulo={
+                    props.tipo == "servicio" ? "Servicio añadido"
+                        : props.tipo == "producto" ? "Producto añadido"
+                            : props.tipo == "manicurista" && "Manicurista añadida"
+                }
+                feedback={
+                    props.tipo == "servicio" ? "El servicio se ha añadico correctamente y esta a disposicion de los clientes"
+                        : props.tipo == "producto" ? "El prodcuto se ha añadico correctamente y esta a disponible en la tienda"
+                            : props.tipo == "manicurista" && "La manicurista se ha añadico correctamente y esta lista para atender citas"
+                }
+                visible={modalFeedbackVisible}
+                fuenteTexto={fuenteTexto.gantariBold}
+                cerrar={() => {
+                    setModalFeedbackVisible(false)
+                }}
+            />
+
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <SeccionEnTab
@@ -115,6 +336,9 @@ export const GestionAgregarScreen = (props) => {
                                         onPress={seleccionarDeGaleria}
                                     />
                                 </View>
+                                {errores.imagen && (
+                                    <Text style={styles.textImagenRequerida}>{errores.imagen}</Text>
+                                )}
                             </View>
                         )}
                         <View style={{ gap: 10, marginBottom: (props.tipo == "producto" || props.tipo == "manicurista") ? 15 : 0 }}>
@@ -126,23 +350,34 @@ export const GestionAgregarScreen = (props) => {
                                             conIcono={true}
                                             nombreIcono={"assistant"}
                                             fuenteTexto={fuenteTexto.gantariRegular}
-                                            placeHolder={"Nombre del servicio"}
+                                            placeHolder={"Manicura clasica"}
                                             conLabel={true}
                                             textLabel={"Nombre"}
                                             labelCentrado={true}
                                             fuenteTextoLabel={fuenteTexto.gantariBold}
                                             contrasena={false}
+                                            nombreCampo={"nombre"}
+                                            valorCampo={valoresCampos.nombre}
+                                            onValueChange={onValueChange}
+                                            errorValidacion={errores.nombre}
+                                            onBlurValidacion={servicioValidacionOnBlur}
                                         />
                                         <CampoTextoInput
+                                            tipoCantidad={true}
                                             conIcono={true}
                                             nombreIcono={"currency-eur"}
                                             fuenteTexto={fuenteTexto.gantariRegular}
-                                            placeHolder={"Precio del servicio"}
+                                            placeHolder={"19.00"}
                                             conLabel={true}
                                             textLabel={"Precio"}
                                             labelCentrado={true}
                                             fuenteTextoLabel={fuenteTexto.gantariBold}
                                             contrasena={false}
+                                            nombreCampo={"precio"}
+                                            valorCampo={valoresCampos.precio}
+                                            onValueChange={onValueChange}
+                                            errorValidacion={errores.precio}
+                                            onBlurValidacion={servicioValidacionOnBlur}
                                         />
                                         <CampoTextoInput
                                             fuenteTexto={fuenteTexto.gantariRegular}
@@ -151,6 +386,10 @@ export const GestionAgregarScreen = (props) => {
                                             labelCentrado={true}
                                             fuenteTextoLabel={fuenteTexto.gantariBold}
                                             esTiempoRequerido={true}
+                                            tiempoRequerido={tiempoContador}
+                                            maxTiempo={MAX_TIEMPO}
+                                            onIncrementar={incrementarTiempo}
+                                            onDecrementar={decrementarTiempo}
                                         />
                                     </>
                                 )}
@@ -166,6 +405,11 @@ export const GestionAgregarScreen = (props) => {
                                             labelCentrado={true}
                                             fuenteTextoLabel={fuenteTexto.gantariBold}
                                             contrasena={false}
+                                            nombreCampo={"nombre"}
+                                            valorCampo={valoresCampos.nombre}
+                                            onValueChange={onValueChange}
+                                            errorValidacion={errores.nombre}
+                                            onBlurValidacion={productoValidacionOnBlur}
                                         />
                                         <CampoTextoInput
                                             conIcono={false}
@@ -178,28 +422,45 @@ export const GestionAgregarScreen = (props) => {
                                             contrasena={false}
                                             anchoCompleto={true}
                                             esTextArea={true}
+                                            nombreCampo={"descripcion"}
+                                            valorCampo={valoresCampos.descripcion}
+                                            onValueChange={onValueChange}
+                                            errorValidacion={errores.descripcion}
+                                            onBlurValidacion={productoValidacionOnBlur}
                                         />
                                         <CampoTextoInput
+                                            tipoCantidad={true}
                                             conIcono={true}
                                             nombreIcono={"currency-eur"}
                                             fuenteTexto={fuenteTexto.gantariRegular}
-                                            placeHolder={"Precio del producto"}
+                                            placeHolder={"99.99"}
                                             conLabel={true}
                                             textLabel={"Precio"}
                                             labelCentrado={true}
                                             fuenteTextoLabel={fuenteTexto.gantariBold}
                                             contrasena={false}
+                                            nombreCampo={"precio"}
+                                            valorCampo={valoresCampos.precio}
+                                            onValueChange={onValueChange}
+                                            errorValidacion={errores.precio}
+                                            onBlurValidacion={productoValidacionOnBlur}
                                         />
                                         <CampoTextoInput
+                                            tipoCantidad={true}
                                             conIcono={true}
                                             nombreIcono={"package-variant"}
                                             fuenteTexto={fuenteTexto.gantariRegular}
-                                            placeHolder={"Stock del producto"}
+                                            placeHolder={"999"}
                                             conLabel={true}
                                             textLabel={"Stock"}
                                             labelCentrado={true}
                                             fuenteTextoLabel={fuenteTexto.gantariBold}
                                             contrasena={false}
+                                            nombreCampo={"stock"}
+                                            valorCampo={valoresCampos.stock}
+                                            onValueChange={onValueChange}
+                                            errorValidacion={errores.stock}
+                                            onBlurValidacion={productoValidacionOnBlur}
                                         />
                                     </>
                                 )}
@@ -215,6 +476,11 @@ export const GestionAgregarScreen = (props) => {
                                             labelCentrado={true}
                                             fuenteTextoLabel={fuenteTexto.gantariBold}
                                             contrasena={false}
+                                            nombreCampo={"dniNie"}
+                                            valorCampo={valoresCampos.dniNie}
+                                            onValueChange={onValueChange}
+                                            errorValidacion={errores.dniNie}
+                                            onBlurValidacion={manicuristaValidacionOnBlur}
                                         />
                                         <CampoTextoInput
                                             conIcono={true}
@@ -226,6 +492,11 @@ export const GestionAgregarScreen = (props) => {
                                             labelCentrado={true}
                                             fuenteTextoLabel={fuenteTexto.gantariBold}
                                             contrasena={false}
+                                            nombreCampo={"nombre"}
+                                            valorCampo={valoresCampos.nombre}
+                                            onValueChange={onValueChange}
+                                            errorValidacion={errores.nombre}
+                                            onBlurValidacion={manicuristaValidacionOnBlur}
                                         />
                                         <CampoTextoInput
                                             conIcono={true}
@@ -237,6 +508,11 @@ export const GestionAgregarScreen = (props) => {
                                             labelCentrado={true}
                                             fuenteTextoLabel={fuenteTexto.gantariBold}
                                             contrasena={false}
+                                            nombreCampo={"apellidos"}
+                                            valorCampo={valoresCampos.apellidos}
+                                            onValueChange={onValueChange}
+                                            errorValidacion={errores.apellidos}
+                                            onBlurValidacion={manicuristaValidacionOnBlur}
                                         />
                                         <CampoTextoInput
                                             conIcono={true}
@@ -248,6 +524,11 @@ export const GestionAgregarScreen = (props) => {
                                             labelCentrado={true}
                                             fuenteTextoLabel={fuenteTexto.gantariBold}
                                             contrasena={false}
+                                            nombreCampo={"telefono"}
+                                            valorCampo={valoresCampos.telefono}
+                                            onValueChange={onValueChange}
+                                            errorValidacion={errores.telefono}
+                                            onBlurValidacion={manicuristaValidacionOnBlur}
                                         />
                                         <CampoTextoInput
                                             conIcono={true}
@@ -259,6 +540,11 @@ export const GestionAgregarScreen = (props) => {
                                             labelCentrado={true}
                                             fuenteTextoLabel={fuenteTexto.gantariBold}
                                             contrasena={false}
+                                            nombreCampo={"email"}
+                                            valorCampo={valoresCampos.email}
+                                            onValueChange={onValueChange}
+                                            errorValidacion={errores.email}
+                                            onBlurValidacion={manicuristaValidacionOnBlur}
                                         />
                                         <CampoTextoInput
                                             conIcono={true}
@@ -269,7 +555,12 @@ export const GestionAgregarScreen = (props) => {
                                             textLabel={"Contraseña"}
                                             labelCentrado={true}
                                             fuenteTextoLabel={fuenteTexto.gantariBold}
-                                            contrasena={false}
+                                            contrasena={true}
+                                            nombreCampo={"contrasena"}
+                                            valorCampo={valoresCampos.contrasena}
+                                            onValueChange={onValueChange}
+                                            errorValidacion={errores.contrasena}
+                                            onBlurValidacion={manicuristaValidacionOnBlur}
                                         />
                                         <CampoTextoInput
                                             conIcono={true}
@@ -280,7 +571,13 @@ export const GestionAgregarScreen = (props) => {
                                             textLabel={"Confirmar contraseña"}
                                             labelCentrado={true}
                                             fuenteTextoLabel={fuenteTexto.gantariBold}
-                                            contrasena={false}
+                                            contrasena={true}
+                                            nombreCampo={"confirmarContrasena"}
+                                            valorCampo={valoresCampos.confirmarContrasena}
+                                            onValueChange={onValueChange}
+                                            errorValidacion={errores.confirmarContrasena}
+                                            verificarContrasena={valoresCampos.contrasena}
+                                            onBlurValidacion={manicuristaValidacionOnBlur}
                                         />
                                     </>
                                 )}
@@ -292,6 +589,22 @@ export const GestionAgregarScreen = (props) => {
                                     fondo={true}
                                     fuenteTexto={fuenteTexto.gantariBold}
                                     textoBoton={`Agregar ${props.tipo}`}
+                                    onPress={() => {
+                                        switch (props.tipo) {
+                                            case "servicio":
+                                                onSubmitServicio()
+                                                //console.log("onsubmit servicio")
+                                                break;
+                                            case "producto":
+                                                onSubmitProducto()
+                                                //console.log("onsubmit producto")
+                                                break;
+                                            case "manicurista":
+                                                onSubmitManicurista()
+                                                //console.log("onsubmit manicurista")
+                                                break;
+                                        }
+                                    }}
                                 />
                             </View>
                         </View>

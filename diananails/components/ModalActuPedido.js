@@ -6,7 +6,7 @@ import { BotonTexto } from "./BotonTexto";
 
 
 
-export const ModalConfirmarAccion = (props) => {
+export const ModalActuPedido = (props) => {
     const tema = useThemedStyles()
 
     const styles = StyleSheet.create({
@@ -17,18 +17,15 @@ export const ModalConfirmarAccion = (props) => {
             alignItems: 'center'
         },
         modalContenido: {
-            backgroundColor: tema.errorContainer,
+            backgroundColor: tema.background,
             padding: 20,
             borderRadius: 10,
             width: '80%',
             alignItems: 'center'
         },
         textTituloModal: {
-            color: tema.onErrorContainer,
-            textAlign: "center",
             fontFamily: "GantariBold",
-            fontSize: hp(3),
-            marginBottom: 20
+            fontSize: hp(3)
         },
         textInfoModal: {
             fontFamily: "GantariRegular",
@@ -47,29 +44,29 @@ export const ModalConfirmarAccion = (props) => {
         >
             <View style={styles.modalFondo}>
                 <View style={styles.modalContenido}>
-                    <Text style={styles.textTituloModal}>{props.titulo}</Text>
+                    <Text style={styles.textTituloModal}>Actualización del estado del pedido</Text>
+                    <Text style={styles.textInfoModal}>{props.texto}</Text>
                     <View style={{ flexDirection: "row", gap: 10 }}>
-                        <BotonTexto
-                            botonNavegacion={true}
-                            esLink={false}
-                            fondo={true}
-                            fuenteTexto={props.fuenteTexto}
-                            textoBoton={"Cancelar"}
-                            tipoError={true}
-                            onPress={props.cerrar}
-
-                        />
                         <BotonTexto
                             botonNavegacion={true}
                             esLink={false}
                             fondo={false}
                             fuenteTexto={props.fuenteTexto}
+                            textoBoton={"Cancelar"}
+                            onPress={props.cerrar}
+
+                        />
+                        <BotonTexto
+                            botonNavegacion={true}
+                            esLink={props.navegacion ? true : false}
+                            href={props.navegacion ? props.href : false}
+                            fondo={true}
+                            fuenteTexto={props.fuenteTexto}
                             textoBoton={"Aceptar"}
-                            tipoError={true}
                             onPress={props.aceptar}
                         />
-
                     </View>
+
                 </View>
             </View>
 

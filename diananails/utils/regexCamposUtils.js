@@ -27,5 +27,6 @@ export const regex = {
 
 // Función genérica para verificar si un campo está vacío
 export function estaVacio(valorCampo) {
-    return !valorCampo || valorCampo.trim() == '';
+    //console.log(valorCampo)
+    return !valorCampo || valorCampo == null || valorCampo.trim() == '';
 }

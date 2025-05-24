@@ -1,5 +1,5 @@
 import express from "express"; //Importamos la libreria 'express'
-import {getServicios, nuevoServicio, updateServicio} from "./../controllers/serviciosController.js"
+import {getServicios, nuevoServicio, getServicio, updateServicio} from "./../controllers/serviciosController.js"
 
 //Creamos el objeto Router para establecer las rutas que vamos a usar
 const router = express.Router()
@@ -19,8 +19,11 @@ router.post("/nuevo-servicio", nuevoServicio)
     }
 */
 
+//Creamos la ruta para la OBTENCION de los SERVICIOS
+router.post("/get-servicio", getServicio)
+
 //Creamos la ruta para la ACTUALIZACION de un nuevo SERVICIO
-router.put("/update-servicio/:id", updateServicio)
+router.put("/update-servicio", updateServicio)
 //JSON DE PRUEBA
 /*
     {

@@ -69,7 +69,7 @@ export const CampoTextoInput = (props) => {
 
     const styles = StyleSheet.create({
         contenedorCampoLoginRegister: {
-            marginHorizontal: props.anchoCompleto ? 10 : wp(15),
+            marginHorizontal: props.anchoCompleto ? 10 : props.tipoCantidad ? wp(30) : wp(15),
         },
         contenedorInputs: {
             flexDirection: 'row',
@@ -135,7 +135,13 @@ export const CampoTextoInput = (props) => {
                     <Text style={[props.fuenteTextoLabel, styles.textLabel, props.labelCentrado && { textAlign: "center" }]}>{props.textLabel}</Text>
                 }
                 {props.esTiempoRequerido ?
-                    <ContadorCantidadProducto esTiempoRequerido={true} />
+                    <ContadorCantidadProducto
+                        esTiempoRequerido={true}
+                        tiempoRequerido={props.tiempoRequerido}
+                        maxTiempo={props.maxTiempo}
+                        onIncrementar={props.onIncrementar}
+                        onDecrementar={props.onDecrementar}
+                    />
                     :
                     <>
                         <View style={[styles.contenedorInputs, props.esTextArea && { height: "auto", minHeight: 120, alignItems: "flex-start" }]}>

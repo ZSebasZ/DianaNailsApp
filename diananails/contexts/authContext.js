@@ -17,6 +17,8 @@ export const AuthProvider = ({ children }) => {
         setUsuario({tipoUsuario: respuesta.tipoUsuario, datosUsuario: respuesta.usuario})
         await AsyncStorage.setItem('email', credenciales.email)
         await AsyncStorage.setItem('contrasena', credenciales.contrasena)
+        
+        return respuesta
     }
 
     const cerrarSesion = async () => {

@@ -156,7 +156,7 @@ const updateDatosPersCliente = (req, res) => {
 const deleteCliente = (req, res) => {
 
     //Obtenemos el id del cliente a eliminar
-    const { idCliente } = req.params;
+    const { idCliente } = req.body;
 
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!idCliente) {
@@ -189,8 +189,9 @@ const deleteCliente = (req, res) => {
                 }
 
                 if (results.length > 0) {
-                    const idsCitasCliente = results.map(row => row.id).join(",");
+                    const idsCitasCliente = results.map(row => row.id);
 
+                    console.log(idsCitasCliente)
                     //Borramos todas las citas_horas del cliente
                     const deleteCitasHorasCliente = "DELETE FROM citas_horas WHERE id_cita IN (?)"
                     connection.query(deleteCitasHorasCliente, [idsCitasCliente], (error, result) => {
@@ -201,6 +202,7 @@ const deleteCliente = (req, res) => {
                             })
                         }
 
+                        console.log("citas horas eliminadas")
                         //Borramos todas las citas_servicios del cliente
                         const deleteCitasServiciosCliente = "DELETE FROM citas_servicios WHERE id_cita IN (?)"
                         connection.query(deleteCitasServiciosCliente, [idsCitasCliente], (error, result) => {
@@ -210,6 +212,201 @@ const deleteCliente = (req, res) => {
                                     res.status(500).json({ mensaje: "Error al ejecutar: " + deleteCitasServiciosCliente });
                                 })
                             }
+
+                            //Borramos todas las citas del cliente
+                            const deleteCitasCliente = "DELETE FROM citas WHERE id_cliente = ?"
+                            connection.query(deleteCitasCliente, [idCliente], (error, result) => {
+                                //Si surge algun error, avisamos con un mensaje
+                                if (error) {
+                                    return connection.rollback(() => {
+                                        res.status(500).json({ mensaje: "Error al ejecutar: " + deleteCitasCliente });
+                                    })
+                                }
+
+                                //Obtenemos todas las pedidos del cliente
+                                const queryPedidosCliente = "SELECT id FROM pedidos WHERE id_cliente = ?"
+                                connection.query(queryPedidosCliente, [idCliente], (error, results) => {
+                                    //Si surge algun error, avisamos con un mensaje
+                                    if (error) {
+                                        return connection.rollback(() => {
+                                            res.status(500).json({ mensaje: "Error al ejecutar: " + queryPedidosCliente });
+                                        })
+                                    }
+
+                                    if (results.length > 0) {
+                                        const idsPedidosCliente = results.map(row => row.id);
+
+                                        //Borramos todos los pedidos_productos del cliente
+                                        const deletePedidosProductos = "DELETE FROM pedidos_productos WHERE id_pedido IN (?)"
+                                        connection.query(deletePedidosProductos, [idsPedidosCliente], (error, result) => {
+                                            //Si surge algun error, avisamos con un mensaje
+                                            if (error) {
+                                                return connection.rollback(() => {
+                                                    res.status(500).json({ mensaje: "Error al ejecutar: " + deletePedidosProductos });
+                                                })
+                                            }
+
+                                            //Borramos todos los pedidos del cliente
+                                            const deletePedidos = "DELETE FROM pedidos WHERE id_cliente = ?"
+                                            connection.query(deletePedidos, [idCliente], (error, result) => {
+                                                //Si surge algun error, avisamos con un mensaje
+                                                if (error) {
+                                                    return connection.rollback(() => {
+                                                        res.status(500).json({ mensaje: "Error al ejecutar: " + deletePedidos });
+                                                    })
+                                                }
+
+                                                //Obtenemos el id del carrito del cliente
+                                                const queryCarritoCliente = "SELECT id FROM carritos WHERE id_cliente = ?"
+                                                connection.query(queryCarritoCliente, [idCliente], (error, result) => {
+                                                    //Si surge algun error, avisamos con un mensaje
+                                                    if (error) {
+                                                        return connection.rollback(() => {
+                                                            res.status(500).json({ mensaje: "Error al ejecutar: " + queryCarritoCliente });
+                                                        })
+                                                    }
+
+                                                    const idCarritoCliente = result.id
+
+                                                    //Borramos todos carritos_productos del cliente
+                                                    const deleteCarritosProductos = "DELETE FROM carritos_productos WHERE id_carrito = ?"
+                                                    connection.query(deleteCarritosProductos, [idCarritoCliente], (error, result) => {
+                                                        //Si surge algun error, avisamos con un mensaje
+                                                        if (error) {
+                                                            return connection.rollback(() => {
+                                                                res.status(500).json({ mensaje: "Error al ejecutar: " + deleteCarritosProductos });
+                                                            })
+                                                        }
+
+                                                        //Borramos el carrito del cliente
+                                                        const deleteCarritoCliente = "DELETE FROM carritos WHERE id_cliente = ?"
+                                                        connection.query(deleteCarritoCliente, [idCliente], (error, result) => {
+                                                            //Si surge algun error, avisamos con un mensaje
+                                                            if (error) {
+                                                                return connection.rollback(() => {
+                                                                    res.status(500).json({ mensaje: "Error al ejecutar: " + deleteCarritoCliente });
+                                                                })
+                                                            }
+
+                                                            //Borramos el cliente
+                                                            const deleteCliente = "DELETE FROM clientes WHERE id = ?"
+                                                            connection.query(deleteCliente, [idCliente], (error, result) => {
+                                                                //Si surge algun error, avisamos con un mensaje
+                                                                if (error) {
+                                                                    return connection.rollback(() => {
+                                                                        res.status(500).json({ mensaje: "Error al ejecutar: " + deleteCliente });
+                                                                    })
+                                                                }
+
+                                                                //Borramos el cliente
+                                                                const deleteUsuario = "DELETE FROM usuarios WHERE id = ?"
+                                                                connection.query(deleteUsuario, [idCliente], (error, result) => {
+                                                                    //Si surge algun error, avisamos con un mensaje
+                                                                    if (error) {
+                                                                        return connection.rollback(() => {
+                                                                            res.status(500).json({ mensaje: "Error al ejecutar: " + deleteUsuario });
+                                                                        })
+                                                                    }
+
+                                                                    // Si todo salió bien, confirmamos la transacción
+                                                                    connection.commit((error) => {
+                                                                        if (error) {
+                                                                            return connection.rollback(() => {
+                                                                                res.status(500).json({ mensaje: "Error al confirmar la transacción" });
+                                                                            });
+                                                                        }
+
+                                                                        res.status(201).json({ mensaje: "Cliente eliminado junto a toda su informacion" });
+                                                                    });
+                                                                })
+                                                            })
+                                                        })
+                                                    })
+                                                })
+                                            })
+                                        })
+                                    } else {
+                                        //Borramos todos los pedidos del cliente
+                                        const deletePedidos = "DELETE FROM pedidos WHERE id_cliente = ?"
+                                        connection.query(deletePedidos, [idCliente], (error, result) => {
+                                            //Si surge algun error, avisamos con un mensaje
+                                            if (error) {
+                                                return connection.rollback(() => {
+                                                    res.status(500).json({ mensaje: "Error al ejecutar: " + deletePedidos });
+                                                })
+                                            }
+
+                                            //Obtenemos el id del carrito del cliente
+                                            const queryCarritoCliente = "SELECT id FROM carritos WHERE id_cliente = ?"
+                                            connection.query(queryCarritoCliente, [idCliente], (error, result) => {
+                                                //Si surge algun error, avisamos con un mensaje
+                                                if (error) {
+                                                    return connection.rollback(() => {
+                                                        res.status(500).json({ mensaje: "Error al ejecutar: " + queryCarritoCliente });
+                                                    })
+                                                }
+
+                                                const idCarritoCliente = result.id
+
+                                                //Borramos todos carritos_productos del cliente
+                                                const deleteCarritosProductos = "DELETE FROM carritos_productos WHERE id_carrito = ?"
+                                                connection.query(deleteCarritosProductos, [idCarritoCliente], (error, result) => {
+                                                    //Si surge algun error, avisamos con un mensaje
+                                                    if (error) {
+                                                        return connection.rollback(() => {
+                                                            res.status(500).json({ mensaje: "Error al ejecutar: " + deleteCarritosProductos });
+                                                        })
+                                                    }
+
+                                                    //Borramos el carrito del cliente
+                                                    const deleteCarritoCliente = "DELETE FROM carritos WHERE id_cliente = ?"
+                                                    connection.query(deleteCarritoCliente, [idCliente], (error, result) => {
+                                                        //Si surge algun error, avisamos con un mensaje
+                                                        if (error) {
+                                                            return connection.rollback(() => {
+                                                                res.status(500).json({ mensaje: "Error al ejecutar: " + deleteCarritoCliente });
+                                                            })
+                                                        }
+
+                                                        //Borramos el cliente
+                                                        const deleteCliente = "DELETE FROM clientes WHERE id = ?"
+                                                        connection.query(deleteCliente, [idCliente], (error, result) => {
+                                                            //Si surge algun error, avisamos con un mensaje
+                                                            if (error) {
+                                                                return connection.rollback(() => {
+                                                                    res.status(500).json({ mensaje: "Error al ejecutar: " + deleteCliente });
+                                                                })
+                                                            }
+
+                                                            //Borramos el cliente
+                                                            const deleteUsuario = "DELETE FROM usuarios WHERE id = ?"
+                                                            connection.query(deleteUsuario, [idCliente], (error, result) => {
+                                                                //Si surge algun error, avisamos con un mensaje
+                                                                if (error) {
+                                                                    return connection.rollback(() => {
+                                                                        res.status(500).json({ mensaje: "Error al ejecutar: " + deleteUsuario });
+                                                                    })
+                                                                }
+
+                                                                // Si todo salió bien, confirmamos la transacción
+                                                                connection.commit((error) => {
+                                                                    if (error) {
+                                                                        return connection.rollback(() => {
+                                                                            res.status(500).json({ mensaje: "Error al confirmar la transacción" });
+                                                                        });
+                                                                    }
+
+                                                                    res.status(201).json({ mensaje: "Cliente eliminado junto a toda su informacion" });
+                                                                });
+                                                            })
+                                                        })
+                                                    })
+                                                })
+                                            })
+                                        })
+                                    }
+                                })
+                            })
                         })
                     })
                 } else {
@@ -234,7 +431,7 @@ const deleteCliente = (req, res) => {
                             }
 
                             if (results.length > 0) {
-                                const idsPedidosCliente = results.map(row => row.id).join(",");
+                                const idsPedidosCliente = results.map(row => row.id);
 
                                 //Borramos todos los pedidos_productos del cliente
                                 const deletePedidosProductos = "DELETE FROM pedidos_productos WHERE id_pedido IN (?)"

@@ -42,7 +42,7 @@ export const OpinionesScreen = () => {
     })
 
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
-    const [modalFeedbackVisible, setModalFeedbackVisible] = useState(true)
+    const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
 
     const onValueChange = (nombreCampo, valor) => {
         setValoresCampos({ ...valoresCampos, [nombreCampo]: valor })

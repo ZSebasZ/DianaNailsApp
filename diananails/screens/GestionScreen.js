@@ -37,7 +37,7 @@ export const GestionScreen = () => {
                         <View style={styles.containerSeccion}>
                             <BotonIconoTexto
                                 esLink={true}
-                                href={"/(gestionAdmin)/(tabs-servicios)/servicios"}
+                                href={"/navegacion/(gestionAdmin)/(tabs-servicios)/servicios"}
                                 nombreIcono={"assistant"}
                                 fondo={true}
                                 fuenteTextoNormal={fuenteTexto.gantariBold}
@@ -46,7 +46,7 @@ export const GestionScreen = () => {
                             />
                             <BotonIconoTexto
                                 esLink={true}
-                                href={"/(gestionAdmin)/(tabs-productos)/productos"}
+                                href={"/navegacion/(gestionAdmin)/(tabs-productos)/productos"}
                                 nombreIcono={"store"}
                                 fondo={true}
                                 fuenteTextoNormal={fuenteTexto.gantariBold}
@@ -55,7 +55,7 @@ export const GestionScreen = () => {
                             />
                             <BotonIconoTexto
                                 esLink={true}
-                                href={"/(gestionAdmin)/(tabs-manicuristas)/manicuristas"}
+                                href={"/navegacion/(gestionAdmin)/(tabs-manicuristas)/manicuristas"}
                                 nombreIcono={"card-account-details"}
                                 fondo={true}
                                 fuenteTextoNormal={fuenteTexto.gantariBold}

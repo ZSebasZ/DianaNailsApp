@@ -20,7 +20,7 @@ import { AuthContext } from "../contexts/authContext";
 //Pantalla de Login
 export const LoginScreen = () => {
 
-    const {login} = useContext(AuthContext)
+    const { login, usuario } = useContext(AuthContext)
 
     useEffect(() => {
         const verificarSesion = async () => {
@@ -32,10 +32,29 @@ export const LoginScreen = () => {
 
                 if (email && contrasena) {
                     //const respuesta = await loginCliente({ email, contrasena });
-                    login({ email, contrasena })
+                    const respuesta = await login({ email, contrasena })
                     //console.log("Inicio de sesión exitoso:", respuesta);
                     setCredencialesIncorrectas(false);
-                    router.replace("/navegacion/(tabs-cliente)/(agendarCita)/");
+                    //router.replace("/navegacion/(tabs-cliente)/(agendarCita)/");
+                    switch (respuesta.tipoUsuario) {
+                        case 0:
+                            router.push("/navegacion/(tabs-admin)/citas")
+                            //console.log("ADMIN")
+                            break;
+                        case 1:
+                            router.push("/navegacion/(tabs-manicurista)/citas")
+                            console.log("MANICURISTA")
+                            break;
+                        case 2:
+                            router.push("/navegacion/(tabs-cliente)/(agendarCita)/")
+                            console.log("CLIENTE")
+                            break;
+                        default:
+                            console.log("NO SE HA CARGADO TIPO USUARIO")
+                            break;
+                    }
+
+
                 } else {
                     console.log("No hay datos guardados para email o contraseña");
                 }
@@ -47,8 +66,6 @@ export const LoginScreen = () => {
         verificarSesion();
     }, []);
 
-
-
     //Estilos
     const styles = useThemedStyles(loginStyles);
     const colors = useThemedStyles();
@@ -56,10 +73,10 @@ export const LoginScreen = () => {
 
     //VALIDACIONES
     const [valoresCampos, setValoresCampos] = useState({
-        email: "prueba@gmail.com",
+        email: "sgarcia@diananails.com",
         contrasena: "Abc123."
     })
-    
+
     const [errores, setErrores] = useState({})
     const [credencialesIncorrectas, setCredencialesIncorrectas] = useState(false)
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
@@ -76,12 +93,28 @@ export const LoginScreen = () => {
         if (Object.keys(validacionErrores).length == 0) {
             try {
                 setModalLoaderVisible(true)
-                login(valoresCampos)
-
+                const respuesta = await login(valoresCampos)
 
                 setCredencialesIncorrectas(false)
-                router.push("/navegacion/(tabs-cliente)/(agendarCita)/")
-                
+                //router.replace("/navegacion/(tabs-cliente)/(agendarCita)/");
+                switch (respuesta.tipoUsuario) {
+                    case 0:
+                        router.push("/navegacion/(tabs-admin)/citas")
+                        console.log("ADMIN")
+                        break;
+                    case 1:
+                        router.push("/navegacion/(tabs-manicurista)/citas")
+                        console.log("MANICURISTA")
+                        break;
+                    case 2:
+                        router.push("/navegacion/(tabs-cliente)/(agendarCita)/")
+                        console.log("CLIENTE")
+                        break;
+                    default:
+                        console.log("NO SE HA CARGADO TIPO USUARIO")
+                        break;
+                }
+
             } catch (error) {
                 const mensajeError = error.response?.data?.mensaje || 'Ocurrió un error inesperado';
                 console.log(mensajeError)

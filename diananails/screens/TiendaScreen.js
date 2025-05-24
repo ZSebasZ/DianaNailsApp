@@ -2,7 +2,7 @@ import { View, useColorScheme, ScrollView, FlatList } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { tiendaStyles } from "../styles/tiendaStyles";
 import { SeccionEnTab } from "../components/SeccionEnTab";
 import { BarraResumen } from "../components/BarraResumen";
@@ -12,6 +12,7 @@ import { AuthContext } from "./../contexts/authContext"
 import { obtenerProductosTienda } from "../api/ProductosController";
 import { anadirCarritoProducto, obtenerCarritoProductos } from "../api/CarritoController";
 import { useCarrito } from "../contexts/carritoContext";
+import { useFocusEffect } from "expo-router";
 
 
 
@@ -20,7 +21,7 @@ export const TiendaScreen = () => {
 
     const { usuario } = useContext(AuthContext)
     const [productos, setProductos] = useState([])
-    const { carritoProductos, dispatch } = useCarrito()
+    const { carritoProductos, carritoCargado, dispatch } = useCarrito()
     const [subtotal, setSubtotal] = useState(0)
 
     const producto = require("./../assets/images/manicurista.jpg")
@@ -32,17 +33,7 @@ export const TiendaScreen = () => {
             setProductos(respuesta)
             //console.log(respuesta)
         }
-
-        const cargarCarrito = async () => {
-            const respuesta = await obtenerCarritoProductos(usuario.datosUsuario.id_carrito, usuario.datosUsuario.id)
-            console.log(respuesta)
-            dispatch({ type: 'CARGAR_CARRITO', payload: respuesta });
-            setSubtotal(calcularTotal(respuesta))
-        }
-
-        cargarCarrito()
         obtenerProductos()
-
     }, [])
 
     const calcularTotal = (items) => {
@@ -51,20 +42,48 @@ export const TiendaScreen = () => {
         }, 0);
     };
 
+
     useEffect(() => {
-        setSubtotal(calcularTotal(carritoProductos))
-        // Extraemos los IDs de los productos que están en el carrito
-        const idsEnCarrito = carritoProductos.map(p => p.id_producto);
+        if (carritoProductos.length > 0) {
+            setSubtotal(calcularTotal(carritoProductos))
+            // Extraemos los IDs de los productos que están en el carrito
+            const idsEnCarrito = carritoProductos.map(p => p.id_producto);
 
-        // Creamos una nueva lista de productos donde marcamos enCarrito según esté en el carrito
-        const productosActualizados = productos.map(producto => ({
-            ...producto,
-            enCarrito: idsEnCarrito.includes(producto.id),
-        }));
+            // Creamos una nueva lista de productos donde marcamos enCarrito según esté en el carrito
+            const productosActualizados = productos.map(producto => ({
+                ...producto,
+                enCarrito: idsEnCarrito.includes(producto.id),
+            }));
 
-        setProductos(productosActualizados);
+            setProductos(productosActualizados);
+        }
     }, [carritoProductos])
-    
+
+
+    useFocusEffect(
+        useCallback(() => {
+            const obtenerProductos = async () => {
+                const respuesta = await obtenerProductosTienda(usuario.datosUsuario.id_carrito)
+                setProductos(respuesta)
+                //console.log(respuesta)
+            }
+
+            const cargarCarrito = async () => {
+                const respuesta = await obtenerCarritoProductos(usuario.datosUsuario.id_carrito, usuario.datosUsuario.id)
+                console.log(respuesta)
+                dispatch({ type: 'CARGAR_CARRITO', payload: respuesta });
+                setSubtotal(calcularTotal(respuesta))
+            }
+
+            obtenerProductos()
+            //setSubtotal(calcularTotal(carritoProductos))
+
+            if (carritoProductos.length == 0 && carritoCargado == false) {
+                cargarCarrito()
+            }
+
+        }, [])
+    );
 
     return (
         <Screen enTab={true}>
@@ -102,8 +121,8 @@ export const TiendaScreen = () => {
                                         enCarrito={item.enCarrito}
                                         agotado={item.agotado}
                                         onAnadir={async () => {
-                                            dispatch({ type: 'ANADIR_PRODUCTO', payload: { id_producto: item.id, nombre: item.nombre, cantidad: 1, precio: item.precio } });
-                                            anadirCarritoProducto(usuario.datosUsuario.id_carrito, item.id, 1)
+                                            await anadirCarritoProducto(usuario.datosUsuario.id_carrito, item.id, 1)
+                                            dispatch({ type: 'ANADIR_PRODUCTO', payload: { id_producto: item.id, nombre: item.nombre, cantidad: 1, precio: item.precio, stock: item.stock } });
                                         }}
                                     />
                                 }
@@ -157,7 +176,7 @@ export const TiendaScreen = () => {
                         botonCarrito={true}
                         cantidadProductos={carritoProductos.length}
                         subtotal={subtotal}
-                        hrefCarrito={"/(clienteScreens)/(pedidosCarrito)/carritoCliente"}
+                        hrefCarrito={"/navegacion/(clienteScreens)/(pedidosCarrito)/carritoCliente"}
                     />
                 </>
             )}

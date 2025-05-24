@@ -9,6 +9,9 @@ import { ContadorCantidadProducto } from "./ContadorCantidadProducto";
 export const CardProductoCarrito = (props) => {
     const tema = useThemedStyles()
 
+    const productoImgDefault = require("./../assets/images/producto.png");
+
+
     const styles = StyleSheet.create({
         contenedorProducto: {
             backgroundColor: tema.secondaryContainer,
@@ -44,29 +47,50 @@ export const CardProductoCarrito = (props) => {
         }
     })
 
+    function formatearPrecio(num) {
+        // Formatear con dos decimales fijos
+        let precio = num.toFixed(2);
+
+        // Separar parte entera y decimal
+        let [entero, decimal] = precio.split('.');
+
+        // Asegurar que la parte entera tenga al menos dos dígitos
+        if (entero.length < 2) {
+            entero = '0' + entero;
+        }
+
+        return `${entero}.${decimal}`;
+    }
+
     return (
         <View>
             <Pressable style={styles.contenedorProducto}>
                 <View>
-                    <Image source={props.productoImg} style={styles.productoImg}></Image>
-                    <View style={{gap: hp(1)}}>
+                    <Image source={props.productoImg ? { uri: productoImg } : productoImgDefault} style={styles.productoImg}></Image>
+                    <View style={{ gap: hp(1) }}>
                         <View style={styles.contenedorSeccionInfoProducto}>
                             <Text style={[props.fuenteTextoBold, styles.textSubTituloInfoProducto]}>Producto: </Text>
-                            <Text style={[props.fuenteTextoRegular, styles.textInfoProducto]}>Lima de grano 5</Text>
+                            <Text style={[props.fuenteTextoRegular, styles.textInfoProducto]}>{props.nombreProducto}</Text>
                         </View>
                         <View style={styles.contenedorSeccionInfoProducto}>
                             <Text style={[props.fuenteTextoBold, styles.textSubTituloInfoProducto]}>Precio: </Text>
-                            <Text style={[props.fuenteTextoRegular, styles.textInfoProducto]}>19.00 $</Text>
+                            <Text style={[props.fuenteTextoRegular, styles.textInfoProducto]}>{formatearPrecio(props.precioProducto)} €</Text>
                         </View>
                         <View style={[styles.contenedorSeccionInfoProducto, { justifyContent: "center" }]}>
                             <View>
                                 <Text style={[props.fuenteTextoBold, styles.textTituloInfoProducto]}>Cantidad</Text>
-                                <ContadorCantidadProducto/>
+                                <ContadorCantidadProducto
+                                    stock={props.stock}
+                                    enCarrito={0}
+                                    onIncrementar={props.onIncrementar}
+                                    onDecrementar={props.onDecrementar}
+                                    cantidad={props.cantidad}
+                                />
                             </View>
                         </View>
                         <View style={styles.contenedorSeccionInfoProducto}>
                             <Text style={[props.fuenteTextoBold, styles.textSubTituloInfoProducto]}>Subtotal: </Text>
-                            <Text style={[props.fuenteTextoRegular, styles.textInfoProducto]}>40.00 $</Text>
+                            <Text style={[props.fuenteTextoRegular, styles.textInfoProducto]}>{formatearPrecio(props.subtotal)} €</Text>
                         </View>
                         <View style={[styles.contenedorSeccionInfoProducto, { flexDirection: "column" }]}>
                             <BotonTexto
@@ -75,6 +99,7 @@ export const CardProductoCarrito = (props) => {
                                 tipoError={true}
                                 fuenteTexto={props.fuenteTextoBold}
                                 textoBoton={"Eliminar"}
+                                onPress={props.onEliminar}
                             />
                         </View>
                     </View>

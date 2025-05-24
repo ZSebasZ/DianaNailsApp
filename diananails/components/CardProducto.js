@@ -67,7 +67,7 @@ export const CardProducto = (props) => {
         <View>
             <Link href={props.href} asChild>
                 <Pressable style={styles.contenedorProducto}>
-                    <Image source={ props.productoImg ? {uri: productoImg} : productoImgDefault} style={styles.productoImg}></Image>
+                    <Image source={ props.productoImg ? {uri: props.productoImg} : productoImgDefault} style={styles.productoImg}></Image>
                     <View style={styles.contenedorInfoProducto}>
                         <Text style={[props.fuenteTextoBold, styles.textTituloProducto]}>{props.nombre}</Text>
                         <Text style={[props.fuenteTextoRegular, styles.textPrecioProducto]}>{formatearPrecio(props.precio)} €</Text>
@@ -84,7 +84,7 @@ export const CardProducto = (props) => {
                                 textoBoton={
                                     props.enCarrito != 0 || props.agotado != 0
                                         ? (props.agotado != 0 ? "Agotado" : "Producto en carrito")
-                                        : "Añadir"
+                                        : props.vistaAdmin ? "En stock" : "Añadir"
                                 }
                                 onPress={props.onAnadir}
                             />

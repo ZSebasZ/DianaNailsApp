@@ -8,29 +8,24 @@ import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { CardCita } from "../components/CardCita";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/authContext";
-import { cancelarCita, obtenerCitas } from "../api/CitasController";
+import { cancelarCita, obtenerCitasClientes, obtenerCitasPorManicurista } from "../api/CitasController";
 import { ModalConfirmarAccion } from "../components/ModalConfirmarAccion";
 import { ModalLoader } from "../components/ModalLoader";
 import { ModalFeedback } from "../components/ModalFeedback";
 
 
 //Pantalla de Login
-export const CitasClienteScreen = () => {
+export const CitasManicuristaScreen = () => {
 
     const { usuario } = useContext(AuthContext)
     const [citas, setCitas] = useState([])
-    const [modalConfirmarAccion, setModalConfirmarAccion] = useState(false)
-    const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
-    const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
-    const [citaSeleccionada, setCitaSeleccionada] = useState(null)
 
     const fuenteTexto = fuenteTextoStyles();
-    const manicurista = require("./../assets/images/manicurista.jpg")
     //Estilos
     const styles = useThemedStyles(citasClienteStyles);
 
     const cargarCitas = async () => {
-        const respuesta = await obtenerCitas(usuario.datosUsuario.id)// esto ya es el array correcto
+        const respuesta = await obtenerCitasPorManicurista(usuario.datosUsuario.id)// esto ya es el array correcto
         setCitas(respuesta.citas);
         //console.log(respuesta.citas)
     };
@@ -39,53 +34,15 @@ export const CitasClienteScreen = () => {
         cargarCitas();
     }, [])
 
-
-
-    const eliminarCita = async () => {
-        try {
-            setModalConfirmarAccion(false)
-            setModalLoaderVisible(true)
-            const respuesta = await cancelarCita(usuario.datosUsuario.id, citaSeleccionada)
-            console.log(respuesta)
-            setModalLoaderVisible(false)
-            setModalFeedbackVisible(true)
-            await cargarCitas();
-            setCitaSeleccionada(null)
-        } catch (error) {
-            console.error("Error al borrar la cita")
-        }
-    }
-
     return (
         <Screen enTab={true}>
-            <ModalLoader
-                visible={modalLoaderVisible}
-            />
-            <ModalConfirmarAccion
-                titulo={"¿Está seguro que quiere cancelar la cita?"}
-                visible={modalConfirmarAccion}
-                cerrar={() => {
-                    setCitaSeleccionada(null)
-                    setModalConfirmarAccion(false)
-                }}
-                aceptar={eliminarCita}
-            />
-            <ModalFeedback
-                titulo={"Cita eliminada"}
-                feedback={"La cita se ha eliminado correctamente"}
-                visible={modalFeedbackVisible}
-                fuenteTexto={fuenteTexto.gantariBold}
-                cerrar={() => setModalFeedbackVisible(false)}
-            />
-
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <SeccionEnTab
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
-                        tituloSeccion={"Mis citas"}
-                        textInfo1={"Aqui se muestran las próximas citas que tienes agendadas"}
-                        textInfo2={"Para cancelar una cita, solo haga click sobre ella"}
+                        tituloSeccion={"Citas"}
+                        textInfo1={"Proximas citas de los clientes"}
                     />
                     <FlatList
                         data={citas}
@@ -95,12 +52,9 @@ export const CitasClienteScreen = () => {
                         }}
                         renderItem={({ item }) =>
                             <CardCita
-                                mostrarCliente={false}
+                                mostrarCliente={true}
                                 datosCita={item.cita}
-                                onPress={() => {
-                                    setCitaSeleccionada(item.cita.id)
-                                    setModalConfirmarAccion(true)
-                                }}
+                                onPress={undefined}
                             />
                         }
                         scrollEnabled={false}

@@ -84,10 +84,10 @@ export const ProductoScreen = (props) => {
                                             setCantidadProducto(cantidadProducto - 1)
                                         }
                                     }}
-                                    onAnadir={() => {
+                                    onAnadir={async() => {
+                                        await anadirCarritoProducto(usuario.datosUsuario.id_carrito, producto.id, cantidadProducto)
                                         setProducto({ ...producto, enCarrito: 1 })
-                                        dispatch({ type: 'ANADIR_PRODUCTO', payload: { ...producto, cantidad: cantidadProducto } })
-                                        anadirCarritoProducto(usuario.datosUsuario.id_carrito, producto.id, cantidadProducto)
+                                        dispatch({ type: 'ANADIR_PRODUCTO', payload: { id_producto: producto.id, nombre: producto.nombre, precio: producto.precio, stock: producto.stock, cantidad: cantidadProducto } })
                                     }}
                                 />
                             </View>
@@ -99,7 +99,7 @@ export const ProductoScreen = (props) => {
                         subtotal={subtotal}
                         botonCarrito={true}
                         cantidadProductos={carritoProductos.length}
-                        hrefCarrito={"/(clienteScreens)/(pedidosCarrito)/carritoCliente"}
+                        hrefCarrito={"/navegacion/(clienteScreens)/(pedidosCarrito)/carritoCliente"}
                     />
                 </>
             )}

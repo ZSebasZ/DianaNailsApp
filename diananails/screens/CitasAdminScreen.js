@@ -1,4 +1,4 @@
-import { View, useColorScheme, ScrollView } from "react-native";
+import { View, useColorScheme, ScrollView, FlatList } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
@@ -6,25 +6,33 @@ import { citasClienteStyles } from '../styles/citasClienteStyles';
 import { SeccionEnTab } from "../components/SeccionEnTab";
 import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { CardCita } from "../components/CardCita";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../contexts/authContext";
+import { cancelarCita, obtenerCitasClientes } from "../api/CitasController";
+import { ModalConfirmarAccion } from "../components/ModalConfirmarAccion";
+import { ModalLoader } from "../components/ModalLoader";
+import { ModalFeedback } from "../components/ModalFeedback";
 
 
 //Pantalla de Login
 export const CitasAdminScreen = () => {
 
-    const insets = useSafeAreaInsets();
+    const { usuario } = useContext(AuthContext)
+    const [citas, setCitas] = useState([])
 
     const fuenteTexto = fuenteTextoStyles();
-
-    const manicurista = require("./../assets/images/manicurista.jpg")
-
     //Estilos
     const styles = useThemedStyles(citasClienteStyles);
-    const colors = useThemedStyles();
-    //Detectamos el tema del sistema para saber que solo mostrar
-    const colorScheme = useColorScheme();
-    const logo = colorScheme === 'dark'
-        ? require('./../assets/images/logoDark.png')
-        : require('./../assets/images/logoLight.png');
+
+    const cargarCitas = async () => {
+        const respuesta = await obtenerCitasClientes(usuario.datosUsuario.id)// esto ya es el array correcto
+        setCitas(respuesta.citas);
+        //console.log(respuesta.citas)
+    };
+
+    useEffect(() => {
+        cargarCitas();
+    }, [])
 
     return (
         <Screen enTab={true}>
@@ -34,38 +42,48 @@ export const CitasAdminScreen = () => {
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
                         tituloSeccion={"Citas"}
-                        textInfo1={"Aqui se muestran las próximas citas que han agendado los clientes"}
+                        textInfo1={"Proximas citas de los clientes"}
                     />
-                    <View style={styles.contenedorCitas}>
+                    <FlatList
+                        data={citas}
+                        contentContainerStyle={{
+                            gap: 20,
+                            marginBottom: 15
+                        }}
+                        renderItem={({ item }) =>
+                            <CardCita
+                                mostrarCliente={true}
+                                datosCita={item.cita}
+                                onPress={undefined}
+                            />
+                        }
+                        scrollEnabled={false}
+
+                    >
+                    </FlatList>
+
+                    {/*<View style={styles.contenedorCitas}>
                         <CardCita
-                            clienteImg={manicurista}
-                            clienteNombre={"Sara Ramirez"}
                             manicuristaImg={manicurista}
                             manicuristaNombre={"Sara Ramirez"}
-                            mostrarCliente={true}
+                            mostrarCliente={false}
                         />
                         <CardCita
-                            clienteImg={manicurista}
-                            clienteNombre={"Sara Ramirez"}
                             manicuristaImg={manicurista}
                             manicuristaNombre={"Sara Ramirez"}
-                            mostrarCliente={true}
+                            mostrarCliente={false}
                         />
                         <CardCita
-                            clienteImg={manicurista}
-                            clienteNombre={"Sara Ramirez"}
                             manicuristaImg={manicurista}
                             manicuristaNombre={"Sara Ramirez"}
-                            mostrarCliente={true}
+                            mostrarCliente={false}
                         />
                         <CardCita
-                            clienteImg={manicurista}
-                            clienteNombre={"Sara Ramirez"}
                             manicuristaImg={manicurista}
                             manicuristaNombre={"Sara Ramirez"}
-                            mostrarCliente={true}
+                            mostrarCliente={false}
                         />
-                    </View>
+                    </View>*/}
                 </ScrollView>
             </View>
         </Screen>

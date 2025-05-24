@@ -25,6 +25,43 @@ const getProductos = (req, res) => {
     })
 }
 
+//Creamos la funcion que se encarga de la OBTENCION de los PRODUCTOS - ADMIN
+const getProductosAdmin = (req, res) => {
+
+    //Obtenemos el id del carrito del cliente
+    const { idAdmin } = req.body;
+
+    if (!idAdmin) {
+        return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    //Sentencia SQL para la obtencion de los productos
+    const queryObtenerProductos = `
+        SELECT
+            p.id,
+            p.url_imagen,
+            p.nombre,
+            p.precio,
+            p.stock,
+            CASE
+                WHEN p.stock = 0 THEN true
+                ELSE false
+            END AS agotado
+        FROM productos p
+    `
+
+    //Hacemos la query para la obtencion de los productos
+    connection.query(queryObtenerProductos, (error, results) => {
+        //Si surge algun error, avisamos con un mensaje
+        if (error) {
+            return res.status(500).json({ mensaje: "Error obtener los productos" });
+        }
+
+        //De lo contrario, enviamos los servicios obtenidos
+        res.status(200).json(results)
+    })
+}
+
 //Creamos la funcion que se encarga de la OBTENCION de los detalles del PRODUCTO
 const getProductoDetalles = (req, res) => {
 
@@ -81,4 +118,64 @@ const nuevoProducto = (req, res) => {
 
 }
 
-export { getProductos, getProductoDetalles, nuevoProducto }
+const getProducto = (req, res) => {
+
+
+    //Obtenemos los datos del nuevo servicio
+    const { idProducto } = req.body;
+
+    //Si alguno de los datos está vació o no se envia, mandamos un error
+    if (!idProducto) {
+        return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    //Sentencia SQL para la obtencion de los datos
+    const queryObtenerProducto = "SELECT url_imagen, nombre, descripcion, precio, stock FROM productos WHERE id = ?"
+
+    //Hacemos la query para la obtencion de los servicios
+    connection.query(queryObtenerProducto, [idProducto], (error, results) => {
+        //Si surge algun error, avisamos con un mensaje
+        if (error) {
+            return res.status(500).json({ mensaje: "Error obtener el producto" });
+        }
+
+        //De lo contrario, enviamos los servicios obtenidos
+        res.status(200).json(results)
+    })
+}
+
+const updateProducto = (req, res) => {
+
+    //Obtenemos el id del servicio a actualizat
+    const { idProducto } = req.body
+
+    //Obtenemos los nuevos datos del servicio
+    const { url_imagen, nombre, descripcion, precio, stock } = req.body;
+
+    //Si alguno de los datos está vació o no se envia, mandamos un error
+    if (!url_imagen || !nombre || !precio || !descripcion || !stock) {
+        return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    //Sentencia SQL para actualizar el servicio
+    const updateProducto = "UPDATE productos SET url_imagen = ?, nombre = ?, descripcion = ?, precio = ?, stock = ? WHERE id = ?"
+
+    //Hacemos la actualizacion del servicio
+    connection.query(updateProducto, [url_imagen, nombre, descripcion, precio, stock, idProducto], (error, result) => {
+        //Si ocurre algun error en la actualizacion, mostramos un mensaje
+        if (error) {
+            return res.status(500).json({ mensaje: "Error al actualizar el producto" });
+        }
+
+        //Comprobamos si alguna fila se actualizó
+        if (result.affectedRows == 0) {
+            return res.status(404).json({ message: "producto no encontrado" });
+        }
+
+        //Si todo el proceso fue exitoso, monstramos un mensaje
+        res.status(200).json({ message: "producto actualizado correctamente" });
+    })
+
+}
+
+export { getProductos, getProductosAdmin, getProductoDetalles, nuevoProducto, getProducto, updateProducto }

@@ -32,10 +32,11 @@ const updateCarritoProducto = (req, res) => {
     const { idCarrito, idProducto, cantidad } = req.body;
 
     //Si alguno de los datos está vació o no se envia, mandamos un error
-    if (!idCarrito || !idProducto || cantidad < 0) {
+    if (!idCarrito || !idProducto || cantidad == null) {
         return res.status(400).json({ mensaje: "Campos incompletos" })
     }
 
+    
     if (cantidad == 0) {
         //Si la cantidad es 0, borramos el producto del carrito
         const deleteCarritoProducto = "DELETE FROM carritos_productos WHERE id_carrito = ? AND id_producto = ?"
@@ -49,9 +50,16 @@ const updateCarritoProducto = (req, res) => {
             res.status(200).json({ mensaje: "Producto elimado del carrito" })
         })
     } else {
+     
         //De lo contrario, actualizamos el producto del carrito
-        const updateCarritoProducto = "UPDATE carritos_productos SET cantidad = ? WHERE id_carrito = ? AND id_producto = ?"
-        connection.query(updateCarritoProducto, [cantidad, idCarrito, idProducto], (error, result) => {
+        let updateCarritoProducto = ""
+        if(cantidad == -1) {
+            updateCarritoProducto = "UPDATE carritos_productos SET cantidad = cantidad - 1 WHERE id_carrito = ? AND id_producto = ?"
+        } else {
+            updateCarritoProducto = "UPDATE carritos_productos SET cantidad = cantidad + 1 WHERE id_carrito = ? AND id_producto = ?"
+        }
+        //const updateCarritoProducto = "UPDATE carritos_productos SET cantidad = ? WHERE id_carrito = ? AND id_producto = ?"
+        connection.query(updateCarritoProducto, [idCarrito, idProducto], (error, result) => {
             //Si ocurre algun error en el actualizado, mostramos un mensaje
             if (error) {
                 return res.status(500).json({ mensaje: "Error al actualizar el producto del carrito" });
@@ -110,10 +118,10 @@ const getCarritoProductos = (req, res) => {
 
         if (subtotalCarrito == 0) {
             //Si el subtotal es 0, indicamos que no hay productos en el carrito
-            return res.status(200).json({ mensaje: "No hay productos en el carrito" });
+            return res.status(200).json([]);
         } else {
             //De lo contrario, obtenemos todos los productos del carrito
-            const queryCarritoProductos = "SELECT cp.id_producto, p.nombre, cp.cantidad, p.precio FROM carritos_productos as cp, productos as p WHERE cp.id_producto = p.id AND cp.id_carrito = ?"
+            const queryCarritoProductos = "SELECT cp.id_producto, p.nombre, cp.cantidad, p.precio, p.stock, p.url_imagen FROM carritos_productos as cp, productos as p WHERE cp.id_producto = p.id AND cp.id_carrito = ?"
             connection.query(queryCarritoProductos, [idCarrito], (error, results) => {
                 //Si ocurre algun error mostramos un mensaje
                 if (error) {

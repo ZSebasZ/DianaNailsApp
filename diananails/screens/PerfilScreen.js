@@ -13,18 +13,26 @@ import { TomarEscogerImagen } from "../components/TomarEscogerImagen";
 import { CampoTextoInput } from "../components/CampoTextoInput";
 import { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { datosPerfilUsuario, fotoUsuario } from "../api/AuthController";
+import { datosPerfilUsuario, eliminarCuentaCliente, fotoUsuario } from "../api/AuthController";
 import { AuthContext } from "../contexts/authContext";
 import { Stack } from "expo-router";
 import { Keyboard } from "react-native";
 import { validacionUpdateDatos, updateDatosValidacionOnBlur } from "../validaciones/updateDatosValidacion";
+import { ModalLoader } from "../components/ModalLoader";
+import { ModalFeedback } from "../components/ModalFeedback";
+import { ModalConfirmarAccion } from "../components/ModalConfirmarAccion";
 
 const IMGUR_CLIENT_ID = "fe29c6d3f1dde1a";
 
 //Pantalla de Login
 export const PerfilScreen = () => {
 
-    const { usuario, actualizarFotoUsuario, updateDatos } = useContext(AuthContext)
+    const { usuario, actualizarFotoUsuario, updateDatos, cerrarSesion } = useContext(AuthContext)
+
+    const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
+    const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
+    const [modalConfirmarAccion, setModalConfirmarAccion] = useState(false)
+
 
     //Estilos
     const styles = useThemedStyles(perfilStyles);
@@ -39,7 +47,7 @@ export const PerfilScreen = () => {
         ...(usuario.tipoUsuario == 2 && {
             direccionEnvio: usuario.datosUsuario.direccion_envio
         }),
-        
+
         ...((usuario.tipoUsuario == 0 || usuario.tipoUsuario == 1) && {
             dni: usuario.datosUsuario.dni
         })
@@ -50,18 +58,18 @@ export const PerfilScreen = () => {
     }
 
     const onSubmit = async () => {
-            Keyboard.dismiss()
-            const validacionErrores = validacionUpdateDatos(valoresCampos)
-            setErrores(validacionErrores)
-            if (Object.keys(validacionErrores).length == 0) {
-                try {
-                    updateDatos(valoresCampos)
-                } catch (error) {
-                    const mensajeError = error.response?.data?.mensaje || 'Ocurrió un error inesperado';
-                    console.log(mensajeError)
-                }
+        Keyboard.dismiss()
+        const validacionErrores = validacionUpdateDatos(valoresCampos)
+        setErrores(validacionErrores)
+        if (Object.keys(validacionErrores).length == 0) {
+            try {
+                updateDatos(valoresCampos)
+            } catch (error) {
+                const mensajeError = error.response?.data?.mensaje || 'Ocurrió un error inesperado';
+                console.log(mensajeError)
             }
         }
+    }
 
     const [imageUri, setImageUri] = useState(null);
     const [imageBase64, setImageBase64] = useState(null);
@@ -151,6 +159,18 @@ export const PerfilScreen = () => {
         }
     };
 
+    const eliminarCuenta = async () => {
+        try {
+            setModalConfirmarAccion(false)
+            setModalLoaderVisible(true)
+            await eliminarCuentaCliente(usuario.datosUsuario.id)
+            setModalLoaderVisible(false)
+            setModalFeedbackVisible(true)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <Screen enTab={true}>
             <Stack.Screen
@@ -158,6 +178,28 @@ export const PerfilScreen = () => {
                     headerBackVisible: true,
                 }}
             />
+            <ModalLoader
+                visible={modalLoaderVisible}
+            />
+            <ModalFeedback
+                titulo={"Cuenta eliminada con exito"}
+                feedback={"Su cuenta y todos los datos relacionados a ella se han eliminado con exito"}
+                visible={modalFeedbackVisible}
+                fuenteTexto={fuenteTexto.gantariBold}
+                cerrar={() => {
+                    setModalFeedbackVisible(false)
+                    cerrarSesion()
+                }}
+            />
+            <ModalConfirmarAccion
+                titulo={"¿Está seguro que quiere eliminar su cuenta y todos los datos relacionados a ella?"}
+                visible={modalConfirmarAccion}
+                cerrar={() => {
+                    setModalConfirmarAccion(false)
+                }}
+                aceptar={eliminarCuenta}
+            />
+
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <SeccionEnTab
@@ -223,6 +265,22 @@ export const PerfilScreen = () => {
                         <View style={{ gap: 10, marginBottom: 15 }}>
                             <Text style={styles.textTituloSeccion}>Datos personales</Text>
                             <View style={{ gap: 15 }}>
+                                {(usuario.tipoUsuario == 0 || usuario.tipoUsuario == 1) && (
+                                    <CampoTextoInput
+                                        conIcono={true}
+                                        nombreIcono={"card-account-details"}
+                                        fuenteTexto={fuenteTexto.gantariRegular}
+                                        placeHolder={"57463456A"}
+                                        conLabel={true}
+                                        textLabel={"DNI"}
+                                        labelCentrado={true}
+                                        fuenteTextoLabel={fuenteTexto.gantariBold}
+                                        contrasena={false}
+                                        nombreCampo={"dniNie"}
+                                        valorCampo={usuario.datosUsuario.dni}
+                                        deshabilitado={true}
+                                    />
+                                )}
                                 <CampoTextoInput
                                     conIcono={true}
                                     nombreIcono={"account"}
@@ -323,6 +381,9 @@ export const PerfilScreen = () => {
                                         tipoError={true}
                                         fuenteTexto={fuenteTexto.gantariBold}
                                         textoBoton={"Eliminar cuenta"}
+                                        onPress={() => {
+                                            setModalConfirmarAccion(true)
+                                        }}
                                     />
                                 }
 

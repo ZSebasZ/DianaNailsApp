@@ -4,7 +4,8 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 export const pedidosClienteStyles = (colors) => StyleSheet.create({
     
     contenedorFiltroPedidos: {
-        flexDirection: "row",
+        flexDirection: "column",
+        
         justifyContent: "center",
         alignItems: "center",
         gap: wp(2),

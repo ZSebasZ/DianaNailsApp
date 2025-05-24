@@ -48,8 +48,8 @@ export const CardCita = (props) => {
                         <View>
                             <Text style={[styles.textTituloSeccionCita, { marginBottom: 5 }]}>Cliente</Text>
                             <ImagenNombre
-                                imagen={props.datosCita.cliente}
-                                nombre={props.datosCita.clienteImg}
+                                imagen={props.datosCita.clienteImg}
+                                nombre={props.datosCita.cliente}
                                 textNormal={true}
                             />
                         </View>
@@ -80,15 +80,19 @@ export const CardCita = (props) => {
                         </View>
                     </View>
                 </View>
-                <View style={styles.lineaDivisora}></View>
-                <View>
-                    <Text style={[styles.textTituloSeccionCita, { marginBottom: 5 }]}>Manicurista</Text>
-                    <ImagenNombre
-                        imagen={props.datosCita.manicuristaImg}
-                        nombre={props.datosCita.manicurista}
-                        textNormal={true}
-                    />
-                </View>
+                {props.datosCita.manicurista && (
+                    <>
+                        <View style={styles.lineaDivisora}></View>
+                        <View>
+                            <Text style={[styles.textTituloSeccionCita, { marginBottom: 5 }]}>Manicurista</Text>
+                            <ImagenNombre
+                                imagen={props.datosCita.manicuristaImg}
+                                nombre={props.datosCita.manicurista}
+                                textNormal={true}
+                            />
+                        </View>
+                    </>
+                )}
                 <View style={styles.lineaDivisora}></View>
                 <View>
                     <Text style={styles.textTituloSeccionCita}>Metodo de pago</Text>

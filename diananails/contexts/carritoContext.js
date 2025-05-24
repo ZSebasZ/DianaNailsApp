@@ -9,7 +9,7 @@ export const CarritoProvider = ({ children }) => {
     const [carrito, dispatch] = useReducer(carritoReducer, initialState);
 
     return (
-        <CarritoContext.Provider value={{ carritoProductos: carrito.items, dispatch }}>
+        <CarritoContext.Provider value={{ carritoProductos: carrito.items, carritoCargado: carrito.carritoCargado, dispatch }}>
             {children}
         </CarritoContext.Provider>
     );
