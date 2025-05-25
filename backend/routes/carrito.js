@@ -1,5 +1,5 @@
 import express from "express"; //Importamos la libreria 'express'
-import {insertCarritoProducto, updateCarritoProducto, deleteCarritoProducto, getCarritoProductos} from "./../controllers/carritoController.js"
+import {insertCarritoProducto, updateCarritoProducto, deleteCarritoProducto, getCarritoProductos, vaciarCarrito} from "./../controllers/carritoController.js"
 
 //Creamos el objeto Router para establecer las rutas que vamos a usar
 const router = express.Router()
@@ -45,5 +45,8 @@ router.post("/get-carrito-productos", getCarritoProductos)
         "idCliente": 8
     }
 */
+
+router.delete("/vaciar-carrito", vaciarCarrito)
+
 
 export default router;

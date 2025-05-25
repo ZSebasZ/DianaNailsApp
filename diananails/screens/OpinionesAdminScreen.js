@@ -22,7 +22,7 @@ import { obtenerOpiniones, realizarOpinion } from "../api/OpinionesController";
 export const OpinionesAdminScreen = () => {
 
     const { usuario } = useContext(AuthContext)
-    const [opiniones, setOpiniones] = useState([])
+    const [opiniones, setOpiniones] = useState(null)
 
     const fuenteTexto = fuenteTextoStyles();
     //Estilos
@@ -88,9 +88,11 @@ export const OpinionesAdminScreen = () => {
 
     const cargarOpiniones = async () => {
         const respuesta = await obtenerOpiniones(valoresFiltro); // esto ya es el array correcto
-        setOpiniones(respuesta);
-
-
+        if (respuesta.length != 0) {
+            setOpiniones(respuesta);
+        } else {
+            setOpiniones(null)
+        }
         //console.log(respuesta)
     };
 
@@ -157,26 +159,31 @@ export const OpinionesAdminScreen = () => {
                             />
                         </View>
                     </View>
-
-                    <FlatList
-                        data={opiniones}
-                        contentContainerStyle={{
-                            gap: 20,
-                            marginVertical: 15
-                        }}
-                        renderItem={({ item }) =>
-                            <CardOpinion
-                                titulo={item.titulo}
-                                clienteImg={item.clienteImg}
-                                clienteNombre={item.clienteNombre}
-                                fecha={item.fecha}
-                                opinion={item.descripcion}
-                                estrellas={item.estrellas}
-                            />
-                        }
-                        scrollEnabled={false}
-                    >
-                    </FlatList>
+                    {opiniones == null ? (
+                        <View style={{ marginVertical: 15, alignItems: "center", justifyContent: "center" }}>
+                            <Text style={[styles.textInfo]}>No hay opiniones para el filtro aplicado</Text>
+                        </View>
+                    ) : (
+                        <FlatList
+                            data={opiniones}
+                            contentContainerStyle={{
+                                gap: 20,
+                                marginVertical: 15
+                            }}
+                            renderItem={({ item }) =>
+                                <CardOpinion
+                                    titulo={item.titulo}
+                                    clienteImg={item.clienteImg}
+                                    clienteNombre={item.clienteNombre}
+                                    fecha={item.fecha}
+                                    opinion={item.descripcion}
+                                    estrellas={item.estrellas}
+                                />
+                            }
+                            scrollEnabled={false}
+                        >
+                        </FlatList>
+                    )}
                 </ScrollView>
             </View>
         </Screen>

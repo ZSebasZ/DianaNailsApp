@@ -3,6 +3,10 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 export const productoStyles = (colors) => StyleSheet.create({
 
-    
+    textInfo: {
+        color: colors.onBackground,
+        fontFamily: "GantariBold",
+        fontSize: hp(2.2)
+    }
 
 });

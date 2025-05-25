@@ -94,7 +94,7 @@ export const GestionEdicionScreen = (props) => {
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
 
     const [errores, setErrores] = useState({});
-    const [valoresCampos, setValoresCampos] = useState();
+    const [valoresCampos, setValoresCampos] = useState(null);
 
     useEffect(() => {
         const obtenerDatos = async () => {
@@ -338,15 +338,19 @@ export const GestionEdicionScreen = (props) => {
                 }}
             />
 
-            {valoresCampos &&
-                <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                    <ScrollView showsVerticalScrollIndicator={false}>
-                        <SeccionEnTab
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            tituloSeccion={"Actualizar " + props.tipo}
-                            textInfo1={`Actualiza los datos de ${props.tipo == "manicurista" ? "esta" : "este"} ${props.tipo}`}
-                        />
+            <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <SeccionEnTab
+                        fuenteTextoBold={fuenteTexto.gantariBold}
+                        fuenteTextoRegular={fuenteTexto.gantariRegular}
+                        tituloSeccion={"Actualizar " + props.tipo}
+                        textInfo1={`Actualiza los datos de ${props.tipo == "manicurista" ? "esta" : "este"} ${props.tipo}`}
+                    />
+                    {valoresCampos == null ? (
+                        <View style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Text style={[styles.textInfo]}>{`Cargando informacion ${props.tipo == "manicurista" ? "de la" : "del"} ${props.tipo}`}</Text>
+                        </View>
+                    ) : (
                         <View style={{ gap: 20 }}>
                             {(props.tipo == "producto" || props.tipo == "manicurista") && (
                                 <View style={{ gap: 10 }}>
@@ -631,9 +635,9 @@ export const GestionEdicionScreen = (props) => {
                                 </View>
                             </View>
                         </View>
-                    </ScrollView>
-                </View>
-            }
+                    )}
+                </ScrollView>
+            </View>
         </Screen>
     );
 }

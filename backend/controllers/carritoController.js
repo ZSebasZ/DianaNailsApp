@@ -36,7 +36,7 @@ const updateCarritoProducto = (req, res) => {
         return res.status(400).json({ mensaje: "Campos incompletos" })
     }
 
-    
+
     if (cantidad == 0) {
         //Si la cantidad es 0, borramos el producto del carrito
         const deleteCarritoProducto = "DELETE FROM carritos_productos WHERE id_carrito = ? AND id_producto = ?"
@@ -50,10 +50,10 @@ const updateCarritoProducto = (req, res) => {
             res.status(200).json({ mensaje: "Producto elimado del carrito" })
         })
     } else {
-     
+
         //De lo contrario, actualizamos el producto del carrito
         let updateCarritoProducto = ""
-        if(cantidad == -1) {
+        if (cantidad == -1) {
             updateCarritoProducto = "UPDATE carritos_productos SET cantidad = cantidad - 1 WHERE id_carrito = ? AND id_producto = ?"
         } else {
             updateCarritoProducto = "UPDATE carritos_productos SET cantidad = cantidad + 1 WHERE id_carrito = ? AND id_producto = ?"
@@ -136,10 +136,10 @@ const getCarritoProductos = (req, res) => {
 
                 results.forEach(row => {
                     carritoProductos.carritoProductos.push({
-                            id: row.id_producto,
-                            nombre: row.nombre,
-                            cantidad: row.cantidad,
-                            totalPrecio: row.totalPrecio
+                        id: row.id_producto,
+                        nombre: row.nombre,
+                        cantidad: row.cantidad,
+                        totalPrecio: row.totalPrecio
                     });
                 });
 
@@ -153,4 +153,28 @@ const getCarritoProductos = (req, res) => {
 
 }
 
-export { insertCarritoProducto, updateCarritoProducto, deleteCarritoProducto, getCarritoProductos }
+const vaciarCarrito = (req, res) => {
+
+    //Obtenemos los datos del nuevo producto en el carrito
+    const { idCarrito } = req.body;
+
+    //Si alguno de los datos está vació o no se envia, mandamos un error
+    if (!idCarrito) {
+        return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    //Vaciamos el carrito
+    const deleteCarritoProductos = "DELETE FROM carritos_productos WHERE id_carrito = ?"
+    connection.query(deleteCarritoProductos, [idCarrito], (error, result) => {
+        //Si ocurre algun error en el borrado
+        if (error) {
+            return res.status(500).json({ mensaje: "Error al vaciar el carrito" });
+        }
+
+        //De lo contrario, enviamos un mensaje de exito
+        res.status(200).json({ mensaje: "Carrito vaciado con exito" })
+    })
+
+}
+
+export { insertCarritoProducto, updateCarritoProducto, deleteCarritoProducto, getCarritoProductos, vaciarCarrito }

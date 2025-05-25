@@ -50,6 +50,7 @@ export const ModalFeedback = (props) => {
                         botonNavegacion={true}
                         esLink={props.navegacion ? true : false}
                         href={props.navegacion ? props.href : false}
+                        replace={true}
                         fondo={true}
                         fuenteTexto={props.fuenteTexto}
                         textoBoton={"Aceptar"}

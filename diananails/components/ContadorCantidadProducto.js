@@ -61,8 +61,8 @@ export const ContadorCantidadProducto = (props) => {
             }
 
             <Pressable
-                style={[styles.botonCantidadProducto, { opacity: (props.stock == 0 || props.enCarrito == 1 || props.cantidad == 5 || ((props.cantidad == props.stock) && (props.cantidad && props.stock)) || props.tiempoRequerido == props.maxTiempo) ? 0.5 : 1 }]}
-                disabled={(props.stock == 0 || props.enCarrito == 1 || props.cantidad == 5 || ((props.cantidad == props.stock) && (props.cantidad && props.stock)) || props.tiempoRequerido == props.maxTiempo) ? true : false}
+                style={[styles.botonCantidadProducto, { opacity: (props.stock == 0 || props.enCarrito == 1 || props.cantidad == 5 || ((props.cantidad == props.stock) && (props.cantidad && props.stock)) || ((props.tiempoRequerido == props.maxTiempo) && props.tiempoRequerido && props.maxTiempo)) ? 0.5 : 1 }]}
+                disabled={(props.stock == 0 || props.enCarrito == 1 || props.cantidad == 5 || ((props.cantidad == props.stock) && (props.cantidad && props.stock)) || ((props.tiempoRequerido == props.maxTiempo) && props.tiempoRequerido && props.maxTiempo)) ? true : false}
                 onPress={props.onIncrementar}
             >
                 <Icono IconComponent={MaterialCommunityIcons} name="plus" onPrimary={false} style={[styles.iconoCantidadProducto]} />

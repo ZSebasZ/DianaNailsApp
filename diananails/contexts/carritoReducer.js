@@ -57,6 +57,12 @@ export function carritoReducer(carrito, action) {
                 items: [],
             };
 
+        case 'VACIAR_CARRITO':
+            return {
+                ...carrito,
+                items: [],
+            };
+
         default:
             return carrito;
     }

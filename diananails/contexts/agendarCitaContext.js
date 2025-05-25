@@ -1,4 +1,4 @@
-import { createContext, use, useState } from "react";
+import { createContext, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { loginCliente, updateDatosUsuario } from "../api/AuthController";
 import { router } from "expo-router";
@@ -6,6 +6,8 @@ import { router } from "expo-router";
 export const AgendarCitaContext = createContext()
 
 export const AgendarCitaProvider = ({ children }) => {
+
+    const [pasoAgendamiento, setPasoAgendamiento] = useState(1)
 
     const estadoInicialHora = { idHora: null, hora: null };
     const estadoInicialManicurista = { idManicurista: null, manicurista: null, urlImagen: null };
@@ -20,6 +22,7 @@ export const AgendarCitaProvider = ({ children }) => {
     const [manicurista, setManicurista] = useState({ idManicurista: null, manicurista: null, urlImagen: null })
     const [metodoPago, setMetodoPago] = useState({ idMetodoPago: null, metodoPago: null })
 
+    
     const alternarSeleccionServicio = (servicio) => {
         setServiciosSeleccionados((prev) => {
             const existe = prev.find(s => s.id === servicio.id);
@@ -51,7 +54,7 @@ export const AgendarCitaProvider = ({ children }) => {
             //console.log(manicuristas)
             // Si ya estaba seleccionada esa misma hora, la deselecciona
             if (prev.idHora === nuevaHora.idHora) {
-                setManicurista(null)
+                setManicurista(estadoInicialManicurista)
                 return { idHora: null, hora: null };
             }
 
@@ -99,7 +102,7 @@ export const AgendarCitaProvider = ({ children }) => {
         setManicuristas(null);
         setManicurista(estadoInicialManicurista);
         setMetodoPago(estadoInicialMetodoPago);
-        //router.push("/navegacion/(tabs-cliente)/(agendarCita)/");
+        //router.replace("/navegacion/cliente/(tabs-cliente)/(agendarCita)/")
     };
 
     return (
@@ -118,7 +121,9 @@ export const AgendarCitaProvider = ({ children }) => {
             metodoPago,
             seleccionarMetodoPago,
             resetHoraManicuristas,
-            reiniciarContexto
+            reiniciarContexto,
+            pasoAgendamiento,
+            setPasoAgendamiento
         }}>
             {children}
         </AgendarCitaContext.Provider>

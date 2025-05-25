@@ -12,7 +12,7 @@ const insertPedidoCliente = (req, res) => {
     }
 
     //Insertamos el nuevo pedido
-    const insertPedidoCliente = "INSERT INTO pedidos (id_cliente, id_metodo_pago, total, estado, fecha) VALUES (?, ?, ?, 'Pedido hecho', CURRENT_TIMESTAMP())"
+    const insertPedidoCliente = "INSERT INTO pedidos (id_cliente, id_metodo_pago, total, estado, fecha) VALUES (?, ?, ?, 'Pendiente de envío', CURRENT_TIMESTAMP())"
     connection.query(insertPedidoCliente, [idCliente, idMetodoPago, total], (error, result) => {
         //Si ocurre algun error en la insercion, mostramos un mensaje
         if (error) {

@@ -59,7 +59,12 @@ export const CampoTextoInput = (props) => {
         if (props.verificarContrasena) {
             setErrorOnBlur(props.onBlurValidacion(props.nombreCampo, props.valorCampo, props.verificarContrasena))
         } else {
-            setErrorOnBlur(props.onBlurValidacion(props.nombreCampo, props.valorCampo))
+            if (props.tipoLogin == 0) {
+                setErrorOnBlur(props.onBlurValidacion(props.nombreCampo, props.valorCampo, props.tipoLogin))
+            } else {
+                setErrorOnBlur(props.onBlurValidacion(props.nombreCampo, props.valorCampo))
+            }
+
         }
 
         if (errorOnBlur == 0) {
@@ -118,7 +123,11 @@ export const CampoTextoInput = (props) => {
                         secureTextEntry={props.contrasena}
                         value={props.valorCampo}
                         onChangeText={(text) => {
-                            props.onValueChange(props.nombreCampo, text)
+                            if (props.tipoLogin) {
+                                props.onValueChange(props.nombreCampo, text, props.tipoLogin)
+                            } else {
+                                props.onValueChange(props.nombreCampo, text)
+                            }
                         }}
                         onBlur={onBlur}
                         ref={inputRef}
@@ -153,7 +162,11 @@ export const CampoTextoInput = (props) => {
                                 secureTextEntry={props.contrasena}
                                 value={props.valorCampo}
                                 onChangeText={(text) => {
-                                    props.onValueChange(props.nombreCampo, text)
+                                    if (props.tipoLogin) {
+                                        props.onValueChange(props.nombreCampo, text, props.tipoLogin)
+                                    } else {
+                                        props.onValueChange(props.nombreCampo, text)
+                                    }
                                 }}
                                 onBlur={onBlur}
                                 ref={inputRef}

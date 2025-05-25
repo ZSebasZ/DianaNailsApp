@@ -8,6 +8,7 @@ export const AuthContext = createContext()
 export const AuthProvider = ({ children }) => {
 
     const [usuario, setUsuario] = useState(null)
+    const [tipoLogin, setTipoLogin] = useState(null)
 
     const login = async (credenciales) => {
         const respuesta = await loginCliente(credenciales)
@@ -37,6 +38,10 @@ export const AuthProvider = ({ children }) => {
         }))
     }
 
+    const tipoLoginUsuario = (tipo) => {
+        setTipoLogin(tipo)
+    }
+
     const updateDatos = async (datos) => {
         const respuesta = await updateDatosUsuario(usuario.datosUsuario.id, datos)
         console.log("Datos actualizados: ", respuesta)
@@ -53,7 +58,7 @@ export const AuthProvider = ({ children }) => {
     } 
 
     return (
-        <AuthContext.Provider value={{ usuario, login, cerrarSesion, actualizarFotoUsuario, updateDatos }}>
+        <AuthContext.Provider value={{ usuario, login, tipoLogin, tipoLoginUsuario, cerrarSesion, actualizarFotoUsuario, updateDatos }}>
             {children}
         </AuthContext.Provider>
     )

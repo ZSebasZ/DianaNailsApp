@@ -1,4 +1,4 @@
-import { View, useColorScheme, FlatList, ScrollView } from "react-native";
+import { View, useColorScheme, FlatList, ScrollView, Text } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
@@ -19,36 +19,25 @@ import { AuthContext } from "../contexts/authContext";
 export const FechaHoraCitaScreen = () => {
 
     const { usuario } = useContext(AuthContext)
-    const { serviciosSeleccionados, subtotal, fecha, seleccionarFecha, hora, manicuristas, seleccionarHora, resetHoraManicuristas } = useContext(AgendarCitaContext)
+    const { serviciosSeleccionados, subtotal, fecha, seleccionarFecha, hora, manicuristas, seleccionarHora, resetHoraManicuristas, setPasoAgendamiento } = useContext(AgendarCitaContext)
 
-
-    const items = [
-        { label: 'Javaaa', value: 'java' },
-        { label: 'JavaScript', value: 'javascript' },
-        { label: 'Python', value: 'python' },
-        { label: 'C#', value: 'csharp' },
-        { label: 'Rubyy', value: 'rubyY' },
-        { label: 'Rubyyy', value: 'rubyYY' },
-        { label: 'Rubyyy', value: 'rubyYYY' },
-        { label: 'Rubyyyy', value: 'rubyYYYY' },
-    ];
 
     const fuenteTexto = fuenteTextoStyles();
     //Estilos
     const styles = useThemedStyles(fechaHoraStyles);
     const tema = useThemedStyles()
 
-    const [horasManicuristas, setHorasManicuristas] = useState()
+    const [horasManicuristas, setHorasManicuristas] = useState(null)
 
     const diaSeleccionado = async (dia) => {
         const fecha = new Date(dia.dateString);
         const diaSemana = fecha.getDay(); // 0: Domingo, 6: Sábado
 
-        /*
+
         if (diaSemana === 0 || diaSemana === 6) {
             return;
         }
-        */
+
         // day.dateString tiene la fecha en formato 'YYYY-MM-DD'
         //console.log('Fecha seleccionada:', dia.dateString);
         //setFechaSeleccionada(day.dateString);
@@ -61,7 +50,7 @@ export const FechaHoraCitaScreen = () => {
                 const idsServicios = serviciosSeleccionados.map(servicio => servicio.id);
                 const respuesta = await obtenerHorasManicuristasDisponibles({ idCliente: usuario.datosUsuario.id, fecha: fecha, servicios: idsServicios }) // esto ya es el array correcto
                 setHorasManicuristas(Object.values(respuesta));
-                //console.log(respuesta)
+                //console.log("cambiamos horas")
             };
 
             cargarHoras();
@@ -71,6 +60,7 @@ export const FechaHoraCitaScreen = () => {
 
     useEffect(() => {
         if (fecha == null) {
+            console.log("tin")
             seleccionarFecha(obtenerFechaActual())
         }
     }, [])
@@ -78,11 +68,23 @@ export const FechaHoraCitaScreen = () => {
 
     const obtenerFechaActual = () => {
         const hoy = new Date();
+        const diaSemana = hoy.getDay(); // 0 = domingo, 6 = sábado
+
+        if (diaSemana === 6) {
+            // Sábado: sumamos 2 días
+            hoy.setDate(hoy.getDate() + 2);
+        } else if (diaSemana === 0) {
+            // Domingo: sumamos 1 día
+            hoy.setDate(hoy.getDate() + 1);
+        }
+
         const yyyy = hoy.getFullYear();
         const mm = String(hoy.getMonth() + 1).padStart(2, '0');
         const dd = String(hoy.getDate()).padStart(2, '0');
+
         return `${yyyy}-${mm}-${dd}`;
     };
+
 
 
     const hoy = new Date();
@@ -115,6 +117,7 @@ export const FechaHoraCitaScreen = () => {
                     />
                     <View style={styles.contenedorCalendarioPicker}>
                         <Calendar
+                            current={obtenerFechaActual()}
                             minDate={fechaMin}
                             maxDate={fechaMax}
                             onDayPress={diaSeleccionado}
@@ -139,31 +142,37 @@ export const FechaHoraCitaScreen = () => {
                         tituloSeccion={"Hora"}
                         textInfo1={"Selecciona la hora de la cita"}
                     />
-                    <FlatList
-                        data={horasManicuristas}
-                        numColumns={4}
+                    {horasManicuristas == null ? (
+                        <View style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Text style={[styles.textInfo]}>Cargando horas disponibles...</Text>
+                        </View>
+                    ) : (
+                        <FlatList
+                            data={horasManicuristas}
+                            numColumns={4}
 
-                        contentContainerStyle={{
-                            gap: 20,
-                            marginBottom: 80,
-                        }}
-                        columnWrapperStyle={{
-                            justifyContent: "center",
-                            gap: 20
-                        }}
-                        renderItem={({ item }) =>
-                            <BotonTexto
-                                botonNavegacion={true}
-                                esLink={false}
-                                fondo={hora.idHora === item.idHora}
-                                fuenteTexto={fuenteTexto.gantariRegular}
-                                textoBoton={item.hora}
-                                onPress={() => seleccionarHora(item, item.manicuristas)}
-                            />
-                        }
-                        scrollEnabled={false}
+                            contentContainerStyle={{
+                                gap: 20,
+                                marginBottom: 80,
+                            }}
+                            columnWrapperStyle={{
+                                justifyContent: "center",
+                                gap: 20
+                            }}
+                            renderItem={({ item }) =>
+                                <BotonTexto
+                                    botonNavegacion={true}
+                                    esLink={false}
+                                    fondo={hora.idHora === item.idHora}
+                                    fuenteTexto={fuenteTexto.gantariRegular}
+                                    textoBoton={item.hora}
+                                    onPress={() => seleccionarHora(item, item.manicuristas)}
+                                />
+                            }
+                            scrollEnabled={false}
 
-                    ></FlatList>
+                        ></FlatList>
+                    )}
                     {/*<ListaDropdown
                         items={items}
                         fuenteTexto={fuenteTexto.gantariRegular}
@@ -172,12 +181,18 @@ export const FechaHoraCitaScreen = () => {
             </View>
             <BotonesCancelarVerServicios />
             <BarraResumen
+                onPress={() => {
+                    setPasoAgendamiento(3)
+                }}
+                onPressAtras={() => {
+                    setPasoAgendamiento(1)
+                }}
                 botonVolver={true}
                 hrefAtras={"../"}
                 botonSiguiente={true}
                 btnSiguienteDeshabilitado={hora.hora == null ? true : false}
                 subtotal={subtotal}
-                hrefSiguiente={"/navegacion/(tabs-cliente)/(agendarCita)/(screens)/elegirManicuristaMetodoPago"}
+                hrefSiguiente={"/navegacion/cliente/(tabs-cliente)/(agendarCita)/(screens)/elegirManicuristaMetodoPago"}
             />
         </Screen>
     );

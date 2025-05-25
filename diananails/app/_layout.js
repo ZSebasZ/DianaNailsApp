@@ -25,7 +25,6 @@ export default function Layout() {
   }
   return (
     <AuthProvider>
-      <CarritoProvider>
         <ThemeProvider>
           <Stack
             screenOptions={{
@@ -34,7 +33,6 @@ export default function Layout() {
             }}
           />
         </ThemeProvider>
-      </CarritoProvider>
     </AuthProvider>
 
   );

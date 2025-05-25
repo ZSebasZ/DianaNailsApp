@@ -23,5 +23,10 @@ export const opinionesStyles = (colors) => StyleSheet.create({
         marginTop: hp(2),
         marginBottom: hp(2),
         gap: 15
+    },
+    textInfo: {
+        color: colors.onBackground,
+        fontFamily: "GantariBold",
+        fontSize: hp(2.2)
     }
 });

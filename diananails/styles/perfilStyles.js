@@ -14,5 +14,10 @@ export const perfilStyles = (colors) => StyleSheet.create({
         textAlign: "center",
         fontFamily: "GantariRegular",
         
+    },
+    textInfo: {
+        color: colors.onBackground,
+        fontFamily: "GantariBold",
+        fontSize: hp(2.2)
     }
 });

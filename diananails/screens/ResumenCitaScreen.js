@@ -15,13 +15,15 @@ import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 import { AuthContext } from "../contexts/authContext";
 import { agendarCita } from "../api/AgendarCitaController";
 import { router } from "expo-router";
+import { ModalLoader } from "../components/ModalLoader";
+import { ModalFeedback } from "../components/ModalFeedback";
 
 
 //Pantalla de Login
 export const ResumenCitaScreen = () => {
 
-    const {usuario} = useContext(AuthContext)
-    const { subtotal, serviciosSeleccionados, tiempoTotal, fecha, hora, manicurista, metodoPago, reiniciarContexto  } = useContext(AgendarCitaContext)
+    const { usuario } = useContext(AuthContext)
+    const { subtotal, serviciosSeleccionados, tiempoTotal, fecha, hora, manicurista, metodoPago, reiniciarContexto, setPasoAgendamiento } = useContext(AgendarCitaContext)
 
     const manicuristaImg = "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
     const fuenteTexto = fuenteTextoStyles();
@@ -49,6 +51,8 @@ export const ResumenCitaScreen = () => {
 
     const agendarCitaCliente = async () => {
         try {
+            setModalLoaderVisible(true)
+            
             const idsServicios = serviciosSeleccionados.map(servicio => servicio.id);
             const respuesta = await agendarCita({
                 idCliente: usuario.datosUsuario.id,
@@ -58,17 +62,43 @@ export const ResumenCitaScreen = () => {
                 idManicurista: manicurista.idManicurista,
                 precio: subtotal
             })
-            reiniciarContexto()
-            router.replace("/navegacion/(tabs-cliente)/(agendarCita)/")
+                
+            setModalLoaderVisible(false)
+            setModalFeedbackVisible(true)
+            //reiniciarContexto()
+            //router.replace("/navegacion/cliente/(tabs-cliente)/(agendarCita)/")
             console.log(respuesta)
-        }catch (error) {
+            
+        } catch (error) {
             console.error("Error al agendar cita:", error)
         }
     }
 
 
+    const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
+    const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
+
     return (
         <Screen enTab={true}>
+
+            <ModalLoader
+                visible={modalLoaderVisible}
+            />
+
+            <ModalFeedback
+                titulo={"Cita agendada"}
+                feedback={"Tu cita ha sido agendad correctamente"}
+                visible={modalFeedbackVisible}
+                fuenteTexto={fuenteTexto.gantariBold}
+                cerrar={() => {
+                    reiniciarContexto()
+                    setModalFeedbackVisible(false)
+                    setPasoAgendamiento(1)
+                    //router.replace("/navegacion/cliente")
+
+                }}
+            />
+
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <SeccionEnTab
@@ -158,10 +188,13 @@ export const ResumenCitaScreen = () => {
 
                 </ScrollView>
             </View>
-            <BotonesCancelarVerServicios 
+            <BotonesCancelarVerServicios
                 esResumenScreen={true}
             />
             <BarraResumen
+                onPressAtras={() => {
+                    setPasoAgendamiento(3)
+                }}
                 botonVolver={true}
                 hrefAtras={"../"}
                 botonAgendarCita={true}

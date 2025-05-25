@@ -8,27 +8,40 @@ import { ContenedorInputs } from "../components/ContenedorInputs";
 import { CampoTextoInput } from "../components/CampoTextoInput";
 import { BotonTexto } from "../components/BotonTexto";
 import { validacionRegistro, registroValidacionOnBlur } from "../validaciones/registroValidacion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { registroCliente } from "../api/AuthController";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import { ModalFeedback } from "../components/ModalFeedback";
 import { ModalLoader } from "../components/ModalLoader";
+import { AuthContext } from "../contexts/authContext";
 
 //Pantalla de Login
 export const RegistroScreen = () => {
+
+    const { tipoLogin } = useContext(AuthContext)
 
     const styles = useThemedStyles(registroStyles);
     const fuenteTexto = fuenteTextoStyles();
 
     //VALIDACIONES
-    const [valoresCampos, setValoresCampos] = useState({ 
-        nombre: "sebas", 
-        apellidos: "jimenez", 
-        telefono: "657575757", 
-        direccionEnvio: "pase, 21", 
-        email: "prueba1@gmail.com", 
+    const [valoresCampos, setValoresCampos] = useState({
+        /*
+        nombre: "sebas",
+        apellidos: "jimenez",
+        telefono: "657575757",
+        direccionEnvio: "pase, 21",
+        email: "prueba1@gmail.com",
         contrasena: "Abc123.",
         confirmarContrasena: "Abc123."
+        */
+
+        nombre: null,
+        apellidos: null,
+        telefono: null,
+        direccionEnvio: null,
+        email: null,
+        contrasena: null,
+        confirmarContrasena: null
     })
     const [errores, setErrores] = useState({})
 
@@ -68,6 +81,18 @@ export const RegistroScreen = () => {
         }
     }
 
+    const resetFormulario = () => {
+        setValoresCampos({
+            nombre: null,
+            apellidos: null,
+            telefono: null,
+            direccionEnvio: null,
+            email: null,
+            contrasena: null,
+            confirmarContrasena: null
+        })
+    }
+
     return (
         <Screen>
             <Stack.Screen
@@ -86,7 +111,10 @@ export const RegistroScreen = () => {
                 href={"../"}
                 visible={modalFeedbackVisible}
                 fuenteTexto={fuenteTexto.gantariBold}
-                cerrar={() => setModalFeedbackVisible(false)}
+                cerrar={() => {
+                    setModalFeedbackVisible(false)
+                    resetFormulario()
+                }}
             />
 
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
@@ -154,6 +182,7 @@ export const RegistroScreen = () => {
                                 onValueChange={onValueChange}
                                 errorValidacion={errores.email}
                                 onBlurValidacion={registroValidacionOnBlur}
+                                tipoLogin={tipoLogin}
                             />
                             <CampoTextoInput
                                 conIcono={true}

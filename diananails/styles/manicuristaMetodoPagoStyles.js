@@ -43,4 +43,9 @@ export const manicuristaMetodoPagoStyles = (colors) => StyleSheet.create({
     dropdownIcon: {
         tintColor: colors.primary, // Color de la flecha
     },
+    textInfo: {
+        color: colors.onBackground,
+        fontFamily: "GantariBold",
+        fontSize: hp(2.2)
+    }
 });

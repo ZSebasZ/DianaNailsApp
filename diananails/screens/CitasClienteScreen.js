@@ -1,4 +1,4 @@
-import { View, useColorScheme, ScrollView, FlatList } from "react-native";
+import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
@@ -12,13 +12,14 @@ import { cancelarCita, obtenerCitas } from "../api/CitasController";
 import { ModalConfirmarAccion } from "../components/ModalConfirmarAccion";
 import { ModalLoader } from "../components/ModalLoader";
 import { ModalFeedback } from "../components/ModalFeedback";
+import { BotonTexto } from "../components/BotonTexto";
 
 
 //Pantalla de Login
 export const CitasClienteScreen = () => {
 
     const { usuario } = useContext(AuthContext)
-    const [citas, setCitas] = useState([])
+    const [citas, setCitas] = useState(null)
     const [modalConfirmarAccion, setModalConfirmarAccion] = useState(false)
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
@@ -32,6 +33,7 @@ export const CitasClienteScreen = () => {
     const cargarCitas = async () => {
         const respuesta = await obtenerCitas(usuario.datosUsuario.id)// esto ya es el array correcto
         setCitas(respuesta.citas);
+        console.log(respuesta.citas)
         //console.log(respuesta.citas)
     };
 
@@ -87,26 +89,52 @@ export const CitasClienteScreen = () => {
                         textInfo1={"Aqui se muestran las próximas citas que tienes agendadas"}
                         textInfo2={"Para cancelar una cita, solo haga click sobre ella"}
                     />
-                    <FlatList
-                        data={citas}
-                        contentContainerStyle={{
-                            gap: 20,
-                            marginBottom: 15
-                        }}
-                        renderItem={({ item }) =>
-                            <CardCita
-                                mostrarCliente={false}
-                                datosCita={item.cita}
-                                onPress={() => {
-                                    setCitaSeleccionada(item.cita.id)
-                                    setModalConfirmarAccion(true)
-                                }}
-                            />
-                        }
-                        scrollEnabled={false}
 
-                    >
-                    </FlatList>
+                    {citas === null ? (
+                        <View style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Text style={[styles.textInfo]}>Cargando citas...</Text>
+                        </View>
+
+                    ) : (
+                        citas === undefined ? (
+                            <View style={{ alignItems: "center", justifyContent: "center" }}>
+                                <Text style={[styles.textInfo, { marginBottom: 10 }]}>Aun no tienes citas pendientes</Text>
+                                <BotonTexto
+                                    botonNavegacion={true}
+                                    esLink={true}
+                                    replace={true}
+                                    href={"../../(tabs-cliente)/(agendarCita)/"}
+                                    fondo={true}
+                                    fuenteTexto={fuenteTexto.gantariBold}
+                                    textoBoton={"Pedir una cita"}
+                                    enTab={true}
+                                />
+                            </View>
+                        ) : (
+                            <FlatList
+                                data={citas}
+                                contentContainerStyle={{
+                                    gap: 20,
+                                    marginBottom: 15
+                                }}
+                                renderItem={({ item }) =>
+                                    <CardCita
+                                        mostrarCliente={false}
+                                        datosCita={item.cita}
+                                        onPress={() => {
+                                            setCitaSeleccionada(item.cita.id)
+                                            setModalConfirmarAccion(true)
+                                        }}
+                                    />
+                                }
+                                scrollEnabled={false}
+
+                            >
+                            </FlatList>
+                        )
+
+                    )}
+
 
                     {/*<View style={styles.contenedorCitas}>
                         <CardCita
@@ -132,6 +160,6 @@ export const CitasClienteScreen = () => {
                     </View>*/}
                 </ScrollView>
             </View>
-        </Screen>
+        </Screen >
     );
 }

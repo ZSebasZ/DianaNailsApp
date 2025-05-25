@@ -19,4 +19,9 @@ export const fechaHoraStyles = (colors) => StyleSheet.create({
         borderRadius: 10,
         overflow: "hidden"
     },
+    textInfo: {
+        color: colors.onBackground,
+        fontFamily: "GantariBold",
+        fontSize: hp(2.2)
+    }
 });

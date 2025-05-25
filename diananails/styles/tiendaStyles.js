@@ -9,5 +9,11 @@ export const tiendaStyles = (colors) => StyleSheet.create({
         padding: hp(1.5),
         justifyContent: "space-evenly",
         gap: hp(2.5)
+    },
+    textInfo: {
+        color: colors.onBackground,
+        fontFamily: "GantariBold",
+        fontSize: hp(2.2)
     }
+    
 });

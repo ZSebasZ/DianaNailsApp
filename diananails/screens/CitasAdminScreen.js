@@ -1,4 +1,4 @@
-import { View, useColorScheme, ScrollView, FlatList } from "react-native";
+import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
@@ -18,7 +18,7 @@ import { ModalFeedback } from "../components/ModalFeedback";
 export const CitasAdminScreen = () => {
 
     const { usuario } = useContext(AuthContext)
-    const [citas, setCitas] = useState([])
+    const [citas, setCitas] = useState(null)
 
     const fuenteTexto = fuenteTextoStyles();
     //Estilos
@@ -44,23 +44,38 @@ export const CitasAdminScreen = () => {
                         tituloSeccion={"Citas"}
                         textInfo1={"Proximas citas de los clientes"}
                     />
-                    <FlatList
-                        data={citas}
-                        contentContainerStyle={{
-                            gap: 20,
-                            marginBottom: 15
-                        }}
-                        renderItem={({ item }) =>
-                            <CardCita
-                                mostrarCliente={true}
-                                datosCita={item.cita}
-                                onPress={undefined}
-                            />
-                        }
-                        scrollEnabled={false}
+                    {citas === null ? (
+                        <View style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Text style={[styles.textInfo]}>Cargando citas...</Text>
+                        </View>
 
-                    >
-                    </FlatList>
+                    ) : (
+                        citas === undefined ? (
+                            <View style={{ alignItems: "center", justifyContent: "center" }}>
+                                <Text style={[styles.textInfo, { marginBottom: 10 }]}>Aun no hay citas pendientes</Text>
+                            </View>
+                        ) : (
+                            <FlatList
+                                data={citas}
+                                contentContainerStyle={{
+                                    gap: 20,
+                                    marginBottom: 15
+                                }}
+                                renderItem={({ item }) =>
+                                    <CardCita
+                                        mostrarCliente={true}
+                                        datosCita={item.cita}
+                                        onPress={undefined}
+                                    />
+                                }
+                                scrollEnabled={false}
+
+                            >
+                            </FlatList>
+                        )
+                    )}
+
+
 
                     {/*<View style={styles.contenedorCitas}>
                         <CardCita

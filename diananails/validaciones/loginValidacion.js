@@ -1,6 +1,6 @@
 import { regex, estaVacio } from "../utils/regexCamposUtils";
 
-export const validacionLogin = (valoresCampos) => {
+export const validacionLogin = (valoresCampos, tipoLogin) => {
     const textCampoObligatorio = "Este campo es obligatorio"
 
     const errores = {}
@@ -16,9 +16,16 @@ export const validacionLogin = (valoresCampos) => {
         }
     });
 
-    if (!estaVacio(valoresCampos.email) && !regex.email.test(valoresCampos.email)) {
-        errores.email = "Email invalido"
+    if (tipoLogin == 0) {
+        if (!estaVacio(valoresCampos.email) && !regex.emailDianaNails.test(valoresCampos.email)) {
+            errores.email = "Email invalido, el dominio debe ser el de al empresa"
+        }
+    } else {
+        if (!estaVacio(valoresCampos.email) && !regex.email.test(valoresCampos.email)) {
+            errores.email = "Email invalido"
+        }
     }
+
     if (!estaVacio(valoresCampos.contrasena) && !regex.contrasena.test(valoresCampos.contrasena)) {
         errores.contrasena = "Contraseña invalida, minimo 6 caracteres, una letra mayuscula y caracterer especial"
     }
@@ -27,7 +34,7 @@ export const validacionLogin = (valoresCampos) => {
 
 }
 
-export const loginValidacionOnBlur = (campo, valor) => {
+export const loginValidacionOnBlur = (campo, valor, tipoLogin) => {
 
     const textCampoObligatorio = "Este campo es obligatorio"
 
@@ -38,11 +45,20 @@ export const loginValidacionOnBlur = (campo, valor) => {
             if (estaVacio(valor)) {
                 error = textCampoObligatorio;
             } else {
-                if (!regex.email.test(valor)) {
-                    error = "Email invalido"
+                if (tipoLogin == 0) {
+                    if (!regex.emailDianaNails.test(valor)) {
+                        error = "Email invalido, el dominio debe ser el de al empresa"
+                    } else {
+                        error = 0
+                    }
                 } else {
-                    error = 0
+                    if (!regex.email.test(valor)) {
+                        error = "Email invalido"
+                    } else {
+                        error = 0
+                    }
                 }
+
             }
             break;
         case "contrasena":

@@ -89,6 +89,7 @@ export const CardProductoDetalles = (props) => {
                                 : "Añadir al carrito"
                         }
                         onPress={props.onAnadir}
+                        deshabilitado={props.agotado != 0 || props.enCarrito != 0}
                     />
                 </View>
             </View>

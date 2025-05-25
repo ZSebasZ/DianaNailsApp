@@ -5,7 +5,8 @@ export const regex = {
     apellidos: /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{1,100}$/,
     direccionEnvio: /^([\w\sáéíóúÁÉÍÓÚñÑ]+),\s*\d+(\s*,\s*[\w\s\d]+)*$/,
     telefono: /^[67]\d{8}$/,
-    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    email: /^[^\s@]+@(?!diananails\.com$)[^\s@]+\.[^\s@]+$/,
+    emailDianaNails: /^[^\s@]+@diananails\.com$/,
     dniNie: /^([XYZ]?)(\d{7,8})([A-Z])$/i,
     contrasena: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{}[\]:;"'<>,.?/\\|`~]).{6,}$/,
 

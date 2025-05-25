@@ -1,4 +1,4 @@
-import { View, useColorScheme, ScrollView, FlatList } from "react-native";
+import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
@@ -19,7 +19,7 @@ export const ProductosAdminScreen = () => {
 
     const { usuario } = useContext(AuthContext)
 
-    const [productos, setProductos] = useState([])
+    const [productos, setProductos] = useState(null)
 
     const producto = require("./../assets/images/manicurista.jpg")
 
@@ -98,37 +98,44 @@ export const ProductosAdminScreen = () => {
                             productoImg={producto}
                         />
                     </View>*/}
-                    <FlatList
-                        data={productos}
-                        numColumns={2}
+                    {productos == null ? (
+                        <View style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Text style={[styles.textInfo]}>Cargando productos...</Text>
+                        </View>
+                    ) : (
+                        <FlatList
+                            data={productos}
+                            numColumns={2}
 
-                        contentContainerStyle={{
-                            gap: 20,
-                            marginBottom: 20
-                        }}
-                        columnWrapperStyle={{
-                            justifyContent: "center",
-                            gap: 20
-                        }}
-                        keyExtractor={item => item.id}
-                        renderItem={({ item }) =>
-                            <CardProducto
-                                href={`/navegacion/(gestionAdmin)/producto/${item.id}`}
-                                fuenteTextoBold={fuenteTexto.gantariBold}
-                                fuenteTextoRegular={fuenteTexto.gantariRegular}
-                                productoImg={item.url_imagen}
-                                nombre={item.nombre}
-                                precio={item.precio}
-                                agotado={item.agotado}
-                                enCarrito={0}
-                                vistaAdmin={true}
-                                onAnadir={() => { }}
-                            />
-                        }
-                        scrollEnabled={false}
+                            contentContainerStyle={{
+                                gap: 20,
+                                marginBottom: 20
+                            }}
+                            columnWrapperStyle={{
+                                justifyContent: "center",
+                                gap: 20
+                            }}
+                            keyExtractor={item => item.id}
+                            renderItem={({ item }) =>
+                                <CardProducto
+                                    href={`/navegacion/admin/(gestionAdmin)/producto/${item.id}`}
+                                    fuenteTextoBold={fuenteTexto.gantariBold}
+                                    fuenteTextoRegular={fuenteTexto.gantariRegular}
+                                    productoImg={item.url_imagen}
+                                    nombre={item.nombre}
+                                    precio={item.precio}
+                                    agotado={item.agotado}
+                                    enCarrito={0}
+                                    vistaAdmin={true}
+                                    onAnadir={() => { }}
+                                />
+                            }
+                            scrollEnabled={false}
 
-                    >
-                    </FlatList>
+                        >
+                        </FlatList>
+                    )}
+
                 </ScrollView>
             </View>
         </Screen>

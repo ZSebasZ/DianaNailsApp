@@ -1,4 +1,4 @@
-import { View, useColorScheme, ScrollView } from "react-native";
+import { View, useColorScheme, ScrollView, Text } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
@@ -17,7 +17,7 @@ import { anadirCarritoProducto } from "../api/CarritoController";
 export const ProductoScreen = (props) => {
 
     const { usuario } = useContext(AuthContext)
-    const [producto, setProducto] = useState()
+    const [producto, setProducto] = useState(null)
     const [cantidadProducto, setCantidadProducto] = useState(1)
     const { carritoProductos, dispatch } = useCarrito()
     const [subtotal, setSubtotal] = useState(0)
@@ -49,60 +49,60 @@ export const ProductoScreen = (props) => {
     };
 
     return (
-
-
         <Screen enTab={true}>
-            {producto && (
-                <>
-                    <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                        <ScrollView showsVerticalScrollIndicator={false}>
-                            <SeccionEnTab
+            <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                {producto == null ? (
+                    <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
+                        <Text style={[styles.textInfo]}>Cargando detalles del producto...</Text>
+                    </View>
+                ) : (
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        <SeccionEnTab
+                            fuenteTextoBold={fuenteTexto.gantariBold}
+                            fuenteTextoRegular={fuenteTexto.gantariRegular}
+                            tituloSeccion={producto.nombre}
+                            textInfo1={"Detalles del producto"}
+
+                        />
+                        <View style={styles.contenedorProductos}>
+                            <CardProductoDetalles
                                 fuenteTextoBold={fuenteTexto.gantariBold}
                                 fuenteTextoRegular={fuenteTexto.gantariRegular}
-                                tituloSeccion={producto.nombre}
-                                textInfo1={"Detalles del producto"}
-
+                                producto={productoImgDefault}
+                                descripcion={producto.descripcion}
+                                precio={producto.precio}
+                                enCarrito={producto.enCarrito}
+                                agotado={producto.agotado}
+                                stock={producto.stock}
+                                cantidad={cantidadProducto}
+                                onIncrementar={() => {
+                                    if (cantidadProducto < producto.stock && cantidadProducto < 5) {
+                                        setCantidadProducto(cantidadProducto + 1)
+                                    }
+                                }}
+                                onDecrementar={() => {
+                                    if (cantidadProducto > 1) {
+                                        setCantidadProducto(cantidadProducto - 1)
+                                    }
+                                }}
+                                onAnadir={async () => {
+                                    await anadirCarritoProducto(usuario.datosUsuario.id_carrito, producto.id, cantidadProducto)
+                                    setProducto({ ...producto, enCarrito: 1 })
+                                    dispatch({ type: 'ANADIR_PRODUCTO', payload: { id_producto: producto.id, nombre: producto.nombre, precio: producto.precio, stock: producto.stock, cantidad: cantidadProducto } })
+                                }}
                             />
-                            <View style={styles.contenedorProductos}>
-                                <CardProductoDetalles
-                                    fuenteTextoBold={fuenteTexto.gantariBold}
-                                    fuenteTextoRegular={fuenteTexto.gantariRegular}
-                                    producto={productoImgDefault}
-                                    descripcion={producto.descripcion}
-                                    precio={producto.precio}
-                                    enCarrito={producto.enCarrito}
-                                    agotado={producto.agotado}
-                                    stock={producto.stock}
-                                    cantidad={cantidadProducto}
-                                    onIncrementar={() => {
-                                        if (cantidadProducto < producto.stock && cantidadProducto < 5) {
-                                            setCantidadProducto(cantidadProducto + 1)
-                                        }
-                                    }}
-                                    onDecrementar={() => {
-                                        if (cantidadProducto > 1) {
-                                            setCantidadProducto(cantidadProducto - 1)
-                                        }
-                                    }}
-                                    onAnadir={async() => {
-                                        await anadirCarritoProducto(usuario.datosUsuario.id_carrito, producto.id, cantidadProducto)
-                                        setProducto({ ...producto, enCarrito: 1 })
-                                        dispatch({ type: 'ANADIR_PRODUCTO', payload: { id_producto: producto.id, nombre: producto.nombre, precio: producto.precio, stock: producto.stock, cantidad: cantidadProducto } })
-                                    }}
-                                />
-                            </View>
-                        </ScrollView>
-                    </View>
-                    <BarraResumen
-                        botonVolver={true}
-                        hrefAtras={"../"}
-                        subtotal={subtotal}
-                        botonCarrito={true}
-                        cantidadProductos={carritoProductos.length}
-                        hrefCarrito={"/navegacion/(clienteScreens)/(pedidosCarrito)/carritoCliente"}
-                    />
-                </>
-            )}
-        </Screen>
+                        </View>
+                    </ScrollView>
+                )}
+            </View>
+            <BarraResumen
+                botonVolver={true}
+                hrefAtras={"../"}
+                subtotal={subtotal}
+                botonCarrito={true}
+                cantidadProductos={carritoProductos.length}
+                hrefCarrito={"/navegacion/(clienteScreens)/(pedidosCarrito)/carritoCliente"}
+            />
+        </Screen >
     );
 }

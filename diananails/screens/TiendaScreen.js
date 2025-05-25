@@ -1,4 +1,4 @@
-import { View, useColorScheme, ScrollView, FlatList } from "react-native";
+import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
@@ -20,12 +20,13 @@ import { useFocusEffect } from "expo-router";
 export const TiendaScreen = () => {
 
     const { usuario } = useContext(AuthContext)
-    const [productos, setProductos] = useState([])
+    const [productos, setProductos] = useState(null)
     const { carritoProductos, carritoCargado, dispatch } = useCarrito()
     const [subtotal, setSubtotal] = useState(0)
 
     const producto = require("./../assets/images/manicurista.jpg")
     const fuenteTexto = fuenteTextoStyles();
+    const styles = useThemedStyles(tiendaStyles);
 
     useEffect(() => {
         const obtenerProductos = async () => {
@@ -87,99 +88,104 @@ export const TiendaScreen = () => {
 
     return (
         <Screen enTab={true}>
-            {productos && (
-                <>
-                    <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                        <ScrollView showsVerticalScrollIndicator={false}>
-                            <SeccionEnTab
-                                fuenteTextoBold={fuenteTexto.gantariBold}
-                                fuenteTextoRegular={fuenteTexto.gantariRegular}
-                                tituloSeccion={"Tienda"}
-                                textInfo1={"Bienvenid@ a nuestra tienda, aqui encontraras productos sobre manicura y pedicura"}
-                            />
-                            <FlatList
-                                data={productos}
-                                numColumns={2}
-
-                                contentContainerStyle={{
-                                    gap: 20,
-                                    marginBottom: 20
-                                }}
-                                columnWrapperStyle={{
-                                    justifyContent: "center",
-                                    gap: 20
-                                }}
-                                keyExtractor={item => item.id}
-                                renderItem={({ item }) =>
-                                    <CardProducto
-                                        href={`/navegacion/(tabs-cliente)/(tienda)/(screens)/${item.id}`}
-                                        fuenteTextoBold={fuenteTexto.gantariBold}
-                                        fuenteTextoRegular={fuenteTexto.gantariRegular}
-                                        productoImg={producto.url_imagen}
-                                        nombre={item.nombre}
-                                        precio={item.precio}
-                                        enCarrito={item.enCarrito}
-                                        agotado={item.agotado}
-                                        onAnadir={async () => {
-                                            await anadirCarritoProducto(usuario.datosUsuario.id_carrito, item.id, 1)
-                                            dispatch({ type: 'ANADIR_PRODUCTO', payload: { id_producto: item.id, nombre: item.nombre, cantidad: 1, precio: item.precio, stock: item.stock } });
-                                        }}
-                                    />
-                                }
-                                scrollEnabled={false}
-
-                            >
-                            </FlatList>
-                            {/*<View style={styles.contenedorProductos}>
-                        <CardProducto
-                            href={"(tabs-cliente)/(tienda)/(screens)/1"}
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            productoImg={producto}
-                        />
-                        <CardProducto
-                            href={"(tabs-cliente)/(tienda)/(screens)/1"}
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            productoImg={producto}
-                            enCarrito={true}
-                        />
-                        <CardProducto
-                            href={"(tabs-cliente)/(tienda)/(screens)/1"}
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            productoImg={producto}
-                            agotado={true}
-                        />
-                        <CardProducto
-                            href={"(tabs-cliente)/(tienda)/(screens)/1"}
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            productoImg={producto}
-                        />
-                        <CardProducto
-                            href={"(tabs-cliente)/(tienda)/(screens)/1"}
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            productoImg={producto}
-                        />
-                        <CardProducto
-                            href={"(tabs-cliente)/(tienda)/(screens)/1"}
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            productoImg={producto}
-                        />
-                    </View>*/}
-                        </ScrollView>
-                    </View>
-                    <BarraResumen
-                        botonCarrito={true}
-                        cantidadProductos={carritoProductos.length}
-                        subtotal={subtotal}
-                        hrefCarrito={"/navegacion/(clienteScreens)/(pedidosCarrito)/carritoCliente"}
+            <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <SeccionEnTab
+                        fuenteTextoBold={fuenteTexto.gantariBold}
+                        fuenteTextoRegular={fuenteTexto.gantariRegular}
+                        tituloSeccion={"Tienda"}
+                        textInfo1={"Bienvenid@ a nuestra tienda, aqui encontraras productos sobre manicura y pedicura"}
                     />
-                </>
-            )}
+                    {productos == null ? (
+                        <View style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Text style={[styles.textInfo]}>Cargando productos...</Text>
+                        </View>
+                    ) : (
+                        <FlatList
+                            data={productos}
+                            numColumns={2}
+
+                            contentContainerStyle={{
+                                gap: 20,
+                                marginBottom: 20
+                            }}
+                            columnWrapperStyle={{
+                                justifyContent: "center",
+                                gap: 20
+                            }}
+                            keyExtractor={item => item.id}
+                            renderItem={({ item }) =>
+                                <CardProducto
+                                    href={`/navegacion/cliente/(tabs-cliente)/(tienda)/(screens)/${item.id}`}
+                                    fuenteTextoBold={fuenteTexto.gantariBold}
+                                    fuenteTextoRegular={fuenteTexto.gantariRegular}
+                                    productoImg={item.url_imagen}
+                                    nombre={item.nombre}
+                                    precio={item.precio}
+                                    enCarrito={item.enCarrito}
+                                    agotado={item.agotado}
+                                    onAnadir={async () => {
+                                        await anadirCarritoProducto(usuario.datosUsuario.id_carrito, item.id, 1)
+                                        dispatch({ type: 'ANADIR_PRODUCTO', payload: { id_producto: item.id, nombre: item.nombre, cantidad: 1, precio: item.precio, stock: item.stock } });
+                                    }}
+                                />
+                            }
+                            scrollEnabled={false}
+
+                        >
+                        </FlatList>
+                    )}
+
+                    {
+                        /*<View style={styles.contenedorProductos}>
+                    <CardProducto
+                        href={"(tabs-cliente)/(tienda)/(screens)/1"}
+                        fuenteTextoBold={fuenteTexto.gantariBold}
+                        fuenteTextoRegular={fuenteTexto.gantariRegular}
+                        productoImg={producto}
+                    />
+                    <CardProducto
+                        href={"(tabs-cliente)/(tienda)/(screens)/1"}
+                        fuenteTextoBold={fuenteTexto.gantariBold}
+                        fuenteTextoRegular={fuenteTexto.gantariRegular}
+                        productoImg={producto}
+                        enCarrito={true}
+                    />
+                    <CardProducto
+                        href={"(tabs-cliente)/(tienda)/(screens)/1"}
+                        fuenteTextoBold={fuenteTexto.gantariBold}
+                        fuenteTextoRegular={fuenteTexto.gantariRegular}
+                        productoImg={producto}
+                        agotado={true}
+                    />
+                    <CardProducto
+                        href={"(tabs-cliente)/(tienda)/(screens)/1"}
+                        fuenteTextoBold={fuenteTexto.gantariBold}
+                        fuenteTextoRegular={fuenteTexto.gantariRegular}
+                        productoImg={producto}
+                    />
+                    <CardProducto
+                        href={"(tabs-cliente)/(tienda)/(screens)/1"}
+                        fuenteTextoBold={fuenteTexto.gantariBold}
+                        fuenteTextoRegular={fuenteTexto.gantariRegular}
+                        productoImg={producto}
+                    />
+                    <CardProducto
+                        href={"(tabs-cliente)/(tienda)/(screens)/1"}
+                        fuenteTextoBold={fuenteTexto.gantariBold}
+                        fuenteTextoRegular={fuenteTexto.gantariRegular}
+                        productoImg={producto}
+                    />
+                </View>*/
+                    }
+                </ScrollView>
+            </View>
+            <BarraResumen
+                botonCarrito={true}
+                cantidadProductos={carritoProductos.length}
+                subtotal={subtotal}
+                hrefCarrito={"/navegacion/cliente/(clienteScreens)/(pedidosCarrito)/carritoCliente"}
+            />
 
         </Screen>
     );

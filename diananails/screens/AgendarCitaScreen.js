@@ -1,4 +1,4 @@
-import { View, useColorScheme, ScrollView, FlatList } from "react-native";
+import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
@@ -27,8 +27,10 @@ export const AgendarCitaScreen = () => {
 
             const currentRoute = rootState.routes[rootState.index];
 
+            console.log(currentRoute.name)
+
             // Ajusta esto según tu ruta real
-            if (currentRoute.name === "navegacion/(tabs-cliente)") {
+            if (currentRoute.name === "navegacion/cliente") {
                 BackHandler.exitApp(); // salir de la app
                 return true;
             }
@@ -41,13 +43,13 @@ export const AgendarCitaScreen = () => {
         return () => backHandler.remove();
     }, [rootState]);
 
-    const { serviciosSeleccionados, alternarSeleccionServicio, fecha, resetHoraManicuristas, subtotal } = useContext(AgendarCitaContext)
+    const { serviciosSeleccionados, alternarSeleccionServicio, fecha, resetHoraManicuristas, subtotal, setPasoAgendamiento } = useContext(AgendarCitaContext)
 
     const fuenteTexto = fuenteTextoStyles();
     //Estilos
     const styles = useThemedStyles(agendarCitaStyles);
 
-    const [servicios, setServicios] = useState()
+    const [servicios, setServicios] = useState(null)
 
     useEffect(() => {
         const cargarServicios = async () => {
@@ -59,7 +61,7 @@ export const AgendarCitaScreen = () => {
     }, [])
 
     useEffect(() => {
-        if(fecha != null) {
+        if (fecha != null) {
             resetHoraManicuristas()
         }
     }, [serviciosSeleccionados])
@@ -79,41 +81,51 @@ export const AgendarCitaScreen = () => {
                         textInfo2={"3 como máximo"}
                     />
 
+                    {servicios == null ? (
+                        <View style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Text style={[styles.textInfo]}>Cargando servicios...</Text>
+                        </View>
+                    ) : (
+                        <FlatList
+                            data={servicios}
+                            numColumns={2}
 
-                    <FlatList
-                        data={servicios}
-                        numColumns={2}
+                            contentContainerStyle={{
+                                gap: 20,
+                                marginBottom: 80
+                            }}
+                            columnWrapperStyle={{
+                                justifyContent: "center",
+                                gap: 20
+                            }}
+                            renderItem={({ item }) =>
+                                <CardServicio
+                                    estaSeleccionado={serviciosSeleccionados.some(s => s.id === item.id)}
+                                    fuenteTextoBold={fuenteTexto.gantariBold}
+                                    fuenteTextoRegular={fuenteTexto.gantariRegular}
+                                    servicio={item}
+                                    onPress={() => alternarSeleccionServicio(item)}
+                                />
+                            }
+                            scrollEnabled={false}
 
-                        contentContainerStyle={{
-                            gap: 20,
-                            marginBottom: 80
-                        }}
-                        columnWrapperStyle={{
-                            justifyContent: "center",
-                            gap: 20
-                        }}
-                        renderItem={({ item }) =>
-                            <CardServicio
-                                estaSeleccionado={serviciosSeleccionados.some(s => s.id === item.id)}
-                                fuenteTextoBold={fuenteTexto.gantariBold}
-                                fuenteTextoRegular={fuenteTexto.gantariRegular}
-                                servicio={item}
-                                onPress={() => alternarSeleccionServicio(item)}
-                            />
-                        }
-                        scrollEnabled={false}
+                        >
+                        </FlatList>
+                    )}
 
-                    >
-                    </FlatList>
 
                 </ScrollView>
             </View>
             <BotonesCancelarVerServicios />
             <BarraResumen
+                onPress={() => {
+                    setPasoAgendamiento(2)
+                }}
                 botonSiguiente={true}
+                replace={false}
                 btnSiguienteDeshabilitado={serviciosSeleccionados.length == 0 ? true : false}
                 subtotal={subtotal}
-                hrefSiguiente={"/navegacion/(tabs-cliente)/(agendarCita)/(screens)/elegirFechaHora"}
+                hrefSiguiente={"/navegacion/cliente/(tabs-cliente)/(agendarCita)/(screens)/elegirFechaHora"}
             />
         </Screen>
     );

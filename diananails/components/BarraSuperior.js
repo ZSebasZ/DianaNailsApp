@@ -12,7 +12,7 @@ export default function BarraSuperior(props) {
 
     const styles = useThemedStyles(tabsMainLabelStyles);
     const tema = useThemedStyles()
-    const {cerrarSesion} = useContext(AuthContext)
+    const {cerrarSesion, usuario} = useContext(AuthContext)
 
     return (
         <Stack.Screen
@@ -50,6 +50,7 @@ export default function BarraSuperior(props) {
                                     fondo={true}
                                     nombreIcono={"account-circle"}
                                     esPerfil={true}
+                                    fotoPerfil={usuario.datosUsuario.url_imagen ? usuario.datosUsuario.url_imagen : null}
                                 />
                             </View>
                         )

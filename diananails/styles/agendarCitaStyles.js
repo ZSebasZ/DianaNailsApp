@@ -9,5 +9,11 @@ export const agendarCitaStyles = (colors) => StyleSheet.create({
         paddingBottom: hp(9),
         alignItems: "center",
         gap: hp(2.5)
+    },
+
+    textInfo: {
+        color: colors.onBackground,
+        fontFamily: "GantariBold",
+        fontSize: hp(2.2)
     }
 });

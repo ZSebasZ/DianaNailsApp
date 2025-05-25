@@ -6,5 +6,11 @@ export const citasClienteStyles = (colors) => StyleSheet.create({
         padding: 10,
         paddingTop: 0,
         gap: 20
+    },
+
+    textInfo: {
+        color: colors.onBackground,
+        fontFamily: "GantariBold",
+        fontSize: hp(2.2)
     }
 });

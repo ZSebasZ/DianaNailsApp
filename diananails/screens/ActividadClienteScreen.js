@@ -28,7 +28,7 @@ export const ActividadClienteScreen = () => {
                     <View style={styles.containerSeccion}>
                         <BotonIconoTexto
                             esLink={true}
-                            href={"/navegacion/(clienteScreens)/(citasOpiniones)/citasCliente"}
+                            href={"/navegacion/cliente/(clienteScreens)/(citasOpiniones)/citasCliente"}
                             nombreIcono={"calendar-month"}
                             fondo={true}
                             fuenteTextoNormal={fuenteTexto.gantariBold}
@@ -37,7 +37,7 @@ export const ActividadClienteScreen = () => {
                         />
                         <BotonIconoTexto
                             esLink={true}
-                            href={"/navegacion/(clienteScreens)/(pedidosCarrito)/pedidosCliente"}
+                            href={"/navegacion/cliente/(clienteScreens)/(pedidosCarrito)/pedidosCliente"}
                             nombreIcono={"truck-delivery"}
                             fondo={true}
                             fuenteTextoNormal={fuenteTexto.gantariBold}
@@ -46,7 +46,7 @@ export const ActividadClienteScreen = () => {
                         />
                         <BotonIconoTexto
                             esLink={true}
-                            href={"/navegacion/(clienteScreens)/(citasOpiniones)/opiniones"}
+                            href={"/navegacion/cliente/(clienteScreens)/(citasOpiniones)/opiniones"}
                             nombreIcono={"message-star"}
                             fondo={true}
                             fuenteTextoNormal={fuenteTexto.gantariBold}

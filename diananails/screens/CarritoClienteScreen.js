@@ -1,4 +1,4 @@
-import { View, useColorScheme, ScrollView, FlatList } from "react-native";
+import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
@@ -9,9 +9,13 @@ import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { CardProductoCarrito } from "../components/CardProductoCarrito";
 import { useEffect, useState, useContext } from "react";
 import { useCarrito } from "../contexts/carritoContext";
-import { actualizarCarritoCantidadProducto, hacerPedidoCarrito } from "../api/CarritoController";
+import { actualizarCarritoCantidadProducto, hacerPedidoCarrito, vaciarCarrito } from "../api/CarritoController";
 import { AuthContext } from "../contexts/authContext";
-
+import { ModalLoader } from "../components/ModalLoader";
+import { ModalFeedback } from "../components/ModalFeedback";
+import { router } from "expo-router";
+import { BotonIcono } from "../components/BotonIcono";
+import { ModalConfirmarAccion } from "../components/ModalConfirmarAccion";
 
 //Pantalla de Login
 export const CarritoClienteScreen = () => {
@@ -19,6 +23,11 @@ export const CarritoClienteScreen = () => {
     const [subtotal, setSubtotal] = useState(0)
     const { usuario } = useContext(AuthContext)
     const { carritoProductos, dispatch } = useCarrito()
+
+    const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
+    const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
+    const [modalConfirmarAccion, setModalConfirmarAccion] = useState(false)
+
 
     const fuenteTexto = fuenteTextoStyles();
     //Estilos
@@ -43,6 +52,38 @@ export const CarritoClienteScreen = () => {
 
     return (
         <Screen enTab={true}>
+
+            <ModalLoader
+                visible={modalLoaderVisible}
+            />
+
+            <ModalFeedback
+                titulo={"Pedido realizado"}
+                feedback={"Tu pedido se ha realizado con exito y se encuentra pendiente de envio"}
+                visible={modalFeedbackVisible}
+                fuenteTexto={fuenteTexto.gantariBold}
+                cerrar={() => {
+                    //reiniciarContexto()
+                    setModalFeedbackVisible(false)
+                    router.push("../")
+                }}
+            />
+
+            <ModalConfirmarAccion
+                titulo={"¿Está seguro que quiere vaciar el carrito?"}
+                visible={modalConfirmarAccion}
+                cerrar={() => {
+                    setModalConfirmarAccion(false)
+                }}
+                aceptar={async () => {
+                    setModalConfirmarAccion(false)
+                    setModalLoaderVisible(true)
+                    await vaciarCarrito(usuario.datosUsuario.id_carrito)
+                    dispatch({ type: 'VACIAR_CARRITO' })
+                    setModalLoaderVisible(false)
+                }}
+            />
+
             <View style={{ flex: 1, paddingHorizontal: 20 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <SeccionEnTab
@@ -51,44 +92,50 @@ export const CarritoClienteScreen = () => {
                         tituloSeccion={"Mi carrito"}
                         textInfo1={"Productos en mi carrito"}
                     />
+                    {carritoProductos.length == 0 ? (
+                        <View style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Text style={[styles.textInfo]}>No hay productos en tu carrito</Text>
+                        </View>
+                    ) : (
+                        <FlatList
+                            data={carritoProductos}
+                            contentContainerStyle={{
+                                gap: 20,
+                                marginBottom: 70
+                            }}
+                            renderItem={({ item }) =>
+                                <CardProductoCarrito
+                                    productoImg={item.url_imagen}
+                                    nombreProducto={item.nombre}
+                                    precioProducto={item.precio}
+                                    subtotal={item.precio * item.cantidad}
+                                    cantidad={item.cantidad}
+                                    stock={item.stock}
+                                    fuenteTextoBold={fuenteTexto.gantariBold}
+                                    fuenteTextoRegular={fuenteTexto.gantariRegular}
+                                    onIncrementar={async () => {
+                                        if (item.cantidad < item.stock && item.cantidad < 5) {
+                                            await actualizarCarritoCantidadProducto(usuario.datosUsuario.id_carrito, item.id_producto, 1)
+                                            dispatch({ type: 'ANADIR_PRODUCTO', payload: { ...item } })
+                                        }
+                                    }}
+                                    onDecrementar={async () => {
+                                        if (item.cantidad > 1) {
+                                            await actualizarCarritoCantidadProducto(usuario.datosUsuario.id_carrito, item.id_producto, -1)
+                                            dispatch({ type: 'QUITAR_CANTIDAD', payload: { ...item } })
+                                        }
+                                    }}
+                                    onEliminar={async () => {
+                                        await actualizarCarritoCantidadProducto(usuario.datosUsuario.id_carrito, item.id_producto, 0)
+                                        dispatch({ type: 'ELIMINAR_PRODUCTO', payload: item.id_producto })
+                                    }}
+                                />
+                            }
+                            scrollEnabled={false}
+                        >
+                        </FlatList>
+                    )}
 
-                    <FlatList
-                        data={carritoProductos}
-                        contentContainerStyle={{
-                            gap: 20,
-                            marginBottom: 15
-                        }}
-                        renderItem={({ item }) =>
-                            <CardProductoCarrito
-                                productoImg={item.url_imagen}
-                                nombreProducto={item.nombre}
-                                precioProducto={item.precio}
-                                subtotal={item.precio * item.cantidad}
-                                cantidad={item.cantidad}
-                                stock={item.stock}
-                                fuenteTextoBold={fuenteTexto.gantariBold}
-                                fuenteTextoRegular={fuenteTexto.gantariRegular}
-                                onIncrementar={async () => {
-                                    if (item.cantidad < item.stock && item.cantidad < 5) {
-                                        await actualizarCarritoCantidadProducto(usuario.datosUsuario.id_carrito, item.id_producto, 1)
-                                        dispatch({ type: 'ANADIR_PRODUCTO', payload: { ...item } })
-                                    }
-                                }}
-                                onDecrementar={async () => {
-                                    if (item.cantidad > 1) {
-                                        await actualizarCarritoCantidadProducto(usuario.datosUsuario.id_carrito, item.id_producto, -1)
-                                        dispatch({ type: 'QUITAR_CANTIDAD', payload: { ...item } })
-                                    }
-                                }}
-                                onEliminar={async () => {
-                                    await actualizarCarritoCantidadProducto(usuario.datosUsuario.id_carrito, item.id_producto, 0)
-                                    dispatch({ type: 'ELIMINAR_PRODUCTO', payload: item.id_producto })
-                                }}
-                            />
-                        }
-                        scrollEnabled={false}
-                    >
-                    </FlatList>
 
                     {/*<View style={styles.contenedorProductosCarrito}>
                         <CardProductoCarrito
@@ -109,15 +156,33 @@ export const CarritoClienteScreen = () => {
                     </View>*/}
                 </ScrollView>
             </View>
+            {carritoProductos.length > 0 && (
+                <View>
+                    <View style={styles.contenedorBotonCancelarCita}>
+                        <BotonIcono
+                            fondo={true}
+                            nombreIcono={"cart-remove"}
+                            esEliminar={true}
+                            onPress={() => {
+                                setModalConfirmarAccion(true)
+                            }}
+                        />
+                    </View>
+                </View>
+            )}
             <BarraResumen
                 botonVolver={true}
                 hrefAtras={"../"}
                 botonSiguiente={true}
+                btnSiguienteDeshabilitado={carritoProductos.length == 0 ? true : false}
                 subtotal={subtotal}
                 esRealizarPedido={true}
-                onPress={async() => { 
+                onPress={async () => {
+                    setModalLoaderVisible(true)
                     await hacerPedidoCarrito(usuario.datosUsuario.id_carrito, usuario.datosUsuario.id, 1, subtotal)
-                    dispatch({ type: 'HACER_PEDIDO'})
+                    dispatch({ type: 'HACER_PEDIDO' })
+                    setModalLoaderVisible(false);
+                    setModalFeedbackVisible(true)
                 }}
             />
         </Screen>

@@ -20,51 +20,7 @@ import { AuthContext } from "../contexts/authContext";
 //Pantalla de Login
 export const LoginScreen = () => {
 
-    const { login, usuario } = useContext(AuthContext)
-
-    useEffect(() => {
-        const verificarSesion = async () => {
-            try {
-                const email = await AsyncStorage.getItem("email");
-                const contrasena = await AsyncStorage.getItem("contrasena");
-
-
-
-                if (email && contrasena) {
-                    //const respuesta = await loginCliente({ email, contrasena });
-                    const respuesta = await login({ email, contrasena })
-                    //console.log("Inicio de sesión exitoso:", respuesta);
-                    setCredencialesIncorrectas(false);
-                    //router.replace("/navegacion/(tabs-cliente)/(agendarCita)/");
-                    switch (respuesta.tipoUsuario) {
-                        case 0:
-                            router.push("/navegacion/(tabs-admin)/citas")
-                            //console.log("ADMIN")
-                            break;
-                        case 1:
-                            router.push("/navegacion/(tabs-manicurista)/citas")
-                            console.log("MANICURISTA")
-                            break;
-                        case 2:
-                            router.push("/navegacion/(tabs-cliente)/(agendarCita)/")
-                            console.log("CLIENTE")
-                            break;
-                        default:
-                            console.log("NO SE HA CARGADO TIPO USUARIO")
-                            break;
-                    }
-
-
-                } else {
-                    console.log("No hay datos guardados para email o contraseña");
-                }
-            } catch (error) {
-                console.log("Error al verificar la sesión:", error);
-            }
-        };
-
-        verificarSesion();
-    }, []);
+    const { login, usuario, tipoLogin } = useContext(AuthContext)
 
     //Estilos
     const styles = useThemedStyles(loginStyles);
@@ -73,7 +29,9 @@ export const LoginScreen = () => {
 
     //VALIDACIONES
     const [valoresCampos, setValoresCampos] = useState({
-        email: "sgarcia@diananails.com",
+        //email: "admin@diananails.com",
+        //email: "sgarcia@diananails.com",
+        email: "prueba3@gmail.com",
         contrasena: "Abc123."
     })
 
@@ -88,7 +46,7 @@ export const LoginScreen = () => {
     const onSubmit = async () => {
         Keyboard.dismiss()
         setCredencialesIncorrectas(false)
-        const validacionErrores = validacionLogin(valoresCampos)
+        const validacionErrores = validacionLogin(valoresCampos, tipoLogin)
         setErrores(validacionErrores)
         if (Object.keys(validacionErrores).length == 0) {
             try {
@@ -99,15 +57,15 @@ export const LoginScreen = () => {
                 //router.replace("/navegacion/(tabs-cliente)/(agendarCita)/");
                 switch (respuesta.tipoUsuario) {
                     case 0:
-                        router.push("/navegacion/(tabs-admin)/citas")
+                        router.push("/navegacion/admin/")
                         console.log("ADMIN")
                         break;
                     case 1:
-                        router.push("/navegacion/(tabs-manicurista)/citas")
+                        router.push("/navegacion/manicurista/")
                         console.log("MANICURISTA")
                         break;
                     case 2:
-                        router.push("/navegacion/(tabs-cliente)/(agendarCita)/")
+                        router.push("/navegacion/cliente/")
                         console.log("CLIENTE")
                         break;
                     default:
@@ -157,6 +115,7 @@ export const LoginScreen = () => {
                             onValueChange={onValueChange}
                             errorValidacion={errores.email}
                             onBlurValidacion={loginValidacionOnBlur}
+                            tipoLogin={tipoLogin}
                         />
                         <CampoTextoInput
                             conIcono={true}
@@ -183,15 +142,18 @@ export const LoginScreen = () => {
                             textoBoton={"Iniciar sesión"}
                             onPress={onSubmit}
                         />
-                        <BotonTexto
-                            botonPrincipal={true}
-                            esLink={true}
-                            replace={true}
-                            href={"/(auth)/registro"}
-                            fondo={false}
-                            fuenteTexto={fuenteTexto.gantariBold}
-                            textoBoton={"Registrarme"}
-                        />
+                        {tipoLogin == 2 && (
+                            <BotonTexto
+                                botonPrincipal={true}
+                                esLink={true}
+                                replace={false}
+                                href={"/navegacion/(auth)/registro"}
+                                fondo={false}
+                                fuenteTexto={fuenteTexto.gantariBold}
+                                textoBoton={"Registrarme"}
+                            />
+                        )}
+
                     </View>
                 </View>
             </View>

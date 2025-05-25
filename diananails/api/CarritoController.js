@@ -39,3 +39,13 @@ export const hacerPedidoCarrito = async (carrito, cliente, metodoPago, total) =>
         throw error;
     }
 };
+
+export const vaciarCarrito = async (carrito) => {
+    try {
+        //console.log(`get-productos?carrito=${carrito}`)
+        const carritoVaciado = await api("DELETE", `vaciar-carrito`, {idCarrito: carrito}); // Llamamos al servicio
+        return carritoVaciado;  // Devolvemos los datos para ser usados por las pantallas
+    } catch (error) {
+        throw error;
+    }
+};

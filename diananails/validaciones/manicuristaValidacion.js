@@ -53,7 +53,7 @@ export const validacionManicurista = (valoresCampos, esEdicion = false) => {
     if (!estaVacio(valoresCampos.telefono) && !regex.telefono.test(valoresCampos.telefono)) {
         errores.telefono = "Telefono invalido, solo numeros telefonicos de España"
     }
-    if (!estaVacio(valoresCampos.email) && !regex.email.test(valoresCampos.email)) {
+    if (!estaVacio(valoresCampos.email) && !regex.emailDianaNails.test(valoresCampos.email)) {
         errores.email = "Email invalido"
     }
 
@@ -125,7 +125,7 @@ export const manicuristaValidacionOnBlur = (campo, valor, confirmarContrasena = 
             if (estaVacio(valor)) {
                 error = textCampoObligatorio;
             } else {
-                if (!regex.email.test(valor)) {
+                if (!regex.emailDianaNails.test(valor)) {
                     error = "Email invalido"
                 } else {
                     error = 0

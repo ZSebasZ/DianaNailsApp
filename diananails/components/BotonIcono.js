@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Pressable } from "react-native";
+import { View, StyleSheet, Text, Pressable, Image } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Icono } from "./Icono";
@@ -52,12 +52,19 @@ export const BotonIcono = (props) => {
         }
     })
 
+    //console.log(props.fotoPerfil)
+
     return (
         props.esLink ? (
             <Link href={props.href} asChild style={[styles.boton, props.esEliminar && styles.botonEliminar]}>
                 <Pressable
                 >
-                    <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} style={[styles.iconoBoton, props.esEliminar && styles.iconoBotonEliminar]} />
+                    {props.fotoPerfil ? (
+                        <Image source={{ uri: props.fotoPerfil }} style={{ width: hp(4), height: hp(4), borderRadius: 100, resizeMode: "contain", borderWidth: 1, borderColor: tema.background}} />
+                    ) : (
+                        <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} style={[styles.iconoBoton, props.esEliminar && styles.iconoBotonEliminar]} />
+
+                    )}
                     {props.conBurbuja && (
                         <View style={styles.burbuja}>
                             <Text style={[props.fuenteTexto, styles.textBurbuja]}>{props.cantidad}</Text>

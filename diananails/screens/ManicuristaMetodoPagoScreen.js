@@ -17,7 +17,7 @@ import { BotonTexto } from "../components/BotonTexto";
 //Pantalla de Login
 export const ManicuristaMetodoPagoScreen = () => {
 
-    const { subtotal, manicuristas, manicurista, seleccionarManicurista, metodoPago, seleccionarMetodoPago } = useContext(AgendarCitaContext)
+    const { subtotal, manicuristas, manicurista, seleccionarManicurista, metodoPago, seleccionarMetodoPago, setPasoAgendamiento } = useContext(AgendarCitaContext)
 
     //console.log(manicuristas)
 
@@ -126,12 +126,18 @@ export const ManicuristaMetodoPagoScreen = () => {
             </View>
             <BotonesCancelarVerServicios />
             <BarraResumen
+                onPress={() => {
+                    setPasoAgendamiento(4)
+                }}
+                onPressAtras={() => {
+                    setPasoAgendamiento(2)
+                }}
                 botonVolver={true}
                 hrefAtras={"../"}
                 botonSiguiente={true}
                 btnSiguienteDeshabilitado={(manicurista.manicurista == null || metodoPago.metodoPago == null) ? true : false}
                 subtotal={subtotal}
-                hrefSiguiente={"/navegacion/(tabs-cliente)/(agendarCita)/(screens)/resumenCita"}
+                hrefSiguiente={"/navegacion/cliente/(tabs-cliente)/(agendarCita)/(screens)/resumenCita"}
             />
         </Screen>
     );

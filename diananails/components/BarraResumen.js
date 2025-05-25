@@ -72,11 +72,12 @@ export const BarraResumen = (props) => {
                 <View style={[styles.subContenederosBarraResumen, styles.subContenedorLeft]}>
                     <BotonTexto
                         botonNavegacion={true}
-                        esLink={true}
+                        esLink={props.onPressAtras ? false : true}
                         href={props.hrefAtras}
                         fondo={false}
                         fuenteTexto={fuenteTexto.gantariBold}
                         textoBoton={"Atrás"}
+                        onPress={props.onPressAtras}
                     />
                 </View>
             )}
@@ -105,8 +106,9 @@ export const BarraResumen = (props) => {
                 <View style={[styles.subContenederosBarraResumen, styles.subContenedorRight]}>
                     <BotonTexto
                         botonNavegacion={true}
-                        esLink={props.esRealizarPedido ? false : true}
+                        esLink={false}
                         href={props.hrefSiguiente}
+                        replace={props.replace ? true : false}
                         fondo={true}
                         fuenteTexto={fuenteTexto.gantariBold}
                         textoBoton={props.esRealizarPedido ? "Realizar pedido" : "Siguiente"}

@@ -2,13 +2,17 @@ import { View, StyleSheet } from "react-native";
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { BotonIcono } from "./BotonIcono";
 import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 import { router } from "expo-router";
+import { ModalLoader } from "./ModalLoader";
+import { ModalConfirmarAccion } from "./ModalConfirmarAccion";
 
 export const BotonesCancelarVerServicios = (props) => {
 
-    const { serviciosSeleccionados, reiniciarContexto } = useContext(AgendarCitaContext)
+    const { serviciosSeleccionados, reiniciarContexto, setPasoAgendamiento } = useContext(AgendarCitaContext)
+    const [modalConfirmarAccion, setModalConfirmarAccion] = useState(false)
+
 
     const tema = useThemedStyles() // Acceder al contexto
     const fuenteTexto = fuenteTextoStyles();
@@ -28,11 +32,24 @@ export const BotonesCancelarVerServicios = (props) => {
 
     const cancelarAgendamientoCita = () => {
         reiniciarContexto()
-        router.replace("/navegacion/(tabs-cliente)/(agendarCita)/")
+        setPasoAgendamiento(1)
+        //router.replace("/navegacion/cliente")
     }
 
     return (
         <View>
+            <ModalConfirmarAccion
+                titulo={"¿Está seguro eliminar todo el progreso de la cita que esta agendando?"}
+                visible={modalConfirmarAccion}
+                cerrar={() => {
+                    setModalConfirmarAccion(false)
+                }}
+                aceptar={() => {
+                    cancelarAgendamientoCita()
+                    setModalConfirmarAccion(false)
+                }}
+            />
+
             <View style={styles.contenedorBotonVerServicios}>
                 {!props.esResumenScreen && (
                     <BotonIcono
@@ -50,7 +67,9 @@ export const BotonesCancelarVerServicios = (props) => {
                         fondo={true}
                         nombreIcono={"trash-can"}
                         esEliminar={true}
-                        onPress={cancelarAgendamientoCita}
+                        onPress={() => {
+                            setModalConfirmarAccion(true)
+                        }}
                     />
                 </View>
             }

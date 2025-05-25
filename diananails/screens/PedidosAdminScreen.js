@@ -1,4 +1,4 @@
-import { View, useColorScheme, ScrollView, FlatList } from "react-native";
+import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
@@ -22,7 +22,7 @@ export const PedidosAdminScreen = () => {
     const { usuario } = useContext(AuthContext)
     const [filtro, setFiltro] = useState("Pendiente de envío")
     const [textoModalActuPedido, setTextoModalActuPedido] = useState("¿Desea cambiar el estado de este pedido a 'Enviado'?")
-    const [pedidos, setPedidos] = useState([])
+    const [pedidos, setPedidos] = useState(null)
 
     const [pedidoSeleccionado, setPedidoSeleccionado] = useState(null)
     const [modalActuPedido, setModalActuPedido] = useState(false)
@@ -34,8 +34,12 @@ export const PedidosAdminScreen = () => {
     const styles = useThemedStyles(pedidosClienteStyles);
 
     const obtenerPedidos = async () => {
+        setModalLoaderVisible(true)
         const respuesta = await obtenerPedidosClientes(usuario.datosUsuario.id, filtro)
-        setPedidos(respuesta)
+        if (respuesta.length > 0) {
+            setPedidos(respuesta)
+        }
+        setModalLoaderVisible(false)
         //console.log(respuesta)
     }
 
@@ -44,9 +48,16 @@ export const PedidosAdminScreen = () => {
     }, [])
 
     useEffect(() => {
+        setModalLoaderVisible(true)
         const obtenerPedidos = async () => {
             const respuesta = await obtenerPedidosClientes(usuario.datosUsuario.id, filtro)
             setPedidos(respuesta)
+            if (respuesta.length > 0) {
+                setPedidos(respuesta)
+            } else {
+                setPedidos(null)
+            }
+            setModalLoaderVisible(false)
             switch (filtro) {
                 case "Pendiente de envío":
                     setTextoModalActuPedido("¿Desea cambiar el estado de este pedido a ENVIADO?")
@@ -99,43 +110,41 @@ export const PedidosAdminScreen = () => {
                 cerrar={() => setModalFeedbackVisible(false)}
             />
 
-
-            {pedidos && (
-                <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                    <ScrollView showsVerticalScrollIndicator={false}>
-                        <SeccionEnTab
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            tituloSeccion={"Mis pedidos"}
-                            textInfo1={"Aqui se muestran todos tus pedidos"}
+            <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <SeccionEnTab
+                        fuenteTextoBold={fuenteTexto.gantariBold}
+                        fuenteTextoRegular={fuenteTexto.gantariRegular}
+                        tituloSeccion={"Mis pedidos"}
+                        textInfo1={"Aqui se muestran todos tus pedidos"}
+                    />
+                    <View style={styles.contenedorFiltroPedidos}>
+                        <BotonTexto
+                            botonNavegacion={true}
+                            esLink={false}
+                            fondo={filtro === "Pendiente de envío"}
+                            fuenteTexto={fuenteTexto.gantariBold}
+                            textoBoton={"Pendientes de envío"}
+                            onPress={() => setFiltro("Pendiente de envío")}
                         />
-                        <View style={styles.contenedorFiltroPedidos}>
-                            <BotonTexto
-                                botonNavegacion={true}
-                                esLink={false}
-                                fondo={filtro === "Pendiente de envío"}
-                                fuenteTexto={fuenteTexto.gantariBold}
-                                textoBoton={"Pendientes de envío"}
-                                onPress={() => setFiltro("Pendiente de envío")}
-                            />
-                            <BotonTexto
-                                botonNavegacion={true}
-                                esLink={false}
-                                fondo={filtro === "Enviado"}
-                                fuenteTexto={fuenteTexto.gantariBold}
-                                textoBoton={"Enviados"}
-                                onPress={() => setFiltro("Enviado")}
-                            />
-                            <BotonTexto
-                                botonNavegacion={true}
-                                esLink={false}
-                                fondo={filtro === "Recibido"}
-                                fuenteTexto={fuenteTexto.gantariBold}
-                                textoBoton={"Entregados"}
-                                onPress={() => setFiltro("Recibido")}
-                            />
-                        </View>
-                        {/*<View style={styles.contenedorPedidos}>
+                        <BotonTexto
+                            botonNavegacion={true}
+                            esLink={false}
+                            fondo={filtro === "Enviado"}
+                            fuenteTexto={fuenteTexto.gantariBold}
+                            textoBoton={"Enviados"}
+                            onPress={() => setFiltro("Enviado")}
+                        />
+                        <BotonTexto
+                            botonNavegacion={true}
+                            esLink={false}
+                            fondo={filtro === "Recibido"}
+                            fuenteTexto={fuenteTexto.gantariBold}
+                            textoBoton={"Entregados"}
+                            onPress={() => setFiltro("Recibido")}
+                        />
+                    </View>
+                    {/*<View style={styles.contenedorPedidos}>
                         <CardPedido
                             productos={"PASAR LOS PRODUCTOS AQUI, DEL JSON"}
                         />
@@ -143,7 +152,11 @@ export const PedidosAdminScreen = () => {
                             productos={"PASAR LOS PRODUCTOS AQUI, DEL JSON"}
                         />
                     </View>*/}
-
+                    {pedidos == null ? (
+                        <View style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Text style={[styles.textInfo]}>{`No hay pedidos ${filtro == "Pendiente de envío" ? "pendientes de envío" : filtro == "Enviado" ? "enviados" : "recibidos"}`}</Text>
+                        </View>
+                    ) : (
                         <FlatList
                             data={pedidos}
                             contentContainerStyle={{
@@ -168,9 +181,10 @@ export const PedidosAdminScreen = () => {
                             }
                             scrollEnabled={false}
                         ></FlatList>
-                    </ScrollView>
-                </View>
-            )}
+                    )}
+
+                </ScrollView>
+            </View>
         </Screen>
     );
 }
