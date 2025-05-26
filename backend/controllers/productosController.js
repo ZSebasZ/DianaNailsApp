@@ -1,4 +1,5 @@
 import connection from "./../db/connection.js"; //Importamos nuestra conexion
+import { regex } from "../utils/regexCamposUtils.js";
 
 //Creamos la funcion que se encarga de la OBTENCION de los PRODUCTOS
 const getProductos = (req, res) => {
@@ -98,6 +99,10 @@ const nuevoProducto = (req, res) => {
         return res.status(400).json({ mensaje: "Campos incompletos" })
     }
 
+    if (!regex.nombreProducto.test(nombre) || !regex.descripcionProducto.test(descripcion) || !regex.precioProducto.test(precio) || !regex.stockProducto.test(stock)) {
+        return res.status(400).json({ mensaje: "Los campos no cumplen con el formato correcto" })
+    }
+
     //Sentencia SQL para la insercion de un nuevo producto
     const insertNuevoProducto = "INSERT INTO productos (url_imagen, nombre, descripcion, precio, estrellas, stock) VALUES (?, ?, ?, ?, 5, ?)"
 
@@ -155,6 +160,10 @@ const updateProducto = (req, res) => {
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!url_imagen || !nombre || !precio || !descripcion || !stock) {
         return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    if (!regex.nombreProducto.test(nombre) || !regex.descripcionProducto.test(descripcion) || !regex.precioProducto.test(precio) || !regex.stockProducto.test(stock)) {
+        return res.status(400).json({ mensaje: "Los campos no cumplen con el formato correcto" })
     }
 
     //Sentencia SQL para actualizar el servicio

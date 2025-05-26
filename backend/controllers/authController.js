@@ -1,6 +1,7 @@
 import e from "express";
 import connection from "./../db/connection.js"; //Importamos nuestra conexion
 import bcrypt from "bcrypt"; //Usamos bcrypt para encriptar la contraseña
+import { regex } from "../utils/regexCamposUtils.js";
 
 //Creamos la funcion que se encarga del LOGIN
 const login = (req, res) => {
@@ -11,6 +12,11 @@ const login = (req, res) => {
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!email || !contrasena) {
         return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    //Si el email no cumple con el regex, enviamos un mensaje de aviso
+    if ((!regex.email.test(email) && !regex.emailDianaNails.test(email)) || !regex.contrasena.test(contrasena)) {
+        return res.status(400).json({ mensaje: "Los campos no cumplen con el formato correcto" })
     }
 
     //Hacemos la query en la base de datos para saber si el email existe
@@ -134,6 +140,11 @@ const registerCliente = (req, res) => {
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!nombre || !apellidos || !telefono || !email || !contrasena) {
         return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+    
+
+    if (!regex.nombre.test(nombre) || !regex.apellidos.test(apellidos) || !regex.telefono.test(telefono) || !regex.email.test(email) || !regex.contrasena.test(contrasena) || !regex.direccionEnvio.test(direccionEnvio)) {
+        return res.status(400).json({ mensaje: "Los campos no cumplen con el formato correcto" })
     }
 
     //Hacemos la query en la base de datos para saber si el email ya existe

@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { fechaHoraStyles } from "../styles/fechaHoraStyles";
-import { Calendar } from 'react-native-calendars';
+import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { SeccionEnTab } from "../components/SeccionEnTab";
 import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
 import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerServicios";
@@ -14,6 +14,29 @@ import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 import { BotonTexto } from "../components/BotonTexto";
 import { obtenerHorasManicuristasDisponibles } from "../api/AgendarCitaController";
 import { AuthContext } from "../contexts/authContext";
+
+LocaleConfig.locales['es'] = {
+    monthNames: [
+        'Enero',
+        'Febrero',
+        'Marzo',
+        'Abril',
+        'Mayo',
+        'Junio',
+        'Julio',
+        'Agosto',
+        'Septiembre',
+        'Octubre',
+        'Noviembre',
+        'Diciembre'
+    ],
+    monthNamesShort: ['Ene.', 'Feb.', 'Mar.', 'Abr.', 'May.', 'Jun.', 'Jul.', 'Ago.', 'Sep.', 'Oct.', 'Nov.', 'Dic.'],
+    dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+    dayNamesShort: ['Dom.', 'Lun.', 'Mar.', 'Mié.', 'Jue.', 'Vie.', 'Sáb.'],
+    today: 'Hoy'
+};
+
+LocaleConfig.defaultLocale = 'es';
 
 //Pantalla de Login
 export const FechaHoraCitaScreen = () => {
@@ -47,9 +70,12 @@ export const FechaHoraCitaScreen = () => {
     useEffect(() => {
         if (fecha != null) {
             const cargarHoras = async () => {
+                setHorasManicuristas(null)
                 const idsServicios = serviciosSeleccionados.map(servicio => servicio.id);
                 const respuesta = await obtenerHorasManicuristasDisponibles({ idCliente: usuario.datosUsuario.id, fecha: fecha, servicios: idsServicios }) // esto ya es el array correcto
                 setHorasManicuristas(Object.values(respuesta));
+                //console.log(Object.values(respuesta))
+                //setHorasManicuristas({ mensaje: "noHoras" })
                 //console.log("cambiamos horas")
             };
 
@@ -145,6 +171,11 @@ export const FechaHoraCitaScreen = () => {
                     {horasManicuristas == null ? (
                         <View style={{ alignItems: "center", justifyContent: "center" }}>
                             <Text style={[styles.textInfo]}>Cargando horas disponibles...</Text>
+                        </View>
+                    ) : horasManicuristas[0] === "noHoras" ? (
+                        
+                        <View style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Text style={[styles.textInfo, {textAlign: "center"}]}>No tenemos manicuristas diponibles para la fecha seleccionada. Intentelo de nuevo seleccionando otra fecha</Text>
                         </View>
                     ) : (
                         <FlatList

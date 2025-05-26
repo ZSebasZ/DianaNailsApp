@@ -219,12 +219,14 @@ const getHorasDisponiblesManicuristasDisponibles = (req, res) => {
 const nuevaCita = (req, res) => {
 
     //Obtenemos los datos de la cita
-    const { idCliente, servicios, fecha, idHora, idManicurista, precio } = req.body;
+    const { idCliente, servicios, fecha, idHora, idManicurista, precio, idMetodoPago } = req.body;
 
     //Si alguno de los datos está vació o no se envia, mandamos un error
-    if (!idCliente || !servicios || !fecha || !idHora || !idManicurista) {
+    if (!idCliente || !servicios || !fecha || !idHora || !idManicurista || !idMetodoPago) {
         return res.status(400).json({ mensaje: "Campos incompletos" })
     }
+
+    //console.log(fecha)
 
     //Convertimos el array en un sring para la sentencia SQL
     const serviciosString = servicios.join(",")
@@ -279,10 +281,10 @@ const nuevaCita = (req, res) => {
                 }
 
                 //Sentencia SQL para insertar una nueva cita
-                const insertNuevaCita = "INSERT INTO citas (id_manicurista, id_cliente, fecha, precio) VALUES (?, ?, ?, ?)"
+                const insertNuevaCita = "INSERT INTO citas (id_manicurista, id_cliente, fecha, precio, id_metodo_pago) VALUES (?, ?, ?, ?, ?)"
 
                 //Hacemos la insercion de la cita
-                connection.query(insertNuevaCita, [idManicurista, idCliente, fecha, precio], (error, result) => {
+                connection.query(insertNuevaCita, [idManicurista, idCliente, fecha, precio, idMetodoPago], (error, result) => {
                     //Si ocurre algun error mostramos un mensaje
                     if (error) {
                         connection.rollback(() => {

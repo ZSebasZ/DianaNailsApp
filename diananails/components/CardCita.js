@@ -97,7 +97,7 @@ export const CardCita = (props) => {
                 <View>
                     <Text style={styles.textTituloSeccionCita}>Metodo de pago</Text>
                     <View>
-                        <Text style={styles.textInfoCita}>FALTA METODO PAGO</Text>
+                        <Text style={styles.textInfoCita}>{props.datosCita.metodoPago}</Text>
                     </View>
                 </View>
             </Pressable>

@@ -16,18 +16,33 @@ import { ModalFeedback } from "../components/ModalFeedback";
 import { router } from "expo-router";
 import { BotonIcono } from "../components/BotonIcono";
 import { ModalConfirmarAccion } from "../components/ModalConfirmarAccion";
+import { ModalUltDetallesPedido } from "../components/ModalUltDetallesPedido";
 
 //Pantalla de Login
 export const CarritoClienteScreen = () => {
 
     const [subtotal, setSubtotal] = useState(0)
+    const [metodoPago, setMetodoPago] = useState(null)
     const { usuario } = useContext(AuthContext)
     const { carritoProductos, dispatch } = useCarrito()
 
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
     const [modalConfirmarAccion, setModalConfirmarAccion] = useState(false)
+    const [modalUltDetallesPedido, setModalUltDetallesPedido] = useState(false)
 
+    const metodosPago = [
+        {
+            idMetodoPago: 3,
+            metodoPago: "Efectivo (contra entrega)"
+        },
+        {
+            idMetodoPago: 2,
+            metodoPago: "Tarjeta"
+        }
+    ]
+
+    const [metodoPagoSelec, setMetodoPagoSelec] = useState({idMetodoPago: null, metodoPago: null})
 
     const fuenteTexto = fuenteTextoStyles();
     //Estilos
@@ -81,6 +96,26 @@ export const CarritoClienteScreen = () => {
                     await vaciarCarrito(usuario.datosUsuario.id_carrito)
                     dispatch({ type: 'VACIAR_CARRITO' })
                     setModalLoaderVisible(false)
+                }}
+            />
+            <ModalUltDetallesPedido
+                direccionDeEnvio={usuario.datosUsuario.direccion_envio}
+                metodosPago={metodosPago}
+                metodoPagoSelec={metodoPagoSelec}
+                setMetodoPago={setMetodoPagoSelec}
+                visible={modalUltDetallesPedido}
+                fuenteTexto={fuenteTexto.gantariBold}
+                cerrar={() => {
+                    setModalUltDetallesPedido(false)
+                    setMetodoPagoSelec({idMetodoPago: null, metodoPago: null})
+                }}
+                aceptar={async () => {
+                    setModalUltDetallesPedido(false)
+                    setModalLoaderVisible(true)
+                    await hacerPedidoCarrito(usuario.datosUsuario.id_carrito, usuario.datosUsuario.id, metodoPagoSelec.idMetodoPago, subtotal)
+                    dispatch({ type: 'HACER_PEDIDO' })
+                    setModalLoaderVisible(false);
+                    setModalFeedbackVisible(true)
                 }}
             />
 
@@ -177,12 +212,8 @@ export const CarritoClienteScreen = () => {
                 btnSiguienteDeshabilitado={carritoProductos.length == 0 ? true : false}
                 subtotal={subtotal}
                 esRealizarPedido={true}
-                onPress={async () => {
-                    setModalLoaderVisible(true)
-                    await hacerPedidoCarrito(usuario.datosUsuario.id_carrito, usuario.datosUsuario.id, 1, subtotal)
-                    dispatch({ type: 'HACER_PEDIDO' })
-                    setModalLoaderVisible(false);
-                    setModalFeedbackVisible(true)
+                onPress={() => {
+                    setModalUltDetallesPedido(true)
                 }}
             />
         </Screen>

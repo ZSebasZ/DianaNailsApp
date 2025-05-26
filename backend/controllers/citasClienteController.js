@@ -27,7 +27,8 @@ const getCitasCliente = (req, res) => {
                                 CONCAT(u.nombre, ' ', u.apellidos) AS manicurista,
                                 u.url_imagen AS manicuristaImg,
                                 h_inicio.hora AS horaInicio,
-                                h_fin.hora AS horaFin
+                                h_fin.hora AS horaFin,
+                                mp.metodo as metodoPago
                             FROM citas c
                             JOIN citas_servicios cs ON c.id = cs.id_cita
                             JOIN servicios s ON cs.id_servicio = s.id
@@ -46,6 +47,7 @@ const getCitasCliente = (req, res) => {
                                 JOIN horas h2 ON h2.id = h.id + 1
                                 GROUP BY ch.id_cita
                             ) h_fin ON h_fin.id_cita = c.id
+                            JOIN metodos_pago mp ON c.id_metodo_pago = mp.id
                             WHERE
                                 c.id_cliente = ${idCliente}
                                 AND (
@@ -73,6 +75,7 @@ const getCitasCliente = (req, res) => {
 
             results.forEach(row => {
                 if (row.id_cita !== citaAnterior) {
+                    //console.log(row.fecha_cita);
                     citasCliente.citas.push({
                         cita: {
                             id: row.id_cita,
@@ -82,7 +85,8 @@ const getCitasCliente = (req, res) => {
                             horaInicio: row.horaInicio,
                             horaFin: row.horaFin,
                             manicurista: row.manicurista,
-                            manicuristaImg: row.manicuristaImg
+                            manicuristaImg: row.manicuristaImg,
+                            metodoPago: row.metodoPago
                         }
                     });
                     citaAnterior = row.id_cita;
@@ -219,7 +223,8 @@ const getCitasClientes = (req, res) => {
                                 uc.url_imagen AS clienteImg,
 
                                 h_inicio.hora AS horaInicio,
-                                h_fin.hora AS horaFin
+                                h_fin.hora AS horaFin,
+                                mp.metodo as metodoPago
 
                             FROM citas c
 
@@ -249,6 +254,7 @@ const getCitasClientes = (req, res) => {
                                 JOIN horas h2 ON h2.id = h.id + 1
                                 GROUP BY ch.id_cita
                             ) h_fin ON h_fin.id_cita = c.id
+                            JOIN metodos_pago mp ON c.id_metodo_pago = mp.id
 
                             -- Condiciones de fecha y hora
                             WHERE (
@@ -287,7 +293,8 @@ const getCitasClientes = (req, res) => {
                             manicurista: row.manicurista,
                             manicuristaImg: row.manicuristaImg,
                             cliente: row.cliente,
-                            clienteImg: row.clienteImg
+                            clienteImg: row.clienteImg,
+                            metodoPago: row.metodoPago
                         }
                     });
                     citaAnterior = row.id_cita;

@@ -112,7 +112,7 @@ const getPedidosCliente = (req, res) => {
             return res.status(200).json({ mensaje: "No hay pedidos" });
         } else {
             //De lo contrario, obtenemos todos los pedidos del cliente
-            const queryPedidosCliente = "SELECT p.id AS idPedido, p.fecha as fechaPedido, p.estado as estadoPedido, pr.nombre as productoNombre, pr.precio as productoPrecio, pp.cantidad as productoCantidad, ROUND(p.total, 2) AS totalPedido FROM pedidos AS p JOIN pedidos_productos AS pp ON p.id = pp.id_pedido JOIN productos AS pr ON pp.id_producto = pr.id WHERE p.id_cliente = ? AND p.estado = ?"
+            const queryPedidosCliente = "SELECT p.id AS idPedido, p.fecha as fechaPedido, p.estado as estadoPedido, pr.nombre as productoNombre, pr.precio as productoPrecio, pp.cantidad as productoCantidad, ROUND(p.total, 2) AS totalPedido, mp.metodo AS metodoPago FROM pedidos AS p JOIN pedidos_productos AS pp ON p.id = pp.id_pedido JOIN productos AS pr ON pp.id_producto = pr.id JOIN metodos_pago AS mp ON p.id_metodo_pago = mp.id WHERE p.id_cliente = ? AND p.estado = ?"
             connection.query(queryPedidosCliente, [idCliente, filtro], (error, results) => {
                 //Si ocurre algun error mostramos un mensaje
                 if (error) {
@@ -136,6 +136,7 @@ const getPedidosCliente = (req, res) => {
                             fecha: row.fechaPedido,
                             estado: row.estadoPedido,
                             total: row.totalPedido,
+                            metodoPago: row.metodoPago,
                             productos: []
 
                         };
@@ -272,7 +273,8 @@ const getPedidosClientes = (req, res) => {
     pr.nombre AS productoNombre,
     pr.precio AS productoPrecio,
     pp.cantidad AS productoCantidad,
-    ROUND(p.total, 2) AS totalPedido
+    ROUND(p.total, 2) AS totalPedido,
+    mp.metodo AS metodoPago
 
 FROM pedidos AS p
 
@@ -283,6 +285,8 @@ JOIN productos AS pr ON pp.id_producto = pr.id
 -- JOIN con cliente y usuario
 JOIN clientes AS c ON p.id_cliente = c.id
 JOIN usuarios AS u ON c.id = u.id
+
+JOIN metodos_pago AS mp ON p.id_metodo_pago = mp.id
 
 -- Filtro por estado
 WHERE p.estado = ?
@@ -313,6 +317,7 @@ WHERE p.estado = ?
                             fecha: row.fechaPedido,
                             estado: row.estadoPedido,
                             total: row.totalPedido,
+                            metodoPago: row.metodoPago,
                             productos: []
 
                         };

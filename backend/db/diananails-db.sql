@@ -127,7 +127,8 @@ CREATE TABLE citas (
     fecha DATE NOT NULL,
     precio INT NOT NULL,
     FOREIGN KEY (id_manicurista) REFERENCES manicuristas(id),
-    FOREIGN KEY (id_cliente) REFERENCES clientes(id)
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id),
+    FOREIGN KEY (id_metodo_pago) REFERENCES metodos_pago(id)
 );
 
 -- Relación N:M entre citas y servicios

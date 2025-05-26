@@ -1,4 +1,5 @@
 import connection from "./../db/connection.js"; //Importamos nuestra conexion
+import { regex } from "../utils/regexCamposUtils.js";
 
 //Creamos la funcion que se encarga de la INSERCION de una OPINION
 const nuevaOpinion = (req, res) => {
@@ -9,6 +10,10 @@ const nuevaOpinion = (req, res) => {
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!idCliente || !titulo || !descripcion || !estrellas) {
         return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    if (!regex.tituloOpinion.test(titulo) || !regex.descripcionOpinion.test(descripcion)) {
+        return res.status(400).json({ mensaje: "Los campos no cumplen con el formato correcto" })
     }
 
     //Sentencia SQL para la insercion de la nueva opinion

@@ -1,5 +1,6 @@
 import connection from "./../db/connection.js"; //Importamos nuestra conexion
 import bcrypt from "bcrypt"; //Usamos bcrypt para encriptar la contraseña
+import { regex } from "../utils/regexCamposUtils.js";
 
 //Creamos la funcion que se encarga de la OBTENCION de las MANICURISTAS - ADMIN
 const getManicuristas = (req, res) => {
@@ -37,6 +38,10 @@ const nuevaManicurista = (req, res) => {
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!nombre || !apellidos || !telefono || !email || !contrasena || !dni) {
         return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    if (!regex.nombre.test(nombre) || !regex.apellidos.test(apellidos) || !regex.telefono.test(telefono) || !regex.emailDianaNails.test(email) || !regex.dniNie.test(dni) || !regex.contrasena.test(contrasena)) {
+        return res.status(400).json({ mensaje: "Los campos no cumplen con el formato correcto" })
     }
 
     //Hacemos la query en la base de datos para saber si el email ya existe
@@ -120,6 +125,10 @@ const updateManicurista = (req, res) => {
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!url_imagen || !nombre || !apellidos || !telefono) {
         return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    if (!regex.nombre.test(nombre) || !regex.apellidos.test(apellidos) || !regex.telefono.test(telefono)) {
+        return res.status(400).json({ mensaje: "Los campos no cumplen con el formato correcto" })
     }
 
     //Sentencia SQL para actualizar el servicio

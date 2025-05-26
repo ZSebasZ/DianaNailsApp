@@ -57,12 +57,15 @@ export const CampoTextoInput = (props) => {
 
     const onBlur = () => {
         if (props.verificarContrasena) {
-            setErrorOnBlur(props.onBlurValidacion(props.nombreCampo, props.valorCampo, props.verificarContrasena))
+            setErrorOnBlur(props.onBlurValidacion(props.nombreCampo, props.valorCampo?.trim(), props.verificarContrasena))
+            inputRef.current.setNativeProps({ text: props.valorCampo?.trim() });
         } else {
             if (props.tipoLogin == 0) {
-                setErrorOnBlur(props.onBlurValidacion(props.nombreCampo, props.valorCampo, props.tipoLogin))
+                setErrorOnBlur(props.onBlurValidacion(props.nombreCampo, props.valorCampo?.trim(), props.tipoLogin))
+                inputRef.current.setNativeProps({ text: props.valorCampo?.trim() });
             } else {
-                setErrorOnBlur(props.onBlurValidacion(props.nombreCampo, props.valorCampo))
+                setErrorOnBlur(props.onBlurValidacion(props.nombreCampo, props.valorCampo?.trim()))
+                inputRef.current.setNativeProps({ text: props.valorCampo?.trim() });
             }
 
         }

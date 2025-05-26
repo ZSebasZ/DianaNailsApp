@@ -119,7 +119,7 @@ export const CardPedido = (props) => {
                 <View style={styles.containerSeccionPedido}>
                     <Text style={styles.textTitleSeccionPedido}>Fecha del pedido</Text>
                     <View>
-                        <Text style={styles.textInfoPedido}>{props.fecha.split('T')[0]}</Text>
+                        <Text style={styles.textInfoPedido}>{props.fecha.split(' ')[0]}</Text>
                     </View>
                 </View>
                 <View style={styles.lineaDivisora}></View>
@@ -137,12 +137,20 @@ export const CardPedido = (props) => {
                     </View>
                 </View>
                 <View style={styles.lineaDivisora}></View>
+                <View style={styles.containerSeccionPedido}>
+                    <Text style={styles.textTitleSeccionPedido}>Metodo de pago</Text>
+                    <View>
+                        <Text style={styles.textInfoPedido}>{props.metodoPago}</Text>
+                    </View>
+                </View>
+                <View style={styles.lineaDivisora}></View>
                 <View style={[styles.containerSeccionPedido, { marginBottom: 0 }]}>
                     <Text style={styles.textTitleSeccionPedido}>Total</Text>
                     <View>
                         <Text style={styles.textInfoPedido}>{formatearPrecio(props.total)} €</Text>
                     </View>
                 </View>
+                
             </Pressable>
         </View>
     )

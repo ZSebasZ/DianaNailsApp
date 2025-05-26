@@ -165,6 +165,7 @@ export const PedidosClienteScreen = () => {
                                     fecha={item.fecha}
                                     estado={item.estado}
                                     total={item.total}
+                                    metodoPago={item.metodoPago}
                                     productos={item.productos}
                                     cancelarPedido={item.estado === "Pendiente de envío" ? true : false}
                                     onPress={() => {

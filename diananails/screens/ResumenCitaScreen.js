@@ -52,6 +52,7 @@ export const ResumenCitaScreen = () => {
     const agendarCitaCliente = async () => {
         try {
             setModalLoaderVisible(true)
+            //console.log(fecha)
             
             const idsServicios = serviciosSeleccionados.map(servicio => servicio.id);
             const respuesta = await agendarCita({
@@ -60,8 +61,10 @@ export const ResumenCitaScreen = () => {
                 fecha: fecha,
                 idHora: hora.idHora,
                 idManicurista: manicurista.idManicurista,
-                precio: subtotal
+                precio: subtotal,
+                idMetodoPago: metodoPago.idMetodoPago
             })
+                
                 
             setModalLoaderVisible(false)
             setModalFeedbackVisible(true)

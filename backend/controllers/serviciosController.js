@@ -1,4 +1,5 @@
 import connection from "./../db/connection.js"; //Importamos nuestra conexion
+import { regex } from "../utils/regexCamposUtils.js";
 
 //Creamos la funcion que se encarga de la OBTENCION de los SERVICIOS
 const getServicios = (req, res) => {
@@ -30,6 +31,10 @@ const nuevoServicio = (req, res) => {
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!nombre || !precio || !horas_requeridas) {
         return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    if (!regex.nombreServicio.test(nombre) || !regex.precioServicio.test(precio)) {
+        return res.status(400).json({ mensaje: "Los campos no cumplen con el formato correcto" })
     }
 
     //Sentencia SQL para la insercion de un nuevo servicio
@@ -90,6 +95,10 @@ const updateServicio = (req, res) => {
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!nombre || !precio || !horas_requeridas) {
         return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    if (!regex.nombreServicio.test(nombre) || !regex.precioServicio.test(precio)) {
+        return res.status(400).json({ mensaje: "Los campos no cumplen con el formato correcto" })
     }
 
     //Sentencia SQL para actualizar el servicio

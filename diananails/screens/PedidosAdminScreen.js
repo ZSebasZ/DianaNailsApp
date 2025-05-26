@@ -38,6 +38,8 @@ export const PedidosAdminScreen = () => {
         const respuesta = await obtenerPedidosClientes(usuario.datosUsuario.id, filtro)
         if (respuesta.length > 0) {
             setPedidos(respuesta)
+        } else {
+            setPedidos(null)
         }
         setModalLoaderVisible(false)
         //console.log(respuesta)
@@ -72,6 +74,8 @@ export const PedidosAdminScreen = () => {
     }, [filtro])
 
     const actualizarEstadoPedido = async () => {
+        setModalActuPedido(false)
+        setModalLoaderVisible(true)
         switch (filtro) {
             case "Pendiente de envío":
                 await actualizarPedidoEstado(pedidoSeleccionado, filtro)
@@ -80,8 +84,8 @@ export const PedidosAdminScreen = () => {
                 await actualizarPedidoEstado(pedidoSeleccionado, filtro)
                 break;
         }
-        obtenerPedidos()
-        setModalActuPedido(false)
+        await obtenerPedidos()
+        setModalLoaderVisible(false)
         setModalFeedbackVisible(true)
         setPedidoSeleccionado(null)
     }
@@ -171,6 +175,7 @@ export const PedidosAdminScreen = () => {
                                     fecha={item.fecha}
                                     estado={item.estado}
                                     total={item.total}
+                                    metodoPago={item.metodoPago}
                                     productos={item.productos}
                                     cancelarPedido={(item.estado === "Pendiente de envío" || item.estado === "Enviado") ? true : false}
                                     onPress={() => {

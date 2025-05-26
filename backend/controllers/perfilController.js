@@ -1,4 +1,5 @@
 import connection from "./../db/connection.js"; //Importamos nuestra conexion
+import { regex } from "../utils/regexCamposUtils.js";
 
 //Creamos la funcion que se encarga de la OBTENCION de las de los del USUARIO
 const getDatosPerfil = (req, res) => {
@@ -85,6 +86,10 @@ const updateDatosPersManicurista = (req, res) => {
         return res.status(400).json({ mensaje: "Campos incompletos" })
     }
 
+    if (!regex.nombre.test(nombre) || !regex.apellidos.test(apellidos) || !regex.telefono.test(telefono)) {
+        return res.status(400).json({ mensaje: "Los campos no cumplen con el formato correcto" })
+    }
+
     //Setencia SQL para actualizar los datos personales de la manicurista
     const updateDatosPersManicurista = "UPDATE usuarios SET url_imagen = ?, nombre = ?, apellidos = ?, telefono = ? WHERE id = ?"
     //Hacemos la actualizacion 
@@ -116,6 +121,10 @@ const updateDatosPersCliente = (req, res) => {
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!nombre || !apellidos || !telefono) {
         return res.status(400).json({ mensaje: "Campos incompletos" })
+    }
+
+    if (!regex.nombre.test(nombre) || !regex.apellidos.test(apellidos) || !regex.telefono.test(telefono)) {
+        return res.status(400).json({ mensaje: "Los campos no cumplen con el formato correcto" })
     }
 
     //Setencia SQL para actualizar los datos personales del cliente

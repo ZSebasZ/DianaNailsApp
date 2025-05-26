@@ -33,7 +33,7 @@ export const CitasClienteScreen = () => {
     const cargarCitas = async () => {
         const respuesta = await obtenerCitas(usuario.datosUsuario.id)// esto ya es el array correcto
         setCitas(respuesta.citas);
-        console.log(respuesta.citas)
+        //console.log(respuesta.citas)
         //console.log(respuesta.citas)
     };
 
@@ -47,6 +47,7 @@ export const CitasClienteScreen = () => {
         try {
             setModalConfirmarAccion(false)
             setModalLoaderVisible(true)
+            //console.log(usuario.datosUsuario.id, citaSeleccionada)
             const respuesta = await cancelarCita(usuario.datosUsuario.id, citaSeleccionada)
             console.log(respuesta)
             setModalLoaderVisible(false)
