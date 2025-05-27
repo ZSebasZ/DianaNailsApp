@@ -12,7 +12,7 @@ const getCitasCliente = (req, res) => {
 
     //Guardamos la fecha y hora actuales
     //Ffecha actual en formato 'Y-m-d' (año-mes-dia)
-    const fechaActual = new Date().toISOString().split('T')[0];
+    const fechaActual = new Date().toLocaleDateString('en-CA');
 
     //Obtener la hora actual en formato 'H:i' (hora:minuto)
     const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -201,10 +201,12 @@ const getCitasClientes = (req, res) => {
 
     //Guardamos la fecha y hora actuales
     //Ffecha actual en formato 'Y-m-d' (año-mes-dia)
-    const fechaActual = new Date().toISOString().split('T')[0];
+    const fechaActual = new Date().toLocaleDateString('en-CA');
 
     //Obtener la hora actual en formato 'H:i' (hora:minuto)
     const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    //console.log(new Date().toLocaleDateString('en-CA'))
 
     //Obtenemos todas las citas del cliente, a partir de la fecha y hora actuales
     const getCitasCliente = `SELECT
@@ -327,7 +329,7 @@ const getCitasClientesPorManicurista = (req, res) => {
 
     //Guardamos la fecha y hora actuales
     //Ffecha actual en formato 'Y-m-d' (año-mes-dia)
-    const fechaActual = new Date().toISOString().split('T')[0];
+    const fechaActual = new Date().toLocaleDateString('en-CA');
 
     //Obtener la hora actual en formato 'H:i' (hora:minuto)
     const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });

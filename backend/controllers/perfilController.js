@@ -116,14 +116,14 @@ const updateDatosPersCliente = (req, res) => {
     const { id } = req.params
 
     //Obtenemos los datos enviados
-    const { nombre, apellidos, telefono, direccion_envio } = req.body;
+    const { nombre, apellidos, telefono, direccionEnvio } = req.body;
 
     //Si alguno de los datos está vació o no se envia, mandamos un error
     if (!nombre || !apellidos || !telefono) {
         return res.status(400).json({ mensaje: "Campos incompletos" })
     }
 
-    if (!regex.nombre.test(nombre) || !regex.apellidos.test(apellidos) || !regex.telefono.test(telefono)) {
+    if (!regex.nombre.test(nombre) || !regex.apellidos.test(apellidos) || !regex.telefono.test(telefono) || !regex.direccionEnvio.test(direccionEnvio)) {
         return res.status(400).json({ mensaje: "Los campos no cumplen con el formato correcto" })
     }
 
@@ -144,7 +144,7 @@ const updateDatosPersCliente = (req, res) => {
         //Setencia SQL para actualizar la direccion de envio del cliente
         const updateDatosPersCliente = "UPDATE clientes SET direccion_envio = ? WHERE id = ?"
         //Hacemos la actualizacion 
-        connection.query(updateDatosPersCliente, [direccion_envio, id], (error, result) => {
+        connection.query(updateDatosPersCliente, [direccionEnvio, id], (error, result) => {
             //Si ocurre algun error en la actualizacion, mostramos un mensaje
             if (error) {
                 return res.status(500).json({ mensaje: "Error al actualizar los datos del cliente" });

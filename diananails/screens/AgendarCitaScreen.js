@@ -15,6 +15,7 @@ import { router } from "expo-router";
 import { useRootNavigationState } from "expo-router";
 import { obtenerServicios } from "../api/ServiciosController";
 import { AgendarCitaContext } from "../contexts/agendarCitaContext";
+import { ModalServiciosSelec } from "../components/ModalServiciosSelec";
 
 //Pantalla de Login
 export const AgendarCitaScreen = () => {
@@ -50,6 +51,7 @@ export const AgendarCitaScreen = () => {
     const styles = useThemedStyles(agendarCitaStyles);
 
     const [servicios, setServicios] = useState(null)
+    const [modalServiciosSelec, setModalServiciosSelec] = useState(false)
 
     useEffect(() => {
         const cargarServicios = async () => {
@@ -70,6 +72,15 @@ export const AgendarCitaScreen = () => {
 
     return (
         <Screen enTab={true}>
+
+            <ModalServiciosSelec
+                editable={true}
+                servicios={serviciosSeleccionados}
+                visible={modalServiciosSelec}
+                cerrar={() => {setModalServiciosSelec(false)}}
+                eliminarServicio={alternarSeleccionServicio}
+            />
+
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
 
                 <ScrollView showsVerticalScrollIndicator={false}>
@@ -116,7 +127,9 @@ export const AgendarCitaScreen = () => {
 
                 </ScrollView>
             </View>
-            <BotonesCancelarVerServicios />
+            <BotonesCancelarVerServicios 
+                verServicios={() => {setModalServiciosSelec(true)}}
+            />
             <BarraResumen
                 onPress={() => {
                     setPasoAgendamiento(2)

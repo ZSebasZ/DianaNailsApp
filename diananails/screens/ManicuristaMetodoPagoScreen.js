@@ -13,11 +13,13 @@ import { ListaDropdown } from "../components/ListaDropdown";
 import { useContext } from "react";
 import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 import { BotonTexto } from "../components/BotonTexto";
+import { ModalServiciosSelec } from "../components/ModalServiciosSelec";
+
 
 //Pantalla de Login
 export const ManicuristaMetodoPagoScreen = () => {
 
-    const { subtotal, manicuristas, manicurista, seleccionarManicurista, metodoPago, seleccionarMetodoPago, setPasoAgendamiento } = useContext(AgendarCitaContext)
+    const { serviciosSeleccionados, subtotal, manicuristas, manicurista, seleccionarManicurista, metodoPago, seleccionarMetodoPago, setPasoAgendamiento } = useContext(AgendarCitaContext)
 
     //console.log(manicuristas)
 
@@ -43,10 +45,18 @@ export const ManicuristaMetodoPagoScreen = () => {
     //Estilos
     const styles = useThemedStyles(manicuristaMetodoPagoStyles);
 
+    const [modalServiciosSelec, setModalServiciosSelec] = useState(false)
 
 
     return (
         <Screen enTab={true}>
+            <ModalServiciosSelec
+                editable={false}
+                servicios={serviciosSeleccionados}
+                visible={modalServiciosSelec}
+                cerrar={() => { setModalServiciosSelec(false) }}
+                
+            />
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
                     <SeccionEnTab
@@ -124,7 +134,9 @@ export const ManicuristaMetodoPagoScreen = () => {
                     ></FlatList>
                 </ScrollView>
             </View>
-            <BotonesCancelarVerServicios />
+            <BotonesCancelarVerServicios 
+                verServicios={() => {setModalServiciosSelec(true)}}
+            />
             <BarraResumen
                 onPress={() => {
                     setPasoAgendamiento(4)

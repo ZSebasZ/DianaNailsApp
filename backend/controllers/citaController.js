@@ -71,7 +71,7 @@ const getHorasDisponiblesManicuristasDisponibles = (req, res) => {
 
         //Guardamos la fecha y hora actuales
         //Ffecha actual en formato 'Y-m-d' (año-mes-dia)
-        const fechaActual = new Date().toISOString().split('T')[0];
+        const fechaActual = new Date().toLocaleDateString('en-CA');
 
         //Obtener la hora actual en formato 'H:i' (hora:minuto)
         const horaActual = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -156,7 +156,7 @@ const getHorasDisponiblesManicuristasDisponibles = (req, res) => {
 
             for (let i = 1; i <= horsReqs; i++) {
                 if (i > 1) {
-                    horasManicuristasDisponibles += ` JOIN manicuristasLibres p${i}  ON p${i}.id_hora = p1.id_hora + ${i - 1}`
+                    horasManicuristasDisponibles += ` JOIN manicuristasLibres p${i}  ON p${i}.id_hora = p1.id_hora + ${i - 1} `
                 }
             }
 
@@ -245,7 +245,7 @@ const nuevaCita = (req, res) => {
             //Si surge algun error, avisamos con un mensaje
             if (error) {
                 connection.rollback(() => {
-                    
+
                 })
                 return res.status(500).json({ mensaje: "Error al ejecutar: " + queryObtenerHorsReqs });
             }
@@ -268,14 +268,14 @@ const nuevaCita = (req, res) => {
                 //Si ocurre algun error mostramos un mensaje
                 if (error) {
                     connection.rollback(() => {
-                        
+
                     })
                     return res.status(500).json({ mensaje: "Error al ejecutar: " + queryManicuristaOcupada });
                 }
 
                 if (results.length > 0) {
                     connection.rollback(() => {
-                        
+
                     })
                     return res.status(409).json({ mensaje: "La cita ya está reservada." });
                 }
@@ -288,7 +288,7 @@ const nuevaCita = (req, res) => {
                     //Si ocurre algun error mostramos un mensaje
                     if (error) {
                         connection.rollback(() => {
-                            
+
                         })
                         return res.status(500).json({ mensaje: "Error al ejecutar: " + insertNuevaCita });
                     }
@@ -302,7 +302,7 @@ const nuevaCita = (req, res) => {
                         //Si ocurre algun error mostramos un mensaje
                         if (error) {
                             connection.rollback(() => {
-                               
+
                             })
                             return res.status(500).json({ mensaje: "Error al ejecutar: " + queryIdsHorsReqs });
                         }

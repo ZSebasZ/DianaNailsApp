@@ -31,7 +31,7 @@ export const validacionRegistro = (valoresCampos) => {
         errores.telefono = "Telefono invalido, solo numeros telefonicos de España"
     }
     if (!estaVacio(valoresCampos.direccionEnvio) && !regex.direccionEnvio.test(valoresCampos.direccionEnvio)) {
-        errores.direccionEnvio = "Direccion de envio invalida, solo caracteres alfanumericos"
+        errores.direccionEnvio = "Direccion de envio invalida. El formato es: Ciudad, 21, piso 3"
     }
     if (!estaVacio(valoresCampos.email) && !regex.email.test(valoresCampos.email)) {
         errores.email = "Email invalido"

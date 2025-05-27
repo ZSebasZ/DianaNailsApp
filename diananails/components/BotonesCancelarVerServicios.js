@@ -58,6 +58,7 @@ export const BotonesCancelarVerServicios = (props) => {
                         conBurbuja={true}
                         cantidad={serviciosSeleccionados.length}
                         fuenteTexto={fuenteTexto.gantariRegular}
+                        onPress={props.verServicios}
                     />
                 )}
             </View>

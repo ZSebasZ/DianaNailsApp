@@ -112,7 +112,7 @@ const getPedidosCliente = (req, res) => {
             return res.status(200).json({ mensaje: "No hay pedidos" });
         } else {
             //De lo contrario, obtenemos todos los pedidos del cliente
-            const queryPedidosCliente = "SELECT p.id AS idPedido, p.fecha as fechaPedido, p.estado as estadoPedido, pr.nombre as productoNombre, pr.precio as productoPrecio, pp.cantidad as productoCantidad, ROUND(p.total, 2) AS totalPedido, mp.metodo AS metodoPago FROM pedidos AS p JOIN pedidos_productos AS pp ON p.id = pp.id_pedido JOIN productos AS pr ON pp.id_producto = pr.id JOIN metodos_pago AS mp ON p.id_metodo_pago = mp.id WHERE p.id_cliente = ? AND p.estado = ?"
+            const queryPedidosCliente = "SELECT p.id AS idPedido, p.fecha as fechaPedido, p.estado as estadoPedido, pr.nombre as productoNombre, pr.precio as productoPrecio, pp.cantidad as productoCantidad, ROUND(p.total, 2) AS totalPedido, mp.metodo AS metodoPago FROM pedidos AS p JOIN pedidos_productos AS pp ON p.id = pp.id_pedido JOIN productos AS pr ON pp.id_producto = pr.id JOIN metodos_pago AS mp ON p.id_metodo_pago = mp.id WHERE p.id_cliente = ? AND p.estado = ? ORDER BY fechaPedido DESC"
             connection.query(queryPedidosCliente, [idCliente, filtro], (error, results) => {
                 //Si ocurre algun error mostramos un mensaje
                 if (error) {
@@ -290,6 +290,7 @@ JOIN metodos_pago AS mp ON p.id_metodo_pago = mp.id
 
 -- Filtro por estado
 WHERE p.estado = ?
+ORDER BY fechaPedido DESC
 
             `
             connection.query(queryPedidosClientes, [filtro], (error, results) => {

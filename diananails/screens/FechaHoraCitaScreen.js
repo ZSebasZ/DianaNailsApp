@@ -14,6 +14,8 @@ import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 import { BotonTexto } from "../components/BotonTexto";
 import { obtenerHorasManicuristasDisponibles } from "../api/AgendarCitaController";
 import { AuthContext } from "../contexts/authContext";
+import { ModalServiciosSelec } from "../components/ModalServiciosSelec";
+
 
 LocaleConfig.locales['es'] = {
     monthNames: [
@@ -51,6 +53,8 @@ export const FechaHoraCitaScreen = () => {
     const tema = useThemedStyles()
 
     const [horasManicuristas, setHorasManicuristas] = useState(null)
+    const [modalServiciosSelec, setModalServiciosSelec] = useState(false)
+
 
     const diaSeleccionado = async (dia) => {
         const fecha = new Date(dia.dateString);
@@ -133,6 +137,13 @@ export const FechaHoraCitaScreen = () => {
 
     return (
         <Screen enTab={true}>
+            <ModalServiciosSelec
+                editable={false}
+                servicios={serviciosSeleccionados}
+                visible={modalServiciosSelec}
+                cerrar={() => { setModalServiciosSelec(false) }}
+                
+            />
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <SeccionEnTab
@@ -173,9 +184,9 @@ export const FechaHoraCitaScreen = () => {
                             <Text style={[styles.textInfo]}>Cargando horas disponibles...</Text>
                         </View>
                     ) : horasManicuristas[0] === "noHoras" ? (
-                        
+
                         <View style={{ alignItems: "center", justifyContent: "center" }}>
-                            <Text style={[styles.textInfo, {textAlign: "center"}]}>No tenemos manicuristas diponibles para la fecha seleccionada. Intentelo de nuevo seleccionando otra fecha</Text>
+                            <Text style={[styles.textInfo, { textAlign: "center" }]}>No tenemos manicuristas diponibles para la fecha seleccionada. Intentelo de nuevo seleccionando otra fecha</Text>
                         </View>
                     ) : (
                         <FlatList
@@ -210,7 +221,9 @@ export const FechaHoraCitaScreen = () => {
                     />*/}
                 </ScrollView>
             </View>
-            <BotonesCancelarVerServicios />
+            <BotonesCancelarVerServicios 
+                verServicios={() => {setModalServiciosSelec(true)}}
+            />
             <BarraResumen
                 onPress={() => {
                     setPasoAgendamiento(3)

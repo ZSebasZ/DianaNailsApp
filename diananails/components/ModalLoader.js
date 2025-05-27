@@ -24,6 +24,7 @@ export const ModalLoader = (props) => {
             alignItems: 'center'
         },
         textTituloModal: {
+            color: tema.onBackground,
             fontFamily: "GantariBold",
             fontSize: hp(3)
         },

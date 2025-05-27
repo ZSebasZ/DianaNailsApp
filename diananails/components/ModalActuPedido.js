@@ -24,10 +24,12 @@ export const ModalActuPedido = (props) => {
             alignItems: 'center'
         },
         textTituloModal: {
+            color: tema.onBackground,
             fontFamily: "GantariBold",
             fontSize: hp(3)
         },
         textInfoModal: {
+            color: tema.onBackground,
             fontFamily: "GantariRegular",
             textAlign: "center",
             fontSize: hp(2),

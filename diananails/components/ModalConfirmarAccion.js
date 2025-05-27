@@ -24,6 +24,7 @@ export const ModalConfirmarAccion = (props) => {
             alignItems: 'center'
         },
         textTituloModal: {
+            color: tema.onBackground,
             color: tema.onErrorContainer,
             textAlign: "center",
             fontFamily: "GantariBold",
@@ -31,6 +32,7 @@ export const ModalConfirmarAccion = (props) => {
             marginBottom: 20
         },
         textInfoModal: {
+            color: tema.onBackground,
             fontFamily: "GantariRegular",
             textAlign: "center",
             fontSize: hp(2),

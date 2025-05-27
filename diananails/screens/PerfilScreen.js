@@ -31,6 +31,8 @@ export const PerfilScreen = () => {
 
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
+    const [modalFeedbackActuDatosVisible, setModalFeedbackActuDatosVisible] = useState(false)
+    const [modalFeedbackActuFotoVisible, setModalFeedbackActuFotoVisible] = useState(false)
     const [modalConfirmarAccion, setModalConfirmarAccion] = useState(false)
 
 
@@ -63,7 +65,11 @@ export const PerfilScreen = () => {
         setErrores(validacionErrores)
         if (Object.keys(validacionErrores).length == 0) {
             try {
+                setModalLoaderVisible(true)
                 updateDatos(valoresCampos)
+                setModalLoaderVisible(false)
+                setModalFeedbackActuDatosVisible(true)
+
             } catch (error) {
                 const mensajeError = error.response?.data?.mensaje || 'Ocurrió un error inesperado';
                 console.log(mensajeError)
@@ -129,10 +135,12 @@ export const PerfilScreen = () => {
 
     const eliminarFotoUsuario = async () => {
         try {
+            setModalLoaderVisible(true)
             await fotoUsuario({ idUsuario: usuario.datosUsuario.id, imagenBase64: null });
             actualizarFotoUsuario(null);
             setImageUri(null);
             setImageBase64(null)
+            setModalLoaderVisible(false)
         } catch (error) {
             console.error("Error al eliminar la foto del usuario:", error);
         }
@@ -142,6 +150,7 @@ export const PerfilScreen = () => {
         console.log("boton guardar")
         if (imageUri != null) {
             try {
+                setModalLoaderVisible(true)
                 const respuesta = await fotoUsuario({
                     idUsuario: usuario.datosUsuario.id,
                     imagenBase64: imageBase64,
@@ -151,6 +160,8 @@ export const PerfilScreen = () => {
                 setDeshabilitadoBtnGuardarFoto(true)
                 setImageUri(null);
                 setImageBase64(null)
+                setModalLoaderVisible(false)
+                setModalFeedbackActuFotoVisible(true)
             } catch (error) {
                 console.error("Error al subir la nueva foto del usuario:", error);
             }
@@ -189,6 +200,28 @@ export const PerfilScreen = () => {
                 cerrar={() => {
                     setModalFeedbackVisible(false)
                     cerrarSesion()
+                }}
+            />
+
+            <ModalFeedback
+                titulo={"Datos actualzados"}
+                feedback={"Sus datos personales se han actualizado con exito"}
+                visible={modalFeedbackActuDatosVisible}
+                fuenteTexto={fuenteTexto.gantariBold}
+                cerrar={() => {
+                    setModalFeedbackVisible(false)
+                    setModalFeedbackActuDatosVisible(false)
+                }}
+            />
+
+            <ModalFeedback
+                titulo={"Foto de perfil actualizada"}
+                feedback={"Su foto de perfil se ha actualizado con exito"}
+                visible={modalFeedbackActuFotoVisible}
+                fuenteTexto={fuenteTexto.gantariBold}
+                cerrar={() => {
+                    setModalFeedbackVisible(false)
+                    setModalFeedbackActuFotoVisible(false)
                 }}
             />
             <ModalConfirmarAccion
