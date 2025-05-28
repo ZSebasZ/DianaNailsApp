@@ -1,5 +1,4 @@
-import { View, useColorScheme, ScrollView } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, ScrollView } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { gestionStyles } from '../styles/gestionStyles';
@@ -7,14 +6,14 @@ import { SeccionEnTab } from "../components/SeccionEnTab";
 import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { BotonIconoTexto } from "../components/BotonIconoTexto";
 
-
-//Pantalla de Login
+// Pantalla de ActividadCliente
 export const ActividadClienteScreen = () => {
 
+    // Estilos y fuentes
     const fuenteTexto = fuenteTextoStyles();
-    //Estilos
     const styles = useThemedStyles(gestionStyles);
 
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
             <View style={{ flex: 1, paddingHorizontal: 10 }}>

@@ -1,5 +1,4 @@
-import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, ScrollView, FlatList, Text } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { useContext, useEffect, useState, useCallback } from "react";
@@ -14,78 +13,71 @@ import { anadirCarritoProducto, obtenerCarritoProductos } from "../api/CarritoCo
 import { useCarrito } from "../contexts/carritoContext";
 import { useFocusEffect } from "expo-router";
 
-
-
-//Pantalla de Login
+//Pantalla de Tienda
 export const TiendaScreen = () => {
 
-    const { usuario } = useContext(AuthContext)
-    const [productos, setProductos] = useState(null)
-    const { carritoProductos, carritoCargado, dispatch } = useCarrito()
-    const [subtotal, setSubtotal] = useState(0)
-
-    const producto = require("./../assets/images/manicurista.jpg")
+    // Estilos y fuentes
     const fuenteTexto = fuenteTextoStyles();
     const styles = useThemedStyles(tiendaStyles);
 
+    // Usamos el contexto de autenticación y del carrito
+    const { usuario } = useContext(AuthContext)
+    const { carritoProductos, carritoCargado, dispatch } = useCarrito()
+
+    // Estados
+    const [productos, setProductos] = useState(null)
+    const [subtotal, setSubtotal] = useState(0)
+
+    // UseEffect para obtener los productos
     useEffect(() => {
         const obtenerProductos = async () => {
             const respuesta = await obtenerProductosTienda(usuario.datosUsuario.id_carrito)
             setProductos(respuesta)
-            //console.log(respuesta)
         }
         obtenerProductos()
     }, [])
 
+    // Funcion para calcular el subtotal
     const calcularTotal = (items) => {
         return items.reduce((total, item) => {
             return total + item.precio * item.cantidad;
         }, 0);
     };
 
-
+    // UseEffect para calcular el subtotal y actualizar los productos
     useEffect(() => {
         if (carritoProductos.length > 0) {
             setSubtotal(calcularTotal(carritoProductos))
-            // Extraemos los IDs de los productos que están en el carrito
             const idsEnCarrito = carritoProductos.map(p => p.id_producto);
-
-            // Creamos una nueva lista de productos donde marcamos enCarrito según esté en el carrito
             const productosActualizados = productos.map(producto => ({
                 ...producto,
                 enCarrito: idsEnCarrito.includes(producto.id),
             }));
-
             setProductos(productosActualizados);
         }
     }, [carritoProductos])
 
-
+    // UseFocusEffect para obtener los productos
     useFocusEffect(
         useCallback(() => {
             const obtenerProductos = async () => {
                 const respuesta = await obtenerProductosTienda(usuario.datosUsuario.id_carrito)
                 setProductos(respuesta)
-                //console.log(respuesta)
             }
 
             const cargarCarrito = async () => {
                 const respuesta = await obtenerCarritoProductos(usuario.datosUsuario.id_carrito, usuario.datosUsuario.id)
-                console.log(respuesta)
                 dispatch({ type: 'CARGAR_CARRITO', payload: respuesta });
                 setSubtotal(calcularTotal(respuesta))
             }
-
             obtenerProductos()
-            //setSubtotal(calcularTotal(carritoProductos))
-
             if (carritoProductos.length == 0 && carritoCargado == false) {
                 cargarCarrito()
             }
-
         }, [])
     );
 
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
             <View style={{ flex: 1, paddingHorizontal: 10 }}>

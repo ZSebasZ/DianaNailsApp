@@ -3,11 +3,13 @@ import { useThemedStyles } from "../hooks/useThemeStyles"
 import { Link } from "expo-router"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-
-
+// Componente CardManicurista
 export const CardManicurista = (props) => {
+
+    // Obtenemos los colores del tema
     const tema = useThemedStyles()
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         contenedorManicurista: {
             backgroundColor: props.estaSeleccionada ? tema.primary : tema.background,
@@ -32,6 +34,7 @@ export const CardManicurista = (props) => {
         },
     })
 
+    // Renderizamos el componente
     return (
         props.esLink ? (
             <View>

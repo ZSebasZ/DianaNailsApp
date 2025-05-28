@@ -237,7 +237,6 @@ const getDetallesPedidosCliente = (req, res) => {
 
 }
 
-//PEDIENTE DE APLICAR SQL CON FILTROS
 //Creamos la funcion que se encarga de OBTENER todos los PEDIDOS de un CLIENTE
 const getPedidosClientes = (req, res) => {
     //Obtenemos el id del admin

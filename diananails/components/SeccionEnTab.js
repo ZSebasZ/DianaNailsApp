@@ -2,10 +2,13 @@ import { StyleSheet, View, Text } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 
+// Componente SeccionEnTab
 export const SeccionEnTab = (props) => {
 
-    const tema = useThemedStyles() // Acceder al contexto
+    // Obtenemos los colores del tema
+    const tema = useThemedStyles()
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         contenedorSeccion: {
             marginBottom: hp(2)
@@ -23,6 +26,7 @@ export const SeccionEnTab = (props) => {
         },
     })
 
+    // Renderizamos el componente
     return (
         <View style={styles.contenedorSeccion}>
             <Text style={[props.fuenteTextoBold, styles.textTitulo]}>{props.tituloSeccion}</Text>

@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, ScrollView, Alert, Keyboard, ActivityIndicator, Modal, Pressable } from "react-native";
+import { View, Text, StatusBar, ScrollView, Keyboard } from "react-native";
 import { Stack } from 'expo-router';
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
@@ -8,22 +8,23 @@ import { ContenedorInputs } from "../components/ContenedorInputs";
 import { CampoTextoInput } from "../components/CampoTextoInput";
 import { BotonTexto } from "../components/BotonTexto";
 import { validacionRegistro, registroValidacionOnBlur } from "../validaciones/registroValidacion";
-import { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { registroCliente } from "../api/AuthController";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 import { ModalFeedback } from "../components/ModalFeedback";
 import { ModalLoader } from "../components/ModalLoader";
 import { AuthContext } from "../contexts/authContext";
 
-//Pantalla de Login
+//Pantalla de Registro
 export const RegistroScreen = () => {
 
-    const { tipoLogin } = useContext(AuthContext)
-
+    // Estilos y fuentes
     const styles = useThemedStyles(registroStyles);
     const fuenteTexto = fuenteTextoStyles();
 
-    //VALIDACIONES
+    // Usamos el contexto de autenticación
+    const { tipoLogin } = useContext(AuthContext)
+
+    // Estados para los campos del formulario y validaciones
     const [valoresCampos, setValoresCampos] = useState({
         /*
         nombre: "sebas",
@@ -45,14 +46,16 @@ export const RegistroScreen = () => {
     })
     const [errores, setErrores] = useState({})
 
-    //const [cargando, setCargando] = useState(false)
+    //Estados de los modales
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
 
+    // Funcion para ir asignando valores al estado valoresCampos
     const onValueChange = (nombreCampo, valor) => {
         setValoresCampos({ ...valoresCampos, [nombreCampo]: valor })
     }
 
+    // Funcion para enviar el formulario
     const onSubmit = async () => {
         Keyboard.dismiss()
 
@@ -62,25 +65,23 @@ export const RegistroScreen = () => {
             try {
                 setModalLoaderVisible(true)
                 const respuesta = await registroCliente(valoresCampos);
-                console.log('Registro exitoso:', respuesta);
-
-                //Alert.alert('Éxito', 'Cliente registrado correctamente');
-                // Aquí puedes redirigir a otra pantalla si quieres
                 setModalFeedbackVisible(true)
             } catch (error) {
                 const mensajeError = error.response?.data?.mensaje || 'Ocurrió un error inesperado';
-                //Alert.alert('Error', mensajeError);
+                console.error(mensajeError)
 
-                // Ejemplo: si el error es del campo `email`, puedes mostrarlo directamente
+                /*
                 if (mensajeError.includes("correo")) {
                     setErrores({ ...errores, email: mensajeError });
                 }
+                */
             } finally {
                 setModalLoaderVisible(false); // Ocultar loader
             }
         }
     }
 
+    // Funcion para resetear el formulario
     const resetFormulario = () => {
         setValoresCampos({
             nombre: null,
@@ -93,6 +94,7 @@ export const RegistroScreen = () => {
         })
     }
 
+    // Renderizamos la pantalla
     return (
         <Screen>
             <Stack.Screen

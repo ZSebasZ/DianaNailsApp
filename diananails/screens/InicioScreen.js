@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { inicioStyles } from '../styles/inicioStyles';
 import { abrirPerfilInstagram } from '../utils/instagramUtils';
@@ -11,34 +11,56 @@ import { useContext } from "react";
 import { ThemeContext } from "../contexts/themeContext";
 import { BotonIcono } from '../components/BotonIcono';
 import { useEffect, useState } from 'react';
-import { fetchFromApi } from '../api/ApiService';
 import { BackHandler } from 'react-native';
 import { useRootNavigationState } from "expo-router";
 import { AuthContext } from '../contexts/authContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 
-//Pantalla de bienvenida a la aplicacion
+//Pantalla de Inicio
 export const InicioScreen = () => {
 
+    //Estilos, tema, y fuentes
+    const styles = useThemedStyles(inicioStyles);
+    const fuenteTexto = fuenteTextoStyles();
+    const tema = useContext(ThemeContext);
+
+    // Funcion para salir de la app
     const rootState = useRootNavigationState();
+    useEffect(() => {
+        const onBackPress = () => {
+            if (!rootState) return false;
+
+            const currentRoute = rootState.routes[rootState.index];
+
+            if (currentRoute.name === "index") {
+                BackHandler.exitApp();
+                return true;
+            }
+
+            return false;
+        };
+
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+        return () => backHandler.remove();
+    }, [rootState]);
+
+    // Usamos context de autenticacion
     const { login, tipoLoginUsuario } = useContext(AuthContext)
+
+    // Estado para verificar la sesion
     const [verificandoSesion, setVerificandoSesion] = useState(true);
 
+    // UseEffect para verificar la sesion
     useEffect(() => {
         const verificarSesion = async () => {
             try {
                 const email = await AsyncStorage.getItem("email");
                 const contrasena = await AsyncStorage.getItem("contrasena");
 
-
-
                 if (email && contrasena) {
-                    //const respuesta = await loginCliente({ email, contrasena });
                     const respuesta = await login({ email, contrasena })
-                    //console.log("Inicio de sesión exitoso:", respuesta);
-                    //setCredencialesIncorrectas(false);
-                    //router.replace("/navegacion/(tabs-cliente)/(agendarCita)/");
                     switch (respuesta.tipoUsuario) {
                         case 0:
                             router.push("/navegacion/admin/")
@@ -56,47 +78,17 @@ export const InicioScreen = () => {
                             console.log("NO SE HA CARGADO TIPO USUARIO")
                             break;
                     }
-
-
                 } else {
                     setVerificandoSesion(false);
-                    console.log("No hay datos guardados para email o contraseña");
                 }
             } catch (error) {
                 console.log("Error al verificar la sesión:", error);
             }
         };
-
         verificarSesion();
     }, []);
 
-    useEffect(() => {
-        const onBackPress = () => {
-            if (!rootState) return false;
-
-            const currentRoute = rootState.routes[rootState.index];
-
-            // Ajusta esto según tu ruta real
-            if (currentRoute.name === "index") {
-                BackHandler.exitApp(); // salir de la app
-                return true;
-            }
-
-            return false; // permite navegación normal hacia atrás
-        };
-
-        const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
-
-        return () => backHandler.remove();
-    }, [rootState]);
-
-    //Estilos
-    const styles = useThemedStyles(inicioStyles);
-    const fuenteTexto = fuenteTextoStyles();
-
-    const tema = useContext(ThemeContext); // Acceder al contexto
-
-    //Devolvemos la vista de la pantalla de bienvenida
+    // Renderizamos la pantalla
     return (
         <Screen>
             <StatusBar style="auto" />

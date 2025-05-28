@@ -1,5 +1,4 @@
-import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, ScrollView, FlatList, Text } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { pedidosClienteStyles } from '../styles/pedidosClienteStyles';
@@ -14,37 +13,40 @@ import { ModalConfirmarAccion } from "../components/ModalConfirmarAccion";
 import { ModalLoader } from "../components/ModalLoader";
 import { ModalFeedback } from "../components/ModalFeedback";
 
-
-//Pantalla de Login
+//Pantalla de PedidosCliente
 export const PedidosClienteScreen = () => {
 
+    // Estilos y fuentes
+    const fuenteTexto = fuenteTextoStyles();
+    const styles = useThemedStyles(pedidosClienteStyles);
+
+    // Usamos el contexto de autenticación
     const { usuario } = useContext(AuthContext)
+
+    // Estados
     const [filtro, setFiltro] = useState("Pendiente de envío")
     const [pedidos, setPedidos] = useState(null)
-
     const [pedidoSeleccionado, setPedidoSeleccionado] = useState(null)
     const [modalConfirmarAccion, setModalConfirmarAccion] = useState(false)
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
 
-    const fuenteTexto = fuenteTextoStyles();
-    //Estilos
-    const styles = useThemedStyles(pedidosClienteStyles);
-
+    // Funcion para obtener los pedidos
     const obtenerPedidos = async () => {
         setModalLoaderVisible(true)
         const respuesta = await obtenerPedidosCliente(usuario.datosUsuario.id, filtro)
         if (respuesta.length > 0) {
             setPedidos(respuesta)
         }
-        console.log(respuesta)
         setModalLoaderVisible(false)
     }
 
+    // UseEffect para obtener los pedidos
     useEffect(() => {
         obtenerPedidos()
     }, [])
 
+    // UseEffect para obtener los pedidos segun el filtro
     useEffect(() => {
         const obtenerPedidos = async () => {
             setModalLoaderVisible(true)
@@ -54,18 +56,17 @@ export const PedidosClienteScreen = () => {
             } else {
                 setPedidos(null)
             }
-            //console.log(respuesta)
             setModalLoaderVisible(false)
         }
         obtenerPedidos()
     }, [filtro])
 
+    // Funcion para cancelar el pedido
     const cancelarPedido = async () => {
         try {
             setModalConfirmarAccion(false)
             setModalLoaderVisible(true)
             const respuesta = await cancelarPedidoCliente(pedidoSeleccionado)
-            console.log(respuesta)
             setModalLoaderVisible(false)
             setModalFeedbackVisible(true)
             await obtenerPedidos();
@@ -75,6 +76,7 @@ export const PedidosClienteScreen = () => {
         }
     }
 
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
 

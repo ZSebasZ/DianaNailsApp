@@ -1,25 +1,22 @@
-import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, ScrollView, FlatList, Text } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { agendarCitaStyles } from '../styles/agendarCitaStyles';
 import { SeccionEnTab } from "../components/SeccionEnTab";
 import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
 import { CardServicio } from "../components/CardServicio";
-import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerServicios";
-import { BarraResumen } from "../components/BarraResumen";
-import { useContext, useEffect, useState } from 'react';
-import { fetchFromApi } from '../api/ApiService';
-import { BackHandler } from 'react-native';
+import { useEffect, useState } from 'react';
 import { router } from "expo-router";
-import { useRootNavigationState } from "expo-router";
 import { obtenerServicios } from "../api/ServiciosController";
-import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 import { useCallback } from "react";
 import { useFocusEffect } from "expo-router";
 
 //Pantalla de Login
 export const ServiciosAdminScreen = () => {
+
+    // Estilos y fuentes
+    const fuenteTexto = fuenteTextoStyles();
+    const styles = useThemedStyles(agendarCitaStyles);
 
     /*
     const rootState = useRootNavigationState();
@@ -46,43 +43,31 @@ export const ServiciosAdminScreen = () => {
     */
     //const { serviciosSeleccionados, alternarSeleccionServicio, fecha, resetHoraManicuristas, subtotal } = useContext(AgendarCitaContext)
 
-    const fuenteTexto = fuenteTextoStyles();
-    //Estilos
-    const styles = useThemedStyles(agendarCitaStyles);
-
+    // Estados de los servicios
     const [servicios, setServicios] = useState(null)
 
+    // UseEffect para obtener los servicios
     useEffect(() => {
         const cargarServicios = async () => {
-            const respuesta = await obtenerServicios(); // esto ya es el array correcto
+            const respuesta = await obtenerServicios();
             setServicios(respuesta);
         };
 
         cargarServicios();
     }, [])
 
-
+    // UseFocusEffect para obtener los servicios
     useFocusEffect(
         useCallback(() => {
             const cargarServicios = async () => {
-                const respuesta = await obtenerServicios(); // esto ya es el array correcto
+                const respuesta = await obtenerServicios();
                 setServicios(respuesta);
             };
-
             cargarServicios();
-
         }, [])
     );
 
-    /*
-    useEffect(() => {
-        if(fecha != null) {
-            resetHoraManicuristas()
-        }
-    }, [serviciosSeleccionados])
-*/
-
-
+    //Renderizamos la pantalla
     return (
         <Screen enTab={true}>
             <View style={{ flex: 1, paddingHorizontal: 10 }}>

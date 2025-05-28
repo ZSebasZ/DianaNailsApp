@@ -1,19 +1,23 @@
-import { router, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import { tabsMainLabelStyles } from "../styles/tabsMainLabelStyles";
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { View } from "react-native";
 import { LogoTopBar } from './LogoTopBar';
 import { BotonIcono } from "./BotonIcono";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/authContext';
 
+// Componente BarraSuperior
 export default function BarraSuperior(props) {
 
+    // Obtenemos los colores del tema y las fuentes
     const styles = useThemedStyles(tabsMainLabelStyles);
     const tema = useThemedStyles()
+
+    // Usamos el contexto de autenticación
     const {cerrarSesion, usuario} = useContext(AuthContext)
 
+    // Renderizamos el componente
     return (
         <Stack.Screen
             options={{

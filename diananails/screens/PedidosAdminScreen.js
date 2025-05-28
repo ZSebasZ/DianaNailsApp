@@ -1,5 +1,4 @@
-import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, ScrollView, FlatList, Text } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { pedidosClienteStyles } from '../styles/pedidosClienteStyles';
@@ -8,31 +7,33 @@ import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { BotonTexto } from "../components/BotonTexto";
 import { CardPedido } from "../components/CardPedido";
 import { useEffect, useState, useContext } from "react";
-import { actualizarPedidoEstado, cancelarPedidoCliente, obtenerPedidosClientes } from "../api/PedidosController";
+import { actualizarPedidoEstado, obtenerPedidosClientes } from "../api/PedidosController";
 import { AuthContext } from "../contexts/authContext";
-import { ModalConfirmarAccion } from "../components/ModalConfirmarAccion";
 import { ModalLoader } from "../components/ModalLoader";
 import { ModalFeedback } from "../components/ModalFeedback";
 import { ModalActuPedido } from "../components/ModalActuPedido";
 
 
-//Pantalla de Login
+//Pantalla de PedidosAdmin
 export const PedidosAdminScreen = () => {
 
+    // Estilos y fuentes
+    const fuenteTexto = fuenteTextoStyles();
+    const styles = useThemedStyles(pedidosClienteStyles);
+
+    // Usamos el contexto de autenticación
     const { usuario } = useContext(AuthContext)
+
+    // Estados
     const [filtro, setFiltro] = useState("Pendiente de envío")
     const [textoModalActuPedido, setTextoModalActuPedido] = useState("¿Desea cambiar el estado de este pedido a 'Enviado'?")
     const [pedidos, setPedidos] = useState(null)
-
     const [pedidoSeleccionado, setPedidoSeleccionado] = useState(null)
     const [modalActuPedido, setModalActuPedido] = useState(false)
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
 
-    const fuenteTexto = fuenteTextoStyles();
-    //Estilos
-    const styles = useThemedStyles(pedidosClienteStyles);
-
+    // Funcion para obtener los pedidos
     const obtenerPedidos = async () => {
         setModalLoaderVisible(true)
         const respuesta = await obtenerPedidosClientes(usuario.datosUsuario.id, filtro)
@@ -42,13 +43,14 @@ export const PedidosAdminScreen = () => {
             setPedidos(null)
         }
         setModalLoaderVisible(false)
-        //console.log(respuesta)
     }
 
+    // UseEffect para cargar los pedidos
     useEffect(() => {
         obtenerPedidos()
     }, [])
 
+    // UseEffect para cargar los pedidos segun el filtro
     useEffect(() => {
         setModalLoaderVisible(true)
         const obtenerPedidos = async () => {
@@ -68,11 +70,11 @@ export const PedidosAdminScreen = () => {
                     setTextoModalActuPedido("¿Desea cambiar el estado de este pedido a ENTREGADO?")
                     break;
             }
-            //console.log(respuesta)
         }
         obtenerPedidos()
     }, [filtro])
 
+    // Funcion para actualizar el estado del pedido
     const actualizarEstadoPedido = async () => {
         setModalActuPedido(false)
         setModalLoaderVisible(true)
@@ -90,6 +92,7 @@ export const PedidosAdminScreen = () => {
         setPedidoSeleccionado(null)
     }
 
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
 

@@ -12,6 +12,7 @@ export default function AgendarCitaLayout() {
   const styles = useThemedStyles(tabsMainLabelStyles);
   const colors = useThemedStyles();
 
+  //Envolvemos el Stack con el AgendarCitaProvider
   return (
     <AgendarCitaProvider>
       <Stack

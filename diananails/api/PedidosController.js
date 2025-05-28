@@ -1,42 +1,41 @@
 import { api } from "./ApiService";
 
-const IMGUR_CLIENT_ID = "fe29c6d3f1dde1a";
-
+// Funcion para obtener los pedidos de la API
 export const obtenerPedidosCliente = async (cliente, filtro) => {
     try {
-        //console.log({idCliente: cliente, filtro: filtro})
-        const pedidos = await api("POST", `get-pedidos-cliente`, { idCliente: cliente, filtro: filtro }); // Llamamos al servicio
-        return pedidos;  // Devolvemos los datos para ser usados por las pantallas
+        const pedidos = await api("POST", `get-pedidos-cliente`, { idCliente: cliente, filtro: filtro });
+        return pedidos;
     } catch (error) {
         throw error;
     }
 };
 
+// Funcion para cancelar el pedido de un cliente con la API
 export const cancelarPedidoCliente = async (pedido) => {
     try {
         console.log({ idPedido: pedido })
-        const pedidoCancelado = await api("DELETE", `delete-pedido-cliente`, { idPedido: pedido }); // Llamamos al servicio
-        return pedidoCancelado;  // Devolvemos los datos para ser usados por las pantallas
+        const pedidoCancelado = await api("DELETE", `delete-pedido-cliente`, { idPedido: pedido });
+        return pedidoCancelado;
     } catch (error) {
         throw error;
     }
 };
 
+// Funcion para obtener los pedidos de los clientes de la API
 export const obtenerPedidosClientes = async (idAdmin, filtro) => {
     try {
-        //console.log({idCliente: cliente, filtro: filtro})
-        const pedidosClientes = await api("POST", `get-pedidos-clientes`, { idAdmin: idAdmin, filtro: filtro }); // Llamamos al servicio
-        return pedidosClientes;  // Devolvemos los datos para ser usados por las pantallas
+        const pedidosClientes = await api("POST", `get-pedidos-clientes`, { idAdmin: idAdmin, filtro: filtro });
+        return pedidosClientes;
     } catch (error) {
         throw error;
     }
 };
 
+// Funcion para actualizar el estado del pedido con la API
 export const actualizarPedidoEstado = async (pedido, filtro) => {
     try {
-        //console.log({idCliente: cliente, filtro: filtro})
-        const pedidoActualizado = await api("PUT", `update-estado-pedido`, { idPedido: pedido, filtro: filtro }); // Llamamos al servicio
-        return pedidoActualizado;  // Devolvemos los datos para ser usados por las pantallas
+        const pedidoActualizado = await api("PUT", `update-estado-pedido`, { idPedido: pedido, filtro: filtro });
+        return pedidoActualizado;
     } catch (error) {
         throw error;
     }

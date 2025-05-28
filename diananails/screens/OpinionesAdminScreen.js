@@ -1,101 +1,47 @@
-import { View, Text, useColorScheme, ScrollView, Keyboard, FlatList } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, ScrollView, Keyboard, FlatList } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { opinionesStyles } from '../styles/opinionesStyles';
 import { SeccionEnTab } from "../components/SeccionEnTab";
 import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { BotonTexto } from "../components/BotonTexto";
-import { CampoTextoInput } from "../components/CampoTextoInput";
 import { EstrellasOpinion } from "../components/EstrellasOpinion";
 import { CardOpinion } from "../components/CardOpinion";
 import { useContext, useEffect, useState } from "react";
-import { validacionOpinion, opinionValidacionOnBlur } from "../validaciones/opinionValidacion";
-import { ModalLoader } from "../components/ModalLoader";
-import { ModalFeedback } from "../components/ModalFeedback";
+import { validacionOpinion } from "../validaciones/opinionValidacion";
 import { AuthContext } from "../contexts/authContext";
 import { obtenerOpiniones, realizarOpinion } from "../api/OpinionesController";
 
-
-
-//Pantalla de Login
+//Pantalla de OpinionesAdmin
 export const OpinionesAdminScreen = () => {
 
-    const { usuario } = useContext(AuthContext)
-    const [opiniones, setOpiniones] = useState(null)
-
+    // Estilos y fuentes
     const fuenteTexto = fuenteTextoStyles();
-    //Estilos
     const styles = useThemedStyles(opinionesStyles);
 
+    // Usamos el contexto de autenticación
+    const { usuario } = useContext(AuthContext)
 
-    const [errores, setErrores] = useState({})
-    const [valoresCampos, setValoresCampos] = useState({
-        idCliente: usuario.datosUsuario.id,
-        titulo: null,
-        descripcion: null,
-        estrellas: 3,
-    })
+    // Estado de las opiniones
+    const [opiniones, setOpiniones] = useState(null)
+
+    // Estado para el filtro
     const [valoresFiltro, setValoresFiltro] = useState({
         antiguedad: "recientes",
         estrellas: 0
     })
 
-    const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
-    const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
-
-    const onValueChange = (nombreCampo, valor) => {
-        setValoresCampos({ ...valoresCampos, [nombreCampo]: valor })
-    }
-
-    const onSubmit = async () => {
-        Keyboard.dismiss()
-
-        const validacionErrores = validacionOpinion(valoresCampos)
-        setErrores(validacionErrores)
-        if (Object.keys(validacionErrores).length == 0) {
-            try {
-                setModalLoaderVisible(true)
-                const respuesta = await realizarOpinion(valoresCampos);
-                //console.log('Opinion hecha:', respuesta);
-
-                //Alert.alert('Éxito', 'Cliente registrado correctamente');
-                // Aquí puedes redirigir a otra pantalla si quieres
-                resetFormulario()
-                setModalLoaderVisible(false)
-                setModalFeedbackVisible(true)
-                cargarOpiniones()
-            } catch (error) {
-                const mensajeError = error.response?.data?.mensaje || 'Ocurrió un error inesperado';
-                //Alert.alert('Error', mensajeError);
-
-                // Ejemplo: si el error es del campo `email`, puedes mostrarlo directamente
-                if (mensajeError.includes("correo")) {
-                    setErrores({ ...errores, email: mensajeError });
-                }
-            }
-        }
-    }
-
-    const resetFormulario = () => {
-        setValoresCampos({
-            idCliente: usuario.datosUsuario.id,
-            titulo: null,
-            descripcion: null,
-            estrellas: 3,
-        })
-    }
-
+    // Funciones que se encargan de la obtencion de las opiniones
     const cargarOpiniones = async () => {
-        const respuesta = await obtenerOpiniones(valoresFiltro); // esto ya es el array correcto
+        const respuesta = await obtenerOpiniones(valoresFiltro);
         if (respuesta.length != 0) {
             setOpiniones(respuesta);
         } else {
             setOpiniones(null)
         }
-        //console.log(respuesta)
     };
 
+    // UseEffect para cargar las citas
     useEffect(() => {
         try {
             cargarOpiniones();
@@ -104,6 +50,7 @@ export const OpinionesAdminScreen = () => {
         }
     }, [])
 
+    // Funciones para alternar el filtro
     const seleccionarAntiguedad = (tipo) => {
         setValoresFiltro((prev) => ({
             ...prev,
@@ -111,10 +58,12 @@ export const OpinionesAdminScreen = () => {
         }));
     };
 
+    // UseEffect para cargar las citas segun el filtro
     useEffect(() => {
         cargarOpiniones();
     }, [valoresFiltro]);
 
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
             <View style={{ flex: 1, paddingHorizontal: 10 }}>

@@ -41,7 +41,7 @@ const getDatosPerfil = (req, res) => {
 
 }
 
-//Creamos la funcion que se encarga de la ACTUALIZACION de los datos personales de un CLIENTE
+//Creamos la funcion que se encarga de la ACTUALIZACION de la FOTO del USUARIO
 const updateFotoUsuario = (req, res) => {
 
     //Obtenemos el el id y la nueva imagen del usuario

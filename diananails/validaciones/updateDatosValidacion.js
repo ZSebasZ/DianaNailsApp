@@ -1,5 +1,6 @@
 import { regex, estaVacio } from "../utils/regexCamposUtils";
 
+// Funcion que se encarga de validar el formulario completo de actualizacion de datos personales
 export const validacionUpdateDatos = (valoresCampos) => {
     const textCampoObligatorio = "Este campo es obligatorio"
 
@@ -36,6 +37,7 @@ export const validacionUpdateDatos = (valoresCampos) => {
 
 }
 
+// Funcion que se encarga de validar los campos del formulario de actualizacion de datos personales al perder el foco
 export const updateDatosValidacionOnBlur = (campo, valor) => {
 
     const textCampoObligatorio = "Este campo es obligatorio"

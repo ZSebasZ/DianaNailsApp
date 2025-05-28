@@ -225,6 +225,7 @@ const getManicuristas = (req, res) => {
 
 }
 
+//Creamos la funcion para el reset de la contrasena
 const resetContrasena = (req, res) => {
     const { id } = req.body;
 

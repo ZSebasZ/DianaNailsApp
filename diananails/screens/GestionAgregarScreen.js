@@ -1,5 +1,4 @@
-import { View, Text, useColorScheme, ScrollView, Alert, Keyboard } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, ScrollView, Alert, Keyboard } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { perfilStyles } from '../styles/perfilStyles';
@@ -21,27 +20,30 @@ import { manicuristaValidacionOnBlur, validacionManicurista } from "../validacio
 import { nuevaManicurista } from "../api/ManicuristasController";
 
 
-//Pantalla de Login
+//Pantalla de GestionAgregar
 export const GestionAgregarScreen = (props) => {
 
-    //Estilos
+    //Estilos y fuentes
     const styles = useThemedStyles(perfilStyles);
     const fuenteTexto = fuenteTextoStyles();
 
+    // Estados para la imagen
     const [imageUri, setImageUri] = useState(null);
     const [imageBase64, setImageBase64] = useState(null);
 
+    // Funcion que pide permisos para abrir la camara y acceder a la galeria
     const pedirPermisos = async () => {
         const permisoCamara = await ImagePicker.requestCameraPermissionsAsync();
         const permisoGaleria = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
         if (!permisoCamara.granted || !permisoGaleria.granted) {
-            Alert.alert('Permisos requeridos', 'Necesitas otorgar permisos para usar la cámara y la galería.');
+            //Alert.alert('Permisos requeridos', 'Necesitas otorgar permisos para usar la cámara y la galería.');
             return false;
         }
         return true;
     };
 
+    // Funcion para tomar una foto
     const tomarFoto = async () => {
         const permiso = await pedirPermisos();
         if (!permiso) return;
@@ -66,6 +68,7 @@ export const GestionAgregarScreen = (props) => {
         }
     };
 
+    // Funcion para seleccionar una foto de la galeria
     const seleccionarDeGaleria = async () => {
         const permiso = await pedirPermisos();
         if (!permiso) return;
@@ -90,9 +93,11 @@ export const GestionAgregarScreen = (props) => {
         }
     };
 
+    // Estados de los modales
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
 
+    // Estados para la validacion
     const [errores, setErrores] = useState({});
     const [valoresCampos, setValoresCampos] = useState(
         props.tipo === "servicio"
@@ -119,10 +124,11 @@ export const GestionAgregarScreen = (props) => {
             }
     );
 
-    //En caso de sea un SERVICIO
+    //Estados para el contador en caso de sea un SERVICIO
     const [tiempoContador, setTiempoContador] = useState(1);
     const MAX_TIEMPO = 8;
 
+    // Funcion para incrementar el contador
     const incrementarTiempo = () => {
         if (tiempoContador < MAX_TIEMPO) {
             setTiempoContador(tiempoContador + 1);
@@ -130,6 +136,7 @@ export const GestionAgregarScreen = (props) => {
         }
     };
 
+    // Funcion para decrementar el contador
     const decrementarTiempo = () => {
         if (tiempoContador > 1) {
             setTiempoContador(tiempoContador - 1);
@@ -137,6 +144,7 @@ export const GestionAgregarScreen = (props) => {
         }
     };
 
+    // Funcion para resetear el formulario
     const resetFormulario = () => {
         setValoresCampos(
             props.tipo === "servicio"
@@ -179,10 +187,12 @@ export const GestionAgregarScreen = (props) => {
 
     }
 
+    // Funcion para ir asignando valores al estado valoresCampos
     const onValueChange = (nombreCampo, valor) => {
         setValoresCampos({ ...valoresCampos, [nombreCampo]: valor })
     }
 
+    // Funcion para enviar el formulario de servicio
     const onSubmitServicio = async () => {
         Keyboard.dismiss()
 
@@ -202,16 +212,15 @@ export const GestionAgregarScreen = (props) => {
         }
     }
 
+    // Funcion para enviar el formulario de producto
     const onSubmitProducto = async () => {
         Keyboard.dismiss()
-        //console.log("entra")
-        //console.log(valoresCampos)
+
         const validacionErrores = validacionProducto(valoresCampos)
-        //console.log("termina validaciones")
+
         setErrores(validacionErrores)
         if (Object.keys(validacionErrores).length == 0) {
             try {
-
                 setModalLoaderVisible(true)
                 const imagenUrl = await subirImagen()
                 await nuevoProducto(imagenUrl, valoresCampos.nombre, valoresCampos.descripcion, valoresCampos.precio, valoresCampos.stock)
@@ -220,21 +229,17 @@ export const GestionAgregarScreen = (props) => {
                 setModalFeedbackVisible(true)
 
             } catch (error) {
-
                 console.error("error al añadir el servicio", error)
             }
-        } else {
-            console.log("hay errores")
         }
     }
 
+    // Funcion para enviar el formulario de manicurista
     const onSubmitManicurista = async () => {
         Keyboard.dismiss()
-        //console.log("entra")
-        //console.log(valoresCampos)
+
         const validacionErrores = validacionManicurista(valoresCampos)
-        //console.log("termina validaciones")
-        console.log(validacionErrores)
+
         setErrores(validacionErrores)
         if (Object.keys(validacionErrores).length == 0) {
             try {
@@ -244,24 +249,19 @@ export const GestionAgregarScreen = (props) => {
                 resetFormulario()
                 setModalLoaderVisible(false)
                 setModalFeedbackVisible(true)
-
             } catch (error) {
-
                 console.error("error al añadir el servicio", error)
             }
-        } else {
-            console.log("hay errores")
         }
     }
 
+    // Funcion para subir la imagen a Imgur
     const subirImagen = async () => {
         if (imageUri != null) {
             try {
                 const respuesta = await subirImagenImgur({
                     imagenBase64: imageBase64,
                 });
-                //actualizarFotoUsuario(respuesta.urlImagen);
-                //setDeshabilitadoBtnGuardarFoto(true)
                 setValoresCampos({ ...valoresCampos, imagen: respuesta })
                 return respuesta
             } catch (error) {
@@ -270,8 +270,7 @@ export const GestionAgregarScreen = (props) => {
         }
     };
 
-
-
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
 

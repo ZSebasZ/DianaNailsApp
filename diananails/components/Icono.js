@@ -1,9 +1,7 @@
-import { useContext } from 'react';
-import { ThemeContext } from '../contexts/themeContext';
-
+// Componente Icono
 export const Icono = ({ IconComponent, name, style}) => {
-  const { colors } = useContext(ThemeContext);
 
+  // Renderizamos el componenete
   return (
     <IconComponent
       name={name}

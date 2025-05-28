@@ -4,11 +4,16 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { BotonTexto } from "./BotonTexto";
 import { ContadorCantidadProducto } from "./ContadorCantidadProducto"
 
+// Componenente CardProductoDetalles
 export const CardProductoDetalles = (props) => {
+
+    // Obtenemos los colores del tema
     const tema = useThemedStyles()
 
+    // Obtenemos una imagen por defecto para el producto
     const productoImgDefault = require("./../assets/images/producto.png");
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         productoImg: {
             width: "90%",
@@ -35,6 +40,7 @@ export const CardProductoDetalles = (props) => {
 
     })
 
+    // Funcion que formatea el precio
     function formatearPrecio(num) {
         // Formatear con dos decimales fijos
         let precio = num.toFixed(2);
@@ -50,6 +56,7 @@ export const CardProductoDetalles = (props) => {
         return `${entero}.${decimal}`;
     }
 
+    // Renderizamos el componente
     return (
         <View>
             <View style={{ alignItems: "center" }}>

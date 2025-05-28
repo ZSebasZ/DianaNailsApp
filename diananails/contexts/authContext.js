@@ -3,13 +3,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { loginCliente, updateDatosUsuario } from "../api/AuthController";
 import { router } from "expo-router";
 
+// Creamos el contexto
 export const AuthContext = createContext()
 
+// Creamos el proveedor
 export const AuthProvider = ({ children }) => {
 
+    // Creamos los estados de Auth
     const [usuario, setUsuario] = useState(null)
     const [tipoLogin, setTipoLogin] = useState(null)
 
+    // Funcion que se encarga de hacer el login
     const login = async (credenciales) => {
         const respuesta = await loginCliente(credenciales)
         console.log("Inicio de sesion exitoso:", respuesta)
@@ -22,12 +26,14 @@ export const AuthProvider = ({ children }) => {
         return respuesta
     }
 
+    // Funcion que se encarga de cerrar la sesion
     const cerrarSesion = async () => {
         await AsyncStorage.removeItem("email")
         await AsyncStorage.removeItem("contrasena")
         router.replace("/")
     }
 
+    // Funcion que se encarga de actualizar la foto del usuario
     const actualizarFotoUsuario = (url) => {
         setUsuario(prev => ({
             ...prev,
@@ -38,10 +44,12 @@ export const AuthProvider = ({ children }) => {
         }))
     }
 
+    // Funcion que se encarga de cambiar el tipo de login
     const tipoLoginUsuario = (tipo) => {
         setTipoLogin(tipo)
     }
 
+    // Funcion que se encarga de actualizar los datos del cliente
     const updateDatos = async (datos) => {
         const respuesta = await updateDatosUsuario(usuario.datosUsuario.id, datos)
         console.log("Datos actualizados: ", respuesta)
@@ -57,6 +65,7 @@ export const AuthProvider = ({ children }) => {
         }))
     } 
 
+    // Retornamos el proveedor, el cual va a envolver toda la App
     return (
         <AuthContext.Provider value={{ usuario, login, tipoLogin, tipoLoginUsuario, cerrarSesion, actualizarFotoUsuario, updateDatos }}>
             {children}

@@ -2,11 +2,13 @@ import { View, StyleSheet, Text } from "react-native"
 import { useThemedStyles } from "../hooks/useThemeStyles"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-
-
+// Componente CardServicioResumen
 export const CardServicioResumen = (props) => {
+
+    // Obtenemos los colores del tema
     const tema = useThemedStyles()
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         contenedorServicio: {
             backgroundColor: tema.secondaryContainer,
@@ -30,6 +32,7 @@ export const CardServicioResumen = (props) => {
         }
     })
 
+    // Funcion que formatea el precio
     function formatearPrecio(num) {
         // Formatear con dos decimales fijos
         let precio = num.toFixed(2);
@@ -45,6 +48,7 @@ export const CardServicioResumen = (props) => {
         return `${entero}.${decimal}`;
     }
 
+    // Funcion que calcula el tiempo requerido
     const calcularTiempoRequerido = (lapsos) => {
         const totalMinutos = lapsos * 15;
         const horas = Math.floor(totalMinutos / 60);
@@ -62,6 +66,7 @@ export const CardServicioResumen = (props) => {
         return resultado || "0 minutos";
     };
 
+    // Renderizamos el componente
     return (
         <View style={styles.contenedorServicio}>
             <Text style={[props.fuenteTextoBold, styles.textNombreServicio]}>{props.nombreServicio}</Text>

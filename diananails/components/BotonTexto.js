@@ -1,13 +1,15 @@
-import { View, Image, StyleSheet, Text, Pressable } from "react-native";
+import { StyleSheet, Text, Pressable } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { Link } from "expo-router";
 
+// Componente BotonTexto
 export const BotonTexto = (props) => {
 
+    // Obtenemos los colores del tema
+    const tema = useThemedStyles()
 
-    const tema = useThemedStyles() // Acceder al contexto
-
+    // Estilos del componente
     const styles = StyleSheet.create({
         boton: {
             padding: 10,
@@ -34,6 +36,7 @@ export const BotonTexto = (props) => {
         }
     })
 
+    // Renderizamos el componente
     return (
         props.esLink ? (
             <Link href={props.href} asChild {...(props.replace && { replace: true })}>

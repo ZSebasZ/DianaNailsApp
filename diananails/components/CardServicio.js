@@ -3,11 +3,13 @@ import { useThemedStyles } from "../hooks/useThemeStyles"
 import { Link } from "expo-router"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-
-
+// Componente CardServicio
 export const CardServicio = (props) => {
+
+    // Obtenemos los colores del tema
     const tema = useThemedStyles()
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         contenedorServicio: {
             borderColor: tema.primary,
@@ -36,6 +38,7 @@ export const CardServicio = (props) => {
 
     })
 
+    // Función para calcular el tiempo requerido
     const calcularTiempoRequerido = (lapsos) => {
         const totalMinutos = lapsos * 15;
         const horas = Math.floor(totalMinutos / 60);
@@ -53,9 +56,7 @@ export const CardServicio = (props) => {
         return resultado || "0 minutos";
     };
 
-
-    //console.log(props.servicio)
-
+    // Renderizamos el componente
     return (
         props.esLink ? (
             <Link href={props.href} asChild style={[styles.contenedorServicio]}>

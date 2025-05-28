@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 
+//Estilos para usar las fuentes
 export const fuenteTextoStyles = () => StyleSheet.create({
     
     gantariBold: {

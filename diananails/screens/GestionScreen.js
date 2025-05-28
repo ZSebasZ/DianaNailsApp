@@ -8,63 +8,55 @@ import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { BotonIconoTexto } from "../components/BotonIconoTexto";
 
 
-//Pantalla de Login
+//Pantalla de Gestion
 export const GestionScreen = () => {
 
-    const insets = useSafeAreaInsets();
-    
-        const fuenteTexto = fuenteTextoStyles();
-    
-        //Estilos
-        const styles = useThemedStyles(gestionStyles);
-        const colors = useThemedStyles();
-        //Detectamos el tema del sistema para saber que solo mostrar
-        const colorScheme = useColorScheme();
-        const logo = colorScheme === 'dark'
-            ? require('./../assets/images/logoDark.png')
-            : require('./../assets/images/logoLight.png');
-    
-        return (
-            <Screen enTab={true}>
-                <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                    <ScrollView showsVerticalScrollIndicator={false}>
-                        <SeccionEnTab
-                            fuenteTextoBold={fuenteTexto.gantariBold}
-                            fuenteTextoRegular={fuenteTexto.gantariRegular}
-                            tituloSeccion={"Gestión"}
-                            textInfo1={"Desde puedes gestionar tus servicios, productos y manicuristas"}
+    // Estilos y fuentes
+    const fuenteTexto = fuenteTextoStyles();
+    const styles = useThemedStyles(gestionStyles);
+
+    // Renderizamos la pantalla
+    return (
+        <Screen enTab={true}>
+            <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <SeccionEnTab
+                        fuenteTextoBold={fuenteTexto.gantariBold}
+                        fuenteTextoRegular={fuenteTexto.gantariRegular}
+                        tituloSeccion={"Gestión"}
+                        textInfo1={"Desde puedes gestionar tus servicios, productos y manicuristas"}
+                    />
+                    <View style={styles.containerSeccion}>
+                        <BotonIconoTexto
+                            esLink={true}
+                            href={"/navegacion/admin/(gestionAdmin)/(tabs-servicios)/servicios"}
+                            nombreIcono={"assistant"}
+                            fondo={true}
+                            fuenteTextoNormal={fuenteTexto.gantariBold}
+                            textoBoton={"Gestionar servicios"}
+                            enTab={true}
                         />
-                        <View style={styles.containerSeccion}>
-                            <BotonIconoTexto
-                                esLink={true}
-                                href={"/navegacion/admin/(gestionAdmin)/(tabs-servicios)/servicios"}
-                                nombreIcono={"assistant"}
-                                fondo={true}
-                                fuenteTextoNormal={fuenteTexto.gantariBold}
-                                textoBoton={"Gestionar servicios"}
-                                enTab={true}
-                            />
-                            <BotonIconoTexto
-                                esLink={true}
-                                href={"/navegacion/admin/(gestionAdmin)/(tabs-productos)/productos"}
-                                nombreIcono={"store"}
-                                fondo={true}
-                                fuenteTextoNormal={fuenteTexto.gantariBold}
-                                textoBoton={"Gestionar productos"}
-                                enTab={true}
-                            />
-                            <BotonIconoTexto
-                                esLink={true}
-                                href={"/navegacion/admin/(gestionAdmin)/(tabs-manicuristas)/manicuristas"}
-                                nombreIcono={"card-account-details"}
-                                fondo={true}
-                                fuenteTextoNormal={fuenteTexto.gantariBold}
-                                textoBoton={"Gestionar manicuristas"}
-                                enTab={true}
-                            />
-                        </View>
-                    </ScrollView>
-                </View>
-            </Screen>
-        );
+                        <BotonIconoTexto
+                            esLink={true}
+                            href={"/navegacion/admin/(gestionAdmin)/(tabs-productos)/productos"}
+                            nombreIcono={"store"}
+                            fondo={true}
+                            fuenteTextoNormal={fuenteTexto.gantariBold}
+                            textoBoton={"Gestionar productos"}
+                            enTab={true}
+                        />
+                        <BotonIconoTexto
+                            esLink={true}
+                            href={"/navegacion/admin/(gestionAdmin)/(tabs-manicuristas)/manicuristas"}
+                            nombreIcono={"card-account-details"}
+                            fondo={true}
+                            fuenteTextoNormal={fuenteTexto.gantariBold}
+                            textoBoton={"Gestionar manicuristas"}
+                            enTab={true}
+                        />
+                    </View>
+                </ScrollView>
+            </View>
+        </Screen>
+    );
 }

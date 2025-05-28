@@ -5,10 +5,13 @@ import { Icono } from "./Icono";
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { Link } from "expo-router";
 
+// Componente BotonIconoTexto
 export const BotonIconoTexto = (props) => {
 
-    const tema = useThemedStyles() // Acceder al contexto
+    // Obtenemos los colores del tema
+    const tema = useThemedStyles()
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         boton: {
             padding: 10,
@@ -37,6 +40,7 @@ export const BotonIconoTexto = (props) => {
         
     })
 
+    // Renderizamos el componente
     return (
         props.esLink ? (
             <Link href={props.href} asChild>

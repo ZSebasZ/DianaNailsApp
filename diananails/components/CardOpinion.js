@@ -5,11 +5,13 @@ import { Icono } from "./Icono";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { ImagenNombre } from "./ImagenNombre";
 
-
-
+// Componente CardOpinion
 export const CardOpinion = (props) => {
+
+    // Obtenemos los colores del tema
     const tema = useThemedStyles()
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         contenedorOpinion: {
             backgroundColor: tema.secondaryContainer,
@@ -49,6 +51,7 @@ export const CardOpinion = (props) => {
         },
     })
 
+    // Renderizamos el componente
     return (
         <View style={styles.contenedorOpinion}>
             <Text style={styles.textTituloOpinion}>{props.titulo}</Text>

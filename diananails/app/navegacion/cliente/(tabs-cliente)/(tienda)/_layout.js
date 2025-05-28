@@ -5,7 +5,7 @@ import { useThemedStyles } from '../../../../../hooks/useThemeStyles';
 import { tabsMainLabelStyles } from "../../../../../styles/tabsMainLabelStyles";
 import { LogoTopBar } from '../../../../../components/LogoTopBar';
 
-export default function AgendarCitaLayout() {
+export default function TiendaLayout() {
 
   const styles = useThemedStyles(tabsMainLabelStyles);
   const colors = useThemedStyles();

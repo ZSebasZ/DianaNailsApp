@@ -1,5 +1,4 @@
-import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, ScrollView, FlatList, Text } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { citasClienteStyles } from '../styles/citasClienteStyles';
@@ -14,40 +13,40 @@ import { ModalLoader } from "../components/ModalLoader";
 import { ModalFeedback } from "../components/ModalFeedback";
 import { BotonTexto } from "../components/BotonTexto";
 
-
-//Pantalla de Login
+//Pantalla de CitasCliente
 export const CitasClienteScreen = () => {
 
+    // Estilos y fuentes
+    const fuenteTexto = fuenteTextoStyles();
+    const styles = useThemedStyles(citasClienteStyles);
+
+    // Usamos el contexto de autenticación
     const { usuario } = useContext(AuthContext)
+
+    // Estados
     const [citas, setCitas] = useState(null)
     const [modalConfirmarAccion, setModalConfirmarAccion] = useState(false)
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
     const [citaSeleccionada, setCitaSeleccionada] = useState(null)
 
-    const fuenteTexto = fuenteTextoStyles();
-    const manicurista = require("./../assets/images/manicurista.jpg")
-    //Estilos
-    const styles = useThemedStyles(citasClienteStyles);
-
+    
+    // Funcion para cargar las citas
     const cargarCitas = async () => {
         const respuesta = await obtenerCitas(usuario.datosUsuario.id)// esto ya es el array correcto
         setCitas(respuesta.citas);
-        //console.log(respuesta.citas)
-        //console.log(respuesta.citas)
     };
 
+    // UseEffect para cargar las citas
     useEffect(() => {
         cargarCitas();
     }, [])
 
-
-
+    // Funcion para eliminar la cita
     const eliminarCita = async () => {
         try {
             setModalConfirmarAccion(false)
             setModalLoaderVisible(true)
-            //console.log(usuario.datosUsuario.id, citaSeleccionada)
             const respuesta = await cancelarCita(usuario.datosUsuario.id, citaSeleccionada)
             console.log(respuesta)
             setModalLoaderVisible(false)
@@ -59,6 +58,7 @@ export const CitasClienteScreen = () => {
         }
     }
 
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
             <ModalLoader

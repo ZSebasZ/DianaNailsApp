@@ -1,18 +1,18 @@
 import { createContext, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { loginCliente, updateDatosUsuario } from "../api/AuthController";
-import { router } from "expo-router";
 
+// Creamos el contexto para agendar la cita
 export const AgendarCitaContext = createContext()
 
+// Creamos el proveedor aque va a envolver a los componentes que se encargan de almacenar los datos de la cita
 export const AgendarCitaProvider = ({ children }) => {
 
-    const [pasoAgendamiento, setPasoAgendamiento] = useState(1)
-
+    // Estados iniciales
     const estadoInicialHora = { idHora: null, hora: null };
     const estadoInicialManicurista = { idManicurista: null, manicurista: null, urlImagen: null };
     const estadoInicialMetodoPago = { idMetodoPago: null, metodoPago: null };
 
+    // Estados para almacenar los datos de la cita
+    const [pasoAgendamiento, setPasoAgendamiento] = useState(1)
     const [serviciosSeleccionados, setServiciosSeleccionados] = useState([]);
     const [tiempoTotal, setTiempoTotal] = useState(0)
     const [subtotal, setSubtotal] = useState(0.00);
@@ -22,7 +22,7 @@ export const AgendarCitaProvider = ({ children }) => {
     const [manicurista, setManicurista] = useState({ idManicurista: null, manicurista: null, urlImagen: null })
     const [metodoPago, setMetodoPago] = useState({ idMetodoPago: null, metodoPago: null })
 
-    
+    // Funcion para seleccionar o deseleccionar un servicio
     const alternarSeleccionServicio = (servicio) => {
         setServiciosSeleccionados((prev) => {
             const existe = prev.find(s => s.id === servicio.id);
@@ -45,10 +45,12 @@ export const AgendarCitaProvider = ({ children }) => {
         });
     };
 
+    // Funcion para seleccionar la fecha
     const seleccionarFecha = (fecha) => {
         setFecha(fecha)
     }
 
+    // Funcion para seleccionar la hora
     const seleccionarHora = (nuevaHora, manicuristas) => {
         setHora((prev) => {
             //console.log(manicuristas)
@@ -64,6 +66,7 @@ export const AgendarCitaProvider = ({ children }) => {
         }); // hora debería ser un objeto como { idHora: ..., hora: ... }
     };
 
+    // Funcion para seleccionar la manicurista
     const seleccionarManicurista = (nuevaManicurista) => {
         //console.log(nuevaManicurista)
         setManicurista((prev) => {
@@ -76,6 +79,7 @@ export const AgendarCitaProvider = ({ children }) => {
         });
     };
 
+    // Funcion para seleccionar el metodo de pago
     const seleccionarMetodoPago = (nuevoMetodoPago) => {
         setMetodoPago((prev) => {
             if (prev.idMetodoPago === nuevoMetodoPago.idMetodoPago) {
@@ -87,12 +91,14 @@ export const AgendarCitaProvider = ({ children }) => {
         });
     };
 
+    // Funcion para resetear la hora y manicurista seleccionada
     const resetHoraManicuristas = () => {
         setHora({ idHora: null, hora: null })
         setManicuristas(null),
         setManicurista({ idManicurista: null, manicurista: null, urlImagen: null })
     }
 
+    // Funcion para reiniciar el contexto
     const reiniciarContexto = () => {
         setServiciosSeleccionados([]);
         setTiempoTotal(0);
@@ -105,6 +111,7 @@ export const AgendarCitaProvider = ({ children }) => {
         //router.replace("/navegacion/cliente/(tabs-cliente)/(agendarCita)/")
     };
 
+    // Retornamos el proveedor que va a envolver los componentes que necesiten el contexto
     return (
         <AgendarCitaContext.Provider value={{
             serviciosSeleccionados,

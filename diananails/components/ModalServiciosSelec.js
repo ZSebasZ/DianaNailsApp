@@ -1,20 +1,17 @@
-import { Modal, Pressable, StyleSheet, Text, View, FlatList } from "react-native"
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native"
 import { useThemedStyles } from "../hooks/useThemeStyles"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { ImagenNombre } from "./ImagenNombre";
 import { BotonTexto } from "./BotonTexto";
-import { useState } from "react";
-import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Icono } from "./Icono";
 
-
-
+// Modal ModalServiciosSelec
 export const ModalServiciosSelec = (props) => {
 
+    // Obtenemos los colores del tema
     const tema = useThemedStyles()
-    const fuenteTexto = fuenteTextoStyles();
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         modalFondo: {
             flex: 1,
@@ -51,6 +48,7 @@ export const ModalServiciosSelec = (props) => {
         }
     })
 
+    // Funcion que calcula el tiempo requerido
     const calcularTiempoRequerido = (lapsos) => {
         const totalMinutos = lapsos * 15;
         const horas = Math.floor(totalMinutos / 60);
@@ -68,6 +66,7 @@ export const ModalServiciosSelec = (props) => {
         return resultado || "0 minutos";
     };
 
+    // Funcion que formatea el precio
     function formatearPrecio(num) {
         // Formatear con dos decimales fijos
         let precio = num.toFixed(2);
@@ -83,8 +82,7 @@ export const ModalServiciosSelec = (props) => {
         return `${entero}.${decimal}`;
     }
 
-    //console.log(props.servicios)
-
+    // Renderizamos el componente
     return (
         <Modal
             animationType="slide"

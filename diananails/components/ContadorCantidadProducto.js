@@ -3,14 +3,14 @@ import { useThemedStyles } from "../hooks/useThemeStyles"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Icono } from "./Icono";
-import { useState } from "react";
 
-
-
+// Componente ContadorCantidadProducto
 export const ContadorCantidadProducto = (props) => {
-    const tema = useThemedStyles()
-    const [cantidad, setCantidad] = useState(1)
 
+    // Obtenemos los colores del tema
+    const tema = useThemedStyles()
+
+    // Estilos del componente
     const styles = StyleSheet.create({
         containerCantidadProducto: {
             flexDirection: "row",
@@ -34,6 +34,7 @@ export const ContadorCantidadProducto = (props) => {
 
     })
 
+    // Función para formatear el tiempo
     function formatearTiempo(minutos) {
         const horas = Math.floor(minutos / 60);
         const mins = minutos % 60;
@@ -42,8 +43,7 @@ export const ContadorCantidadProducto = (props) => {
         return `${mins} minutos`;
     }
 
-    //console.log(props.tiempoRequerido)
-
+    // Renderizamos el componente
     return (
         <View style={styles.containerCantidadProducto}>
 

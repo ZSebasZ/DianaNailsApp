@@ -3,7 +3,6 @@ import { AgendarCitaScreen } from '../../../../../screens/AgendarCitaScreen';
 import { FechaHoraCitaScreen } from '../../../../../screens/FechaHoraCitaScreen';
 import { ManicuristaMetodoPagoScreen } from '../../../../../screens/ManicuristaMetodoPagoScreen';
 import { useContext } from 'react';
-import { AuthContext } from '../../../../../contexts/authContext';
 import { AgendarCitaContext } from '../../../../../contexts/agendarCitaContext';
 import { ResumenCitaScreen } from '../../../../../screens/ResumenCitaScreen';
 
@@ -12,6 +11,7 @@ export default function Index() {
 
     const {pasoAgendamiento} = useContext(AgendarCitaContext)
 
+    //Segun el paso del agendamiento, mostramos la pantalla correspondiente
     return (
         <>
             <Stack.Screen

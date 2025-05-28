@@ -1,28 +1,28 @@
-import { View, useColorScheme, ScrollView, FlatList } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, ScrollView, FlatList } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { manicuristaMetodoPagoStyles } from "../styles/manicuristaMetodoPagoStyles";
 import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
 import { SeccionEnTab } from "../components/SeccionEnTab";
 import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerServicios";
 import { BarraResumen } from "../components/BarraResumen";
 import { CardManicurista } from "../components/CardManicurista";
-import { ListaDropdown } from "../components/ListaDropdown";
 import { useContext } from "react";
 import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 import { BotonTexto } from "../components/BotonTexto";
 import { ModalServiciosSelec } from "../components/ModalServiciosSelec";
 
-
-//Pantalla de Login
+//Pantalla de ManicuristaMetodoPago
 export const ManicuristaMetodoPagoScreen = () => {
 
+    //Fuentes
+    const fuenteTexto = fuenteTextoStyles();
+
+    // Usamos el contexto de agendar cita
     const { serviciosSeleccionados, subtotal, manicuristas, manicurista, seleccionarManicurista, metodoPago, seleccionarMetodoPago, setPasoAgendamiento } = useContext(AgendarCitaContext)
 
-    //console.log(manicuristas)
-
+    // Metodos de pago
     const metodosPago = [
         {
             idMetodoPago: 1,
@@ -34,20 +34,10 @@ export const ManicuristaMetodoPagoScreen = () => {
         }
     ]
 
-    const items = [
-        { label: 'Pagar en el local', value: 'efectivo' },
-        { label: 'Tarjeta', value: 'tarjeta' }
-    ];
-
-    const manicuristaImg = require("./../assets/images/manicurista.jpg")
-
-    const fuenteTexto = fuenteTextoStyles();
-    //Estilos
-    const styles = useThemedStyles(manicuristaMetodoPagoStyles);
-
+    // Estado del modal
     const [modalServiciosSelec, setModalServiciosSelec] = useState(false)
 
-
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
             <ModalServiciosSelec

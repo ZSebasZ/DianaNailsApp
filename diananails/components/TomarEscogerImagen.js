@@ -1,16 +1,18 @@
 import { StyleSheet, Image, View } from "react-native"
 import { useThemedStyles } from "../hooks/useThemeStyles"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { useContext } from "react";
-import { AuthContext } from "../contexts/authContext";
 
+// Componente TomarEscogerImagen
 export const TomarEscogerImagen = (props) => {
-    const tema = useThemedStyles()
-    const {usuario} = useContext(AuthContext)
 
+    // Obtenemos los colores del tema
+    const tema = useThemedStyles()
+
+    // Imagenes por defecto
     const perfilImgDefault = require("./../assets/images/perfilDefault.png");
     const productoImgDefault = require("./../assets/images/sinImagen.png");
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         recuadroImagen: {
             width: wp(60),
@@ -34,6 +36,7 @@ export const TomarEscogerImagen = (props) => {
         },
     })
     
+    // Renderizamos el componente
     return (
         <View style={{ alignItems: "center" }}>
             <View style={styles.recuadroImagen}>

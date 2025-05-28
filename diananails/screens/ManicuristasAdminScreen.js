@@ -1,32 +1,30 @@
-import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, ScrollView, FlatList, Text } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { useEffect, useState } from "react";
 import { manicuristaMetodoPagoStyles } from "../styles/manicuristaMetodoPagoStyles";
 import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
 import { SeccionEnTab } from "../components/SeccionEnTab";
-import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerServicios";
-import { BarraResumen } from "../components/BarraResumen";
 import { CardManicurista } from "../components/CardManicurista";
-import { ListaDropdown } from "../components/ListaDropdown";
 import { useContext, useCallback } from "react";
-import { AgendarCitaContext } from "../contexts/agendarCitaContext";
-import { BotonTexto } from "../components/BotonTexto";
 import { obtenerManicuristasAdmin } from "../api/ManicuristasController";
 import { AuthContext } from "../contexts/authContext";
 import { useFocusEffect } from "expo-router";
 
-//Pantalla de Login
+//Pantalla de ManicuristasAdmin
 export const ManicuristasAdminScreen = () => {
-
-    const { usuario } = useContext(AuthContext)
-    const [manicuristas, setManicuristas] = useState(null);
-
+    
+    // Estilos y fuentes
     const fuenteTexto = fuenteTextoStyles();
-    //Estilos
     const styles = useThemedStyles(manicuristaMetodoPagoStyles);
 
+    // Usamos el contexto de autenticación
+    const { usuario } = useContext(AuthContext)
+
+    // Estado de las manicuristas
+    const [manicuristas, setManicuristas] = useState(null);
+    
+    // UseEffect para cargar las manicuristas
     useEffect(() => {
         const obtenerManicuristas = async () => {
             const respuesta = await obtenerManicuristasAdmin(usuario.datosUsuario.id);
@@ -35,6 +33,7 @@ export const ManicuristasAdminScreen = () => {
         obtenerManicuristas()
     }, [])
 
+    // UseFocusEffect para cargar las manicuristas
     useFocusEffect(
         useCallback(() => {
             const obtenerManicuristas = async () => {
@@ -42,10 +41,10 @@ export const ManicuristasAdminScreen = () => {
                 setManicuristas(respuesta);
             }
             obtenerManicuristas()
-
         }, [])
     );
 
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
             <View style={{ flex: 1, paddingHorizontal: 10 }}>

@@ -1,17 +1,21 @@
-import { View, Image, StyleSheet, Text, Pressable } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { useState } from "react";
 import DropDownPicker from 'react-native-dropdown-picker';
 
+// Componente ListaDropdown
 export const ListaDropdown = (props) => {
 
-    const tema = useThemedStyles() // Acceder al contexto
+    // Obtenemos los colores del tema
+    const tema = useThemedStyles() 
 
-    const [open, setOpen] = useState(false); // Estado para abrir/cerrar el dropdown
-    const [value, setValue] = useState(null); // Estado para el valor seleccionado
+    // Estados para la lista
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState(null);
     const [items, setItems] = useState(props.items);
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         dropdown: {
             backgroundColor: tema.background,
@@ -44,6 +48,7 @@ export const ListaDropdown = (props) => {
         },
     })
 
+    // Renderizamos el componente
     return (
         <View style={styles.contenedorPicker}>
             <DropDownPicker

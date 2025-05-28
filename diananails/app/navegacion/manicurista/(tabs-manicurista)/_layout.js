@@ -12,6 +12,7 @@ export default function TabsManicuristaLayout() {
     const styles = useThemedStyles(tabsMainLabelStyles);
     const colors = useThemedStyles();
 
+    //Definimos la tab de citas
     return (
         <View style={{ flex: 1 }}>
             <BarraSuperior/>

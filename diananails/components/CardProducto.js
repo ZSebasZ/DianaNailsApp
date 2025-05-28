@@ -4,14 +4,16 @@ import { Link } from "expo-router"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { BotonTexto } from "./BotonTexto";
 
-
-
+// Componente CardProducto
 export const CardProducto = (props) => {
     
+    // Obtenemos los colores del tema
     const tema = useThemedStyles()
 
+    // Obtenemos una imagen por defecto para el producto
     const productoImgDefault = require("./../assets/images/producto.png");
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         contenedorProducto: {
             borderColor: tema.primary,
@@ -48,6 +50,7 @@ export const CardProducto = (props) => {
         },
     })
 
+    // Funcion que formatea el precio
     function formatearPrecio(num) {
         // Formatear con dos decimales fijos
         let precio = num.toFixed(2);
@@ -63,6 +66,7 @@ export const CardProducto = (props) => {
         return `${entero}.${decimal}`;
     }
 
+    // Renderizamos el componente
     return (
         <View>
             <Link href={props.href} asChild>

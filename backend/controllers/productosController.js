@@ -123,6 +123,7 @@ const nuevoProducto = (req, res) => {
 
 }
 
+//Creamos la funcion que se encarga de la OBTENCION de los PRODUCTOS - ADMIN
 const getProducto = (req, res) => {
 
 
@@ -149,6 +150,7 @@ const getProducto = (req, res) => {
     })
 }
 
+//Creamos la funcion que se encarga de la ACTUALIZACION de los PRODUCTOS
 const updateProducto = (req, res) => {
 
     //Obtenemos el id del servicio a actualizat

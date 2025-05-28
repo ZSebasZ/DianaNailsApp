@@ -9,30 +9,11 @@ router.get("/get-servicios", getServicios)
 
 //Creamos la ruta para la INSERCION de un nuevo SERVICIO
 router.post("/nuevo-servicio", nuevoServicio)
-//JSON DE PRUEBA
-/*
-    {
-        "url_imagen": "",
-        "nombre": "Servicio prueba",
-        "precio": 10,
-        "horas_requeridas": 2
-    }
-*/
 
-//Creamos la ruta para la OBTENCION de los SERVICIOS
+//Creamos la ruta para la OBTENCION de los SERVICIOS - ADMIN
 router.post("/get-servicio", getServicio)
 
 //Creamos la ruta para la ACTUALIZACION de un nuevo SERVICIO
 router.put("/update-servicio", updateServicio)
-//JSON DE PRUEBA
-/*
-    {
-
-        "url_imagen": "",
-        "nombre": "Servicio prueba actualizado",
-        "precio": 10,
-        "horas_requeridas": 2
-    }
-*/
 
 export default router;

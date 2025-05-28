@@ -3,10 +3,10 @@ import axios from 'axios';
 //WIFI MOVIL
 //const API_URL = 'http://192.168.229.163:5001/api';
 
-
 //WIFI CASA
 const API_URL = 'http://192.168.1.145:5001/api';
 
+// Crearmos el servicio de la API juntos a sus metodos y endpoints
 export const api = async (metodo, endpoint, datos) => {
   try {
     let respuesta

@@ -5,44 +5,46 @@ import { useThemedStyles } from '../hooks/useThemeStyles';
 import { loginStyles } from '../styles/loginStyles';
 import { LogoPrincipal } from "../components/LogoPrincipal";
 import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
-import { use, useContext, useEffect, useState } from "react";
-import { ThemeContext } from "../contexts/themeContext";
+import { useContext, useState } from "react";
 import { ContenedorInputs } from "../components/ContenedorInputs";
 import { CampoTextoInput } from "../components/CampoTextoInput";
 import { BotonTexto } from "../components/BotonTexto";
 import { validacionLogin, loginValidacionOnBlur } from "../validaciones/loginValidacion";
-import { loginCliente } from "../api/AuthController";
 import { ModalLoader } from "../components/ModalLoader";
-import { ModalFeedback } from "../components/ModalFeedback";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from "../contexts/authContext";
 
 //Pantalla de Login
 export const LoginScreen = () => {
 
-    const { login, usuario, tipoLogin } = useContext(AuthContext)
+    // Usamos el contexto de autenticación
+    const { login, tipoLogin } = useContext(AuthContext)
 
-    //Estilos
+    //Estiloe, tema, y fuentes
     const styles = useThemedStyles(loginStyles);
     const colors = useThemedStyles();
     const fuenteTexto = fuenteTextoStyles();
 
-    //VALIDACIONES
+    // Estado para los campos del login
     const [valoresCampos, setValoresCampos] = useState({
         //email: "admin@diananails.com",
         //email: "sgarcia@diananails.com",
-        email: "prueba3@gmail.com",
+        email: "prueba1@gmail.com",
         contrasena: "Abc123."
     })
 
+    // Estados para las validaciones
     const [errores, setErrores] = useState({})
     const [credencialesIncorrectas, setCredencialesIncorrectas] = useState(false)
+
+    //Estado del modal
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
 
+    // Funcion para ir asignando valores al estado valoresCampos
     const onValueChange = (nombreCampo, valor) => {
         setValoresCampos({ ...valoresCampos, [nombreCampo]: valor })
     }
 
+    // Funcion para enviar el formulario
     const onSubmit = async () => {
         Keyboard.dismiss()
         setCredencialesIncorrectas(false)
@@ -52,9 +54,7 @@ export const LoginScreen = () => {
             try {
                 setModalLoaderVisible(true)
                 const respuesta = await login(valoresCampos)
-
                 setCredencialesIncorrectas(false)
-                //router.replace("/navegacion/(tabs-cliente)/(agendarCita)/");
                 switch (respuesta.tipoUsuario) {
                     case 0:
                         router.push("/navegacion/admin/")
@@ -72,7 +72,6 @@ export const LoginScreen = () => {
                         console.log("NO SE HA CARGADO TIPO USUARIO")
                         break;
                 }
-
             } catch (error) {
                 const mensajeError = error.response?.data?.mensaje || 'Ocurrió un error inesperado';
                 console.log(mensajeError)
@@ -83,6 +82,7 @@ export const LoginScreen = () => {
         }
     }
 
+    // Renderizamos la pantalla
     return (
         <Screen>
             <Stack.Screen

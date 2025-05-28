@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
+// Estilos para la screen de la tienda
 export const tiendaStyles = (colors) => StyleSheet.create({
     contenedorProductos: {
         flex: 1,

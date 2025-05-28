@@ -4,11 +4,13 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { CardProductoPedido } from "./CardProductoPedido";
 import { ImagenNombre } from "./../components/ImagenNombre"
 
-
-
+// Componente CardPedido
 export const CardPedido = (props) => {
+
+    // Obtenemos los colores del tema
     const tema = useThemedStyles()
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         containerPedido: {
             backgroundColor: tema.secondaryContainer,
@@ -38,6 +40,7 @@ export const CardPedido = (props) => {
 
     })
 
+    // Funcion que formatea el precio
     function formatearPrecio(num) {
         // Formatear con dos decimales fijos
         let precio = num.toFixed(2);
@@ -53,6 +56,7 @@ export const CardPedido = (props) => {
         return `${entero}.${decimal}`;
     }
 
+    // Renderizamos el componente
     return (
         <View>
             <Pressable 

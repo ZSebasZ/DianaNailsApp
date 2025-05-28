@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
+// Estilos para la screen de inicio
 export const inicioStyles = (colors) => StyleSheet.create({
     contenedorPrincipal: {
         paddingTop: hp(3),

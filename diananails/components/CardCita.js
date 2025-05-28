@@ -3,11 +3,13 @@ import { useThemedStyles } from "../hooks/useThemeStyles"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { ImagenNombre } from "./ImagenNombre";
 
-
-
+// Componente CardCita
 export const CardCita = (props) => {
+
+    // Obtenemos los colores del tema
     const tema = useThemedStyles()
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         contenedorCita: {
             backgroundColor: tema.secondaryContainer,
@@ -37,6 +39,23 @@ export const CardCita = (props) => {
 
     })
 
+    // Funcion que formatea el precio
+    function formatearPrecio(num) {
+        // Formatear con dos decimales fijos
+        let precio = num.toFixed(2);
+
+        // Separar parte entera y decimal
+        let [entero, decimal] = precio.split('.');
+
+        // Asegurar que la parte entera tenga al menos dos dígitos
+        if (entero.length < 2) {
+            entero = '0' + entero;
+        }
+
+        return `${entero}.${decimal}`;
+    }
+
+    // Renderizamos el componente
     return (
         <View>
             <Pressable
@@ -98,6 +117,13 @@ export const CardCita = (props) => {
                     <Text style={styles.textTituloSeccionCita}>Metodo de pago</Text>
                     <View>
                         <Text style={styles.textInfoCita}>{props.datosCita.metodoPago}</Text>
+                    </View>
+                </View>
+                <View style={styles.lineaDivisora}></View>
+                <View>
+                    <Text style={styles.textTituloSeccionCita}>Total</Text>
+                    <View>
+                        <Text style={styles.textInfoCita}>{formatearPrecio(props.datosCita.precio)} €</Text>
                     </View>
                 </View>
             </Pressable>

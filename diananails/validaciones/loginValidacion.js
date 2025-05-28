@@ -1,5 +1,6 @@
 import { regex, estaVacio } from "../utils/regexCamposUtils";
 
+// Funcion que se encarga de validar el formulario completo de login
 export const validacionLogin = (valoresCampos, tipoLogin) => {
     const textCampoObligatorio = "Este campo es obligatorio"
 
@@ -34,6 +35,7 @@ export const validacionLogin = (valoresCampos, tipoLogin) => {
 
 }
 
+// Funcion que encarga de validar los campos del formulario de login al perder el foco
 export const loginValidacionOnBlur = (campo, valor, tipoLogin) => {
 
     const textCampoObligatorio = "Este campo es obligatorio"

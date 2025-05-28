@@ -1,5 +1,6 @@
 import { regex, estaVacio } from "../utils/regexCamposUtils";
 
+// Funcion que se encarga de validar el formulario completo de registro
 export const validacionRegistro = (valoresCampos) => {
     const textCampoObligatorio = "Este campo es obligatorio"
 
@@ -48,6 +49,7 @@ export const validacionRegistro = (valoresCampos) => {
 
 }
 
+// Funcion que se encarga de validar los campos del formulario de registro al perder el foco
 export const registroValidacionOnBlur = (campo, valor, confirmarContrasena = "") => {
 
     const textCampoObligatorio = "Este campo es obligatorio"

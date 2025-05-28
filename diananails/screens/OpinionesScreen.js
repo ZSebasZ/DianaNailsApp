@@ -1,5 +1,4 @@
-import { View, Text, useColorScheme, ScrollView, Keyboard, FlatList } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, ScrollView, Keyboard, FlatList } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { opinionesStyles } from '../styles/opinionesStyles';
@@ -16,19 +15,20 @@ import { ModalFeedback } from "../components/ModalFeedback";
 import { AuthContext } from "../contexts/authContext";
 import { obtenerOpiniones, realizarOpinion } from "../api/OpinionesController";
 
-
-
-//Pantalla de Login
+//Pantalla de Opiniones
 export const OpinionesScreen = () => {
 
-    const { usuario } = useContext(AuthContext)
-    const [opiniones, setOpiniones] = useState(null)
-
+    // Estilos y fuentes
     const fuenteTexto = fuenteTextoStyles();
-    //Estilos
     const styles = useThemedStyles(opinionesStyles);
 
+    // Usamos el contexto de autenticación
+    const { usuario } = useContext(AuthContext)
 
+    // Estado de las opiniones
+    const [opiniones, setOpiniones] = useState(null)
+
+    // Estados para los campos, errores y filtro
     const [errores, setErrores] = useState({})
     const [valoresCampos, setValoresCampos] = useState({
         idCliente: usuario.datosUsuario.id,
@@ -41,13 +41,16 @@ export const OpinionesScreen = () => {
         estrellas: 0
     })
 
+    // Estados para los modales
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
 
+    //Funcion en ir asignando valores al estado valoresCampos
     const onValueChange = (nombreCampo, valor) => {
         setValoresCampos({ ...valoresCampos, [nombreCampo]: valor })
     }
 
+    // Funciones para enviar la opinion
     const onSubmit = async () => {
         Keyboard.dismiss()
 
@@ -57,26 +60,23 @@ export const OpinionesScreen = () => {
             try {
                 setModalLoaderVisible(true)
                 const respuesta = await realizarOpinion(valoresCampos);
-                //console.log('Opinion hecha:', respuesta);
-
-                //Alert.alert('Éxito', 'Cliente registrado correctamente');
-                // Aquí puedes redirigir a otra pantalla si quieres
                 resetFormulario()
                 setModalLoaderVisible(false)
                 setModalFeedbackVisible(true)
                 cargarOpiniones()
             } catch (error) {
                 const mensajeError = error.response?.data?.mensaje || 'Ocurrió un error inesperado';
-                //Alert.alert('Error', mensajeError);
-
-                // Ejemplo: si el error es del campo `email`, puedes mostrarlo directamente
+                console.error(mensajeError)
+                /*
                 if (mensajeError.includes("correo")) {
                     setErrores({ ...errores, email: mensajeError });
                 }
+                */
             }
         }
     }
 
+    // Funcion para resetear el formulario
     const resetFormulario = () => {
         setValoresCampos({
             idCliente: usuario.datosUsuario.id,
@@ -86,17 +86,17 @@ export const OpinionesScreen = () => {
         })
     }
 
+    // Funciones que se encargan de la obtencion de las opiniones
     const cargarOpiniones = async () => {
         const respuesta = await obtenerOpiniones(valoresFiltro); // esto ya es el array correcto
-        if(respuesta.length != 0){
+        if (respuesta.length != 0) {
             setOpiniones(respuesta);
         } else {
             setOpiniones(null)
         }
-        
-        //console.log(respuesta)
     };
 
+    // UseEffect para cargar las opiniones
     useEffect(() => {
         try {
             cargarOpiniones();
@@ -105,17 +105,20 @@ export const OpinionesScreen = () => {
         }
     }, [])
 
+    //Funcion para alternar el filtro
     const seleccionarAntiguedad = (tipo) => {
         setValoresFiltro((prev) => ({
             ...prev,
-            antiguedad: tipo, // "recientes" o "antiguas"
+            antiguedad: tipo,
         }));
     };
 
+    // UseEffect para cargar las opiniones segun el filtro
     useEffect(() => {
         cargarOpiniones();
     }, [valoresFiltro]);
 
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
 

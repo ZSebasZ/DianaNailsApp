@@ -1,5 +1,6 @@
 import { regex, estaVacio } from "../utils/regexCamposUtils";
 
+// Funcion que se encarga de validar el formulario completo de manicurista
 export const validacionManicurista = (valoresCampos, esEdicion = false) => {
     const textCampoObligatorio = "Este campo es obligatorio"
 
@@ -70,6 +71,7 @@ export const validacionManicurista = (valoresCampos, esEdicion = false) => {
 
 }
 
+// Funcion que se encarga de validar los campos del formulario de manicurista al perder el foco
 export const manicuristaValidacionOnBlur = (campo, valor, confirmarContrasena = "") => {
 
     const textCampoObligatorio = "Este campo es obligatorio"

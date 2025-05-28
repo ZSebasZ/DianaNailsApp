@@ -51,7 +51,7 @@ app.use("/api", carritoRoutes);
 //Usamos la ruta de PEDIDO
 app.use("/api", pedidoRoutes);
 
-//Usamos la ruta de MANICUROISTAS
+//Usamos la ruta de MANICURISTAS
 app.use("/api", manicuristasRoutes);
 
 //Puerto del servidor

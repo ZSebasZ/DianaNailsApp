@@ -78,9 +78,9 @@ const getHorasDisponiblesManicuristasDisponibles = (req, res) => {
 
         //Si hay citas en la fecha escogida
 
-        if (totalCitas > 0) {
+        if (totalCitas >= 0) {
             //Sentencia SQL para obtener las horas disponibles junto a su correspodiente manicurista
-            let horasManicuristasDisponibles = `WITH manicuristasLibres AS (SELECT m.id AS id_manicurista, CONCAT(u.nombre, ' ', u.apellidos) AS nombre_manicurista, u.url_imagen AS url_imagen, h.id AS id_hora, h.hora AS hora, h.es_laboral AS esLaboral FROM manicuristas m JOIN usuarios u ON m.id = u.id JOIN horas h ON h.es_laboral = 1 WHERE NOT EXISTS (SELECT 1 FROM citas_horas r JOIN citas c1 ON r.id_cita = c1.id WHERE c1.id_manicurista = m.id AND r.id_hora = h.id AND c1.fecha = '${fecha}') AND h.id NOT IN (SELECT horasYaPedidas FROM (SELECT ch.id_hora AS horasYaPedidas FROM citas_horas AS ch JOIN citas AS c ON c.id = ch.id_cita WHERE c.id_cliente = ${idCliente} AND c.fecha = '${fecha}') AS subquery) AND (CASE WHEN '${fechaActual}' = '${fecha}' THEN h.hora > '${horaActual}' ELSE TRUE END) ORDER BY id_manicurista, id_hora) SELECT DISTINCT p1.id_manicurista, p1.nombre_manicurista, p1.url_imagen, p1.id_hora, p1.hora FROM manicuristasLibres AS p1 `
+            let horasManicuristasDisponibles = `WITH manicuristasLibres AS (SELECT m.id AS id_manicurista, m.nombre_manicurista, m.url_imagen, h.id AS id_hora, h.hora AS hora, h.es_laboral AS esLaboral FROM vManicuristas m JOIN horas h ON h.es_laboral = 1 WHERE NOT EXISTS (SELECT 1 FROM citas_horas r JOIN citas c1 ON r.id_cita = c1.id WHERE c1.id_manicurista = m.id AND r.id_hora = h.id AND c1.fecha = '${fecha}') AND h.id NOT IN (SELECT horasYaPedidas FROM (SELECT ch.id_hora AS horasYaPedidas FROM citas_horas AS ch JOIN citas AS c ON c.id = ch.id_cita WHERE c.id_cliente = ${idCliente} AND c.fecha = '${fecha}') AS subquery) AND (CASE WHEN '${fechaActual}' = '${fecha}' THEN h.hora > '${horaActual}' ELSE TRUE END) ORDER BY id_manicurista, id_hora) SELECT DISTINCT p1.id_manicurista, p1.nombre_manicurista, p1.url_imagen, p1.id_hora, p1.hora FROM manicuristasLibres AS p1 `
 
             //Variable para ir formando la otra parte de la sentencia
             let serMismaManicurista = ""
@@ -151,7 +151,45 @@ const getHorasDisponiblesManicuristasDisponibles = (req, res) => {
             })
 
         } else {
+            /*
+            let horasManicuristasDisponibles = `WITH manicuristasLibres AS (
+  SELECT
+    m.id AS id_manicurista,
+    CONCAT(u.nombre, ' ', u.apellidos) AS nombre_manicurista,
+    u.url_imagen AS url_imagen,
+    h.id AS id_hora,
+    h.hora AS hora,
+    h.es_laboral AS esLaboral
+  FROM manicuristas m
+  JOIN usuarios u ON m.id = u.id
+  JOIN horas h ON h.es_laboral = 1
+  WHERE h.id NOT IN (
+    SELECT ch.id_hora
+    FROM citas_horas ch
+    JOIN citas c ON c.id = ch.id_cita
+    WHERE c.id_cliente = ${idCliente}
+      AND c.fecha = '${fecha}'
+  )
+  AND (
+    CASE
+      WHEN '${fechaActual}' = '${fecha}' THEN h.hora > '${horaActual}'
+      ELSE TRUE
+    END
+  )
+)
+SELECT
+  p.id_manicurista,
+  p.nombre_manicurista,
+  p.url_imagen,
+  p.id_hora,
+  p.hora,
+  p.esLaboral
+FROM manicuristasLibres p
+ORDER BY p.id_manicurista, p.id_hora;
+`
+*/
             //Sentencia SQL para obtener las horas disponibles junto a su correspodiente manicurista
+            
             let horasManicuristasDisponibles = `WITH manicuristasLibres AS (SELECT m.id AS id_manicurista, CONCAT(u.nombre, ' ', u.apellidos) AS nombre_manicurista, u.url_imagen AS url_imagen, h.id AS id_hora, h.hora AS hora, h.es_laboral AS esLaboral FROM manicuristas m JOIN usuarios u ON m.id = u.id JOIN horas h ON h.es_laboral = 1 WHERE h.id NOT IN (SELECT horasYaPedidas FROM (SELECT ch.id_hora AS horasYaPedidas FROM citas_horas AS ch JOIN citas AS c ON c.id = ch.id_cita WHERE c.id_cliente = ${idCliente} AND c.fecha = '${fecha}') AS subquery) AND (CASE WHEN '${fechaActual}' = '${fecha}' THEN h.hora > '${horaActual}' ELSE TRUE END) ORDER BY id_manicurista, id_hora) SELECT DISTINCT p1.id_manicurista, p1.nombre_manicurista, p1.url_imagen, p1.id_hora, p1.hora FROM manicuristasLibres AS p1 `
 
             for (let i = 1; i <= horsReqs; i++) {
@@ -166,6 +204,7 @@ const getHorasDisponiblesManicuristasDisponibles = (req, res) => {
 
             //Hacemos la query para obtener las horas disponibles junto a su correspodiente manicurista
 
+            
             connection.query(horasManicuristasDisponibles, (error, results) => {
 
                 //Si surge algun error, avisamos con un mensaje
@@ -176,6 +215,7 @@ const getHorasDisponiblesManicuristasDisponibles = (req, res) => {
                 const totalHorsManicuritasDisponibles = results.length
 
                 if (totalHorsManicuritasDisponibles > 0) {
+                    
                     let horas = {}
 
                     results.forEach((row) => {
@@ -202,6 +242,91 @@ const getHorasDisponiblesManicuristasDisponibles = (req, res) => {
                             });
                         }
                     })
+                    
+                    /*
+                    const horas = {};
+                    const manicuristasMap = new Map();
+
+                    // Agrupar horas por manicurista
+                    results.forEach(row => {
+                        const id = row.id_manicurista;
+                        if (!manicuristasMap.has(id)) {
+                            manicuristasMap.set(id, []);
+                        }
+                        manicuristasMap.get(id).push({
+                            id: row.id_hora,
+                            hora: row.hora,
+                            esLaboral: row.esLaboral,
+                            nombre: row.nombre_manicurista,
+                            url_imagen: row.url_imagen
+                        });
+                    });
+
+                    for (let [id_manicurista, horasManicurista] of manicuristasMap.entries()) {
+                        const sortedHoras = horasManicurista.sort((a, b) => a.id - b.id);
+                        const nombre = sortedHoras[0].nombre;
+                        const url_imagen = sortedHoras[0].url_imagen;
+
+                        if (horsReqs === 1) {
+                            sortedHoras.forEach(horaObj => {
+                                if (!horas[horaObj.id]) {
+                                    horas[horaObj.id] = {
+                                        idHora: horaObj.id,
+                                        hora: horaObj.hora,
+                                        manicuristas: []
+                                    };
+                                }
+                                horas[horaObj.id].manicuristas.push({
+                                    id: parseInt(id_manicurista),
+                                    nombre,
+                                    url_imagen
+                                });
+                            });
+                        } else {
+                            for (let i = 0; i <= sortedHoras.length - horsReqs; i++) {
+                                const bloque = sortedHoras.slice(i, i + horsReqs);
+
+                                let bloqueValido = true;
+                                for (let j = 0; j < bloque.length; j++) {
+                                    if (!bloque[j].esLaboral) {
+                                        bloqueValido = false;
+                                        break;
+                                    }
+                                    if (j > 0 && bloque[j].id !== bloque[j - 1].id + 1) {
+                                        bloqueValido = false;
+                                        break;
+                                    }
+                                }
+
+                                if (bloqueValido) {
+                                    // Agregar este bloque completo al objeto horas
+                                    bloque.forEach(horaObj => {
+                                        if (!horas[horaObj.id]) {
+                                            horas[horaObj.id] = {
+                                                idHora: horaObj.id,
+                                                hora: horaObj.hora,
+                                                manicuristas: []
+                                            };
+                                        }
+                                        horas[horaObj.id].manicuristas.push({
+                                            id: parseInt(id_manicurista),
+                                            nombre,
+                                            url_imagen
+                                        });
+                                    });
+
+                                    // Saltar las siguientes horsReqs - 1 posiciones para evitar solapamientos
+                                    i += horsReqs - 1;
+                                }
+                            }
+                        }
+                    }
+                    */
+
+
+
+
+
 
                     //Si todo salio bien, enviamos los datos
                     res.status(200).json(horas)
@@ -216,6 +341,7 @@ const getHorasDisponiblesManicuristasDisponibles = (req, res) => {
     })
 }
 
+//Creamos la funcion para la INSERCION de una nueva CITA
 const nuevaCita = (req, res) => {
 
     //Obtenemos los datos de la cita

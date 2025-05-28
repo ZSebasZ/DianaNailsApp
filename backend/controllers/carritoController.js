@@ -153,6 +153,7 @@ const getCarritoProductos = (req, res) => {
 
 }
 
+//Creamos la funcion que se encarga de VACIAR el CARRITO
 const vaciarCarrito = (req, res) => {
 
     //Obtenemos los datos del nuevo producto en el carrito

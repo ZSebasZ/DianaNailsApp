@@ -88,6 +88,7 @@ const nuevaManicurista = (req, res) => {
     })
 }
 
+//Creamos la funcion que se encarga de la OBTENCION de una MANICURISTA - ADMIN
 const getManicurista = (req, res) => {
 
     //Obtenemos el id del admin
@@ -114,6 +115,7 @@ const getManicurista = (req, res) => {
     })
 }
 
+//Creamos la funcion que se encarga de la ACTUALIZACION de una MANICURISTA
 const updateManicurista = (req, res) => {
 
     //Obtenemos el id del servicio a actualizat

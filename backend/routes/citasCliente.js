@@ -9,13 +9,6 @@ router.get("/get-citas-cliente/:idCliente", getCitasCliente)
 
 //Creamos la ruta para el BORRADO(cancelacion) de la CITA de un CLIENTE
 router.delete("/delete-cita-cliente/:idCliente/:idCita", deleteCitaCliente)
-//JSON DE PRUEBA
-/*
-    {
-        "idCliente": 8,
-        "idCita": 1
-    }
-*/
 
 //Creamos la ruta para la OBTENCION de las CITAS de todos los CLIENTES
 router.post("/get-citas-clientes", getCitasClientes)

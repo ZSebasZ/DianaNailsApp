@@ -2,11 +2,13 @@ import { StyleSheet, Text, View } from "react-native"
 import { useThemedStyles } from "../hooks/useThemeStyles"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-
-
+// Componente CardProductoPedido
 export const CardProductoPedido = (props) => {
+
+    // Obtenemos los colores del tema
     const tema = useThemedStyles()
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         textInfoPedido: {
             color: tema.onSecondaryContainer,
@@ -20,6 +22,7 @@ export const CardProductoPedido = (props) => {
         },
     })
 
+    // Funcion que formatea el precio
     function formatearPrecio(num) {
         // Formatear con dos decimales fijos
         let precio = num.toFixed(2);
@@ -35,6 +38,7 @@ export const CardProductoPedido = (props) => {
         return `${entero}.${decimal}`;
     }
 
+    // Renderizamos el componente
     return (
         <View>
             <View style={{ flexDirection: "row" }}>

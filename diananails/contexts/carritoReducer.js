@@ -1,10 +1,13 @@
+//Estado inicial del carrito
 export const initialState = {
     items: [],
     carritoCargado: false
 };
 
 export function carritoReducer(carrito, action) {
+    //Switch segun el distpatch
     switch (action.type) {
+        //Cargamos el carrito
         case 'CARGAR_CARRITO':
             console.log("carrito cargado")
             return {
@@ -13,6 +16,7 @@ export function carritoReducer(carrito, action) {
                 carritoCargado: true
             };
 
+        //Añadimos un producto
         case 'ANADIR_PRODUCTO':
             console.log('Añadir producto:', action.payload);
             const existingItem = carrito.items.find(item => item.id_producto === action.payload.id_producto);
@@ -33,7 +37,8 @@ export function carritoReducer(carrito, action) {
                     items: [...carrito.items, { ...action.payload, cantidad: action.payload.cantidad }],
                 };
             }
-
+        
+        //Quitamos un cantidad
         case 'QUITAR_CANTIDAD':
             return {
                 ...carrito,
@@ -44,6 +49,7 @@ export function carritoReducer(carrito, action) {
                 ),
             };
 
+        //Eliminamos un producto
         case 'ELIMINAR_PRODUCTO':
             console.log(action.payload)
             return {
@@ -51,12 +57,14 @@ export function carritoReducer(carrito, action) {
                 items: carrito.items.filter(item => item.id_producto !== action.payload),
             };
 
+        //Hacemos el pedido y vaciamos el carrito
         case 'HACER_PEDIDO':
             return {
                 ...carrito,
                 items: [],
             };
-
+        
+        //Vaciamos el carrito
         case 'VACIAR_CARRITO':
             return {
                 ...carrito,

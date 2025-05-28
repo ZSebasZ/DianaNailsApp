@@ -5,21 +5,21 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Icono } from "./Icono";
 import { ContadorCantidadProducto } from "./ContadorCantidadProducto";
 import { useEffect, useState, useRef } from "react";
-//import { validacionOnBlur } from "../validaciones/onBlurValidacion";
 
+// Componente CampoTextoInput
 export const CampoTextoInput = (props) => {
 
-    const tema = useThemedStyles() // Acceder al contexto
+    // Obtenemos los colores del tema
+    const tema = useThemedStyles()
+
+    // Estados para mostrar los errores
     const [mostrarError, setMostrarError] = useState(false)
     const [estilosError, setEstilosError] = useState(false)
     const [errorOnBlur, setErrorOnBlur] = useState(null)
     const inputRef = useRef(null);
 
-
-
+    // UseEffect para mostrar los errores
     useEffect(() => {
-
-
         if (errorOnBlur) {
             setMostrarError(true)
             setEstilosError(true)
@@ -43,6 +43,7 @@ export const CampoTextoInput = (props) => {
         }
     }, [props.errorValidacion, errorOnBlur, props.credencialesIncorrectas]);
 
+    // UseEffect para ocultar el teclado
     useEffect(() => {
         const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
             if (inputRef.current) {
@@ -55,6 +56,7 @@ export const CampoTextoInput = (props) => {
         };
     }, []);
 
+    // Funcion para manejar el onBlur del campo
     const onBlur = () => {
         if (props.verificarContrasena) {
             setErrorOnBlur(props.onBlurValidacion(props.nombreCampo, props.valorCampo?.trim(), props.verificarContrasena))
@@ -75,6 +77,7 @@ export const CampoTextoInput = (props) => {
         }
     }
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         contenedorCampoLoginRegister: {
             marginHorizontal: props.anchoCompleto ? 10 : props.tipoCantidad ? wp(30) : wp(15),
@@ -110,6 +113,7 @@ export const CampoTextoInput = (props) => {
         }
     })
 
+    // Retornamos el componente
     return (
         props.conIcono ? (
             <View style={styles.contenedorCampoLoginRegister}>

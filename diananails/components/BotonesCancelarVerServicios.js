@@ -4,19 +4,21 @@ import { BotonIcono } from "./BotonIcono";
 import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { useContext, useState } from "react";
 import { AgendarCitaContext } from "../contexts/agendarCitaContext";
-import { router } from "expo-router";
-import { ModalLoader } from "./ModalLoader";
 import { ModalConfirmarAccion } from "./ModalConfirmarAccion";
 
+// Componente BotonesCancelarVerServicios
 export const BotonesCancelarVerServicios = (props) => {
 
+    // Usamos el contexto de agendar cita
     const { serviciosSeleccionados, reiniciarContexto, setPasoAgendamiento } = useContext(AgendarCitaContext)
+
+    // Modal para confirmar accion
     const [modalConfirmarAccion, setModalConfirmarAccion] = useState(false)
 
-
-    const tema = useThemedStyles() // Acceder al contexto
+    // Obtenemos las fuentes
     const fuenteTexto = fuenteTextoStyles();
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         contenedorBotonCancelarCita: {
             position: "absolute",
@@ -30,12 +32,13 @@ export const BotonesCancelarVerServicios = (props) => {
         },
     })
 
+    // Funcion que cancela el agendamiento de la cita
     const cancelarAgendamientoCita = () => {
         reiniciarContexto()
         setPasoAgendamiento(1)
-        //router.replace("/navegacion/cliente")
     }
 
+    // Renderizamos el componente
     return (
         <View>
             <ModalConfirmarAccion

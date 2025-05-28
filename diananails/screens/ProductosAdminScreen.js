@@ -1,5 +1,4 @@
-import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, ScrollView, FlatList, Text } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { useState, useEffect, useContext, useCallback } from "react";
@@ -9,46 +8,42 @@ import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { CardProducto } from "../components/CardProducto";
 import { AuthContext } from "./../contexts/authContext"
 import { obtenerProductosAdmin, obtenerProductosTienda } from "../api/ProductosController";
-import { anadirCarritoProducto, obtenerCarritoProductos } from "../api/CarritoController";
-import { useCarrito } from "../contexts/carritoContext";
 import { useFocusEffect } from "expo-router";
 
-
-//Pantalla de Login
+//Pantalla de ProductosAdmin
 export const ProductosAdminScreen = () => {
 
-    const { usuario } = useContext(AuthContext)
-
-    const [productos, setProductos] = useState(null)
-
-    const producto = require("./../assets/images/manicurista.jpg")
-
+    // Estilos y fuentes
     const fuenteTexto = fuenteTextoStyles();
-    //Estilos
     const styles = useThemedStyles(tiendaStyles);
 
+    // Usamos el contexto de autenticación
+    const { usuario } = useContext(AuthContext)
+
+    // Estado de productos
+    const [productos, setProductos] = useState(null)
+
+    // UseEffect para obtener los productos
     useEffect(() => {
         const obtenerProductos = async () => {
             const respuesta = await obtenerProductosAdmin(usuario.datosUsuario.id)
             setProductos(respuesta)
-            //console.log(respuesta)
         }
         obtenerProductos()
     }, [])
 
+    // UseFocusEffect para obtener los productos
     useFocusEffect(
         useCallback(() => {
             const obtenerProductos = async () => {
                 const respuesta = await obtenerProductosTienda(usuario.datosUsuario.id_carrito)
                 setProductos(respuesta)
-                //console.log(respuesta)
             }
-
             obtenerProductos()
-
         }, [])
     );
 
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
             <View style={{ flex: 1, paddingHorizontal: 10 }}>

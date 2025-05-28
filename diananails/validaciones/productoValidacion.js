@@ -1,5 +1,6 @@
 import { regex, estaVacio } from "../utils/regexCamposUtils";
 
+// Funcion que se encarga de validar el formulario completo de producto
 export const validacionProducto = (valoresCampos) => {
     const textCampoObligatorio = "Este campo es obligatorio"
 
@@ -45,6 +46,7 @@ export const validacionProducto = (valoresCampos) => {
 
 }
 
+// Funcion que se encarga de validar los campos del formulario de producto al perder el foco
 export const productoValidacionOnBlur = (campo, valor) => {
 
     const textCampoObligatorio = "Este campo es obligatorio"

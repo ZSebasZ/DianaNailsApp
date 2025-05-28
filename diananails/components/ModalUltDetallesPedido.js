@@ -1,18 +1,19 @@
-import { Modal, Pressable, StyleSheet, Text, View, FlatList } from "react-native"
+import { Modal, StyleSheet, Text, View, FlatList } from "react-native"
 import { useThemedStyles } from "../hooks/useThemeStyles"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { ImagenNombre } from "./ImagenNombre";
 import { BotonTexto } from "./BotonTexto";
-import { useState } from "react";
 import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 
-
-
+// Modal ModalUltDetallesPedido
 export const ModalUltDetallesPedido = (props) => {
 
+    // Obtenemos los colores del tema
     const tema = useThemedStyles()
+
+    // Obtenemos las fuentes
     const fuenteTexto = fuenteTextoStyles();
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         modalFondo: {
             flex: 1,
@@ -46,6 +47,7 @@ export const ModalUltDetallesPedido = (props) => {
         }
     })
 
+    // Renderizamos el componente
     return (
         <Modal
             animationType="slide"

@@ -2,11 +2,16 @@ import { StyleSheet, Text, Image, View } from "react-native"
 import { useThemedStyles } from "../hooks/useThemeStyles"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
+// Componente ImagenNombre
 export const ImagenNombre = (props) => {
+
+    // Obtenemos los colores del tema
     const tema = useThemedStyles()
 
+    // Imagen por defecto
     const imgDefault = require("./../assets/images/perfilDefault.png");
 
+    // Estilos del componente
     const styles = StyleSheet.create({
        textClienteOpinion: {
             fontFamily: props.textNormal ? "GantariRegular" : "GantariBold",
@@ -15,8 +20,7 @@ export const ImagenNombre = (props) => {
         },
     })
 
-
-
+    // Renderizamos el componente
     return (
         <View style={{flexDirection: "row", alignItems: "center", gap: 10}}>
             <View>

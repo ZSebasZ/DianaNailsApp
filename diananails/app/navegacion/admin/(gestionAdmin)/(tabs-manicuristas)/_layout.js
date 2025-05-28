@@ -11,6 +11,7 @@ export default function TabsAdminLayout() {
     const styles = useThemedStyles(tabsMainLabelStyles);
     const colors = useThemedStyles();
 
+    //Definimos las tabs de la gestión de manicuristas
     return (
         <View style={{ flex: 1 }}>
             <BarraSuperior mostrarVolverAtras={true}/>

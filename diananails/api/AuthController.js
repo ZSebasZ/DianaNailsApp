@@ -1,25 +1,28 @@
 import { api } from "./ApiService";
 
-const IMGUR_CLIENT_ID = "fe29c6d3f1dde1a";
+const IMGUR_CLIENT_ID = "fe29c6d3f1dde1a"; // KEY para subir imagenes a Imgur
 
+// Funcion para registrar un cliente con la API
 export const registroCliente = async (datos) => {
     try {
-        const clienteRegistrado = await api("POST", "register-cliente", datos); // Llamamos al servicio
-        return clienteRegistrado;  // Devolvemos los datos para ser usados por las pantallas
+        const clienteRegistrado = await api("POST", "register-cliente", datos);
+        return clienteRegistrado;
     } catch (error) {
         throw error;
     }
 };
 
+// Funciones para loguear un cliente con la API
 export const loginCliente = async (datos) => {
     try {
-        const clienteLogueado = await api("POST", "login", datos); // Llamamos al servicio
-        return clienteLogueado;  // Devolvemos los datos para ser usados por las pantallas
+        const clienteLogueado = await api("POST", "login", datos);
+        return clienteLogueado;
     } catch (error) {
         throw error;
     }
 };
 
+// Funcion para subir la foto del usuario y actualizarla
 export const fotoUsuario = async (datos) => {
     try {
         let urlImagen = null
@@ -40,25 +43,26 @@ export const fotoUsuario = async (datos) => {
             const data = await respuesta.json();
 
             if (data.success) {
-                console.log("Imagen subida", data.data.link);
+                //console.log("Imagen subida", data.data.link);
                 urlImagen = data.data.link
             } else {
-                console.error("Error al subir:", data);
-                console.log("Error al subir", data.data.error);
+                //console.error("Error al subir:", data);
+                //console.log("Error al subir", data.data.error);
             }
         }
 
         const fotoUsuario = await api("POST", "update-foto-usuario", {idUsuario: datos.idUsuario, urlImagen: urlImagen}); // Llamamos al servicio
-        return fotoUsuario;  // Devolvemos los datos para ser usados por las pantallas
+        return fotoUsuario;
     } catch (error) {
         throw error;
     }
 };
 
+// Funcion para obtener los datos del perfil del usuario
 export const datosPerfilUsuario = async (datos) => {
     try {
-        const datosPerfil = await api("POST", "datos-perfil", datos); // Llamamos al servicio
-        return datosPerfil;  // Devolvemos los datos para ser usados por las pantallas
+        const datosPerfil = await api("POST", "datos-perfil", datos);
+        return datosPerfil;
     } catch (error) {
         throw error;
     }

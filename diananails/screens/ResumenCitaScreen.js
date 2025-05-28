@@ -1,5 +1,4 @@
-import { View, Text, useColorScheme, ScrollView, FlatList } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, ScrollView, FlatList } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { useState } from "react";
@@ -14,22 +13,22 @@ import { useContext } from "react";
 import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 import { AuthContext } from "../contexts/authContext";
 import { agendarCita } from "../api/AgendarCitaController";
-import { router } from "expo-router";
 import { ModalLoader } from "../components/ModalLoader";
 import { ModalFeedback } from "../components/ModalFeedback";
 
 
-//Pantalla de Login
+//Pantalla de ResumenCita
 export const ResumenCitaScreen = () => {
 
+    // Estilos y fuentes
+    const fuenteTexto = fuenteTextoStyles();
+    const styles = useThemedStyles(resumenCitaStyles);
+
+    // Usamos el contexto de autenticacion y de agendar cita
     const { usuario } = useContext(AuthContext)
     const { subtotal, serviciosSeleccionados, tiempoTotal, fecha, hora, manicurista, metodoPago, reiniciarContexto, setPasoAgendamiento } = useContext(AgendarCitaContext)
 
-    const manicuristaImg = "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-    const fuenteTexto = fuenteTextoStyles();
-    //Estilos
-    const styles = useThemedStyles(resumenCitaStyles);
-
+    // Funcion que calcula el tiempo requerido
     const calcularTiempoRequerido = (lapsos) => {
         const totalMinutos = lapsos * 15;
         const horas = Math.floor(totalMinutos / 60);
@@ -47,13 +46,10 @@ export const ResumenCitaScreen = () => {
         return resultado || "0 minutos";
     };
 
-    const [enviando, setEnviando] = useState(false);
-
+    // Funcion para agendar la cita
     const agendarCitaCliente = async () => {
         try {
-            setModalLoaderVisible(true)
-            //console.log(fecha)
-            
+            setModalLoaderVisible(true)            
             const idsServicios = serviciosSeleccionados.map(servicio => servicio.id);
             const respuesta = await agendarCita({
                 idCliente: usuario.datosUsuario.id,
@@ -64,23 +60,18 @@ export const ResumenCitaScreen = () => {
                 precio: subtotal,
                 idMetodoPago: metodoPago.idMetodoPago
             })
-                
-                
             setModalLoaderVisible(false)
             setModalFeedbackVisible(true)
-            //reiniciarContexto()
-            //router.replace("/navegacion/cliente/(tabs-cliente)/(agendarCita)/")
-            console.log(respuesta)
-            
         } catch (error) {
             console.error("Error al agendar cita:", error)
         }
     }
 
-
+    // Estados de los modales
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
 
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
 

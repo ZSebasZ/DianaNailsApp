@@ -56,7 +56,7 @@ const nuevoServicio = (req, res) => {
 
 }
 
-//Creamos la funcion que se encarga de la OBTENCION de un SERVICIO
+//Creamos la funcion que se encarga de la OBTENCION de un SERVICIO - ADMIN
 const getServicio = (req, res) => {
 
 

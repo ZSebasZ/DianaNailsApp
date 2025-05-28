@@ -1,5 +1,4 @@
-import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, ScrollView, FlatList, Text } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { carritoClienteStyles } from '../styles/carritoClienteStyles';
@@ -18,19 +17,25 @@ import { BotonIcono } from "../components/BotonIcono";
 import { ModalConfirmarAccion } from "../components/ModalConfirmarAccion";
 import { ModalUltDetallesPedido } from "../components/ModalUltDetallesPedido";
 
-//Pantalla de Login
+//Pantalla de CarritoCliente
 export const CarritoClienteScreen = () => {
 
-    const [subtotal, setSubtotal] = useState(0)
-    const [metodoPago, setMetodoPago] = useState(null)
+    // Estilos y fuentes
+    const fuenteTexto = fuenteTextoStyles();
+    const styles = useThemedStyles(carritoClienteStyles);
+
+    // Usamos el contexto de autenticación y del carrito
     const { usuario } = useContext(AuthContext)
     const { carritoProductos, dispatch } = useCarrito()
 
+    // Estados
+    const [subtotal, setSubtotal] = useState(0)
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
     const [modalConfirmarAccion, setModalConfirmarAccion] = useState(false)
     const [modalUltDetallesPedido, setModalUltDetallesPedido] = useState(false)
 
+    // Metodos de pago
     const metodosPago = [
         {
             idMetodoPago: 3,
@@ -42,29 +47,27 @@ export const CarritoClienteScreen = () => {
         }
     ]
 
+    // Estado para almacenar el metodo de pago
     const [metodoPagoSelec, setMetodoPagoSelec] = useState({idMetodoPago: null, metodoPago: null})
 
-    const fuenteTexto = fuenteTextoStyles();
-    //Estilos
-    const styles = useThemedStyles(carritoClienteStyles);
-
+    // Metodo para calcular el subtotal
     useEffect(() => {
         setSubtotal(calcularTotal(carritoProductos))
-        console.log(carritoProductos)
-        //console.log(carritoProductos)
     }, [])
 
-
+    // Metodo para calcular el subtotal
     const calcularTotal = (items) => {
         return items.reduce((total, item) => {
             return total + item.precio * item.cantidad;
         }, 0);
     };
 
+    // Metodo para calcular el subtotal cuando cambia el carrito
     useEffect(() => {
         setSubtotal(calcularTotal(carritoProductos))
     }, [carritoProductos])
 
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
 

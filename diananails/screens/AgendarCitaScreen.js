@@ -1,5 +1,4 @@
-import { View, useColorScheme, ScrollView, FlatList, Text } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, ScrollView, FlatList, Text } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { agendarCitaStyles } from '../styles/agendarCitaStyles';
@@ -9,19 +8,21 @@ import { CardServicio } from "../components/CardServicio";
 import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerServicios";
 import { BarraResumen } from "../components/BarraResumen";
 import { useContext, useEffect, useState } from 'react';
-import { fetchFromApi } from '../api/ApiService';
 import { BackHandler } from 'react-native';
-import { router } from "expo-router";
 import { useRootNavigationState } from "expo-router";
 import { obtenerServicios } from "../api/ServiciosController";
 import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 import { ModalServiciosSelec } from "../components/ModalServiciosSelec";
 
-//Pantalla de Login
+// Pantalla de AgendarCita
 export const AgendarCitaScreen = () => {
 
+    // Estilos y fuentes
+    const fuenteTexto = fuenteTextoStyles();
+    const styles = useThemedStyles(agendarCitaStyles);
+    
+    // Logica para salir de la app con darle al boton de atras
     const rootState = useRootNavigationState();
-
     useEffect(() => {
         const onBackPress = () => {
             if (!rootState) return false;
@@ -44,15 +45,14 @@ export const AgendarCitaScreen = () => {
         return () => backHandler.remove();
     }, [rootState]);
 
+    // Usamos el contexto
     const { serviciosSeleccionados, alternarSeleccionServicio, fecha, resetHoraManicuristas, subtotal, setPasoAgendamiento } = useContext(AgendarCitaContext)
 
-    const fuenteTexto = fuenteTextoStyles();
-    //Estilos
-    const styles = useThemedStyles(agendarCitaStyles);
-
+    // Estados
     const [servicios, setServicios] = useState(null)
     const [modalServiciosSelec, setModalServiciosSelec] = useState(false)
 
+    // Cargamos los servicios
     useEffect(() => {
         const cargarServicios = async () => {
             const respuesta = await obtenerServicios(); // esto ya es el array correcto
@@ -62,14 +62,14 @@ export const AgendarCitaScreen = () => {
         cargarServicios();
     }, [])
 
+    // Si los servicios cambian, reiniciamos la hora y manicurista escogida
     useEffect(() => {
         if (fecha != null) {
             resetHoraManicuristas()
         }
     }, [serviciosSeleccionados])
 
-
-
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
 

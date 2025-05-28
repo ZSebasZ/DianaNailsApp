@@ -4,14 +4,15 @@ import { useThemedStyles } from '../hooks/useThemeStyles';
 import { BotonIcono } from "./BotonIcono";
 import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { BotonTexto } from "./BotonTexto";
-import { useContext } from "react";
-import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 
+// Componente BarraResumen
 export const BarraResumen = (props) => {
 
-    const tema = useThemedStyles() // Acceder al contexto
+    // Obtenemos los colores del tema y las fuentes
+    const tema = useThemedStyles()
     const fuenteTexto = fuenteTextoStyles();
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         cotenedorBarraResumen: {
             flexDirection: "row",
@@ -50,6 +51,7 @@ export const BarraResumen = (props) => {
 
     })
 
+    // Funcion que formatea el precio
     function formatearPrecio(num) {
         // Formatear con dos decimales fijos
         let precio = num.toFixed(2);
@@ -65,7 +67,7 @@ export const BarraResumen = (props) => {
         return `${entero}.${decimal}`;
     }
 
-
+    // Renderizamos el componente
     return (
         <View style={styles.cotenedorBarraResumen}>
             {props.botonVolver && (

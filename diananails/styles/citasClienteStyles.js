@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
+// Estilos para la screen de las citas del cliente
 export const citasClienteStyles = (colors) => StyleSheet.create({
     contenedorCitas: {
         padding: 10,

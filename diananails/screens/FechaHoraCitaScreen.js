@@ -1,5 +1,4 @@
-import { View, useColorScheme, FlatList, ScrollView, Text } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, FlatList, ScrollView, Text } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { fechaHoraStyles } from "../styles/fechaHoraStyles";
@@ -8,7 +7,6 @@ import { SeccionEnTab } from "../components/SeccionEnTab";
 import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
 import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerServicios";
 import { BarraResumen } from "../components/BarraResumen";
-import { ListaDropdown } from "../components/ListaDropdown";
 import { useContext, useEffect, useState } from "react";
 import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 import { BotonTexto } from "../components/BotonTexto";
@@ -16,7 +14,7 @@ import { obtenerHorasManicuristasDisponibles } from "../api/AgendarCitaControlle
 import { AuthContext } from "../contexts/authContext";
 import { ModalServiciosSelec } from "../components/ModalServiciosSelec";
 
-
+// Configuracion del calendario en español
 LocaleConfig.locales['es'] = {
     monthNames: [
         'Enero',
@@ -40,37 +38,33 @@ LocaleConfig.locales['es'] = {
 
 LocaleConfig.defaultLocale = 'es';
 
-//Pantalla de Login
+//Pantalla de FechaHoraCita
 export const FechaHoraCitaScreen = () => {
 
-    const { usuario } = useContext(AuthContext)
-    const { serviciosSeleccionados, subtotal, fecha, seleccionarFecha, hora, manicuristas, seleccionarHora, resetHoraManicuristas, setPasoAgendamiento } = useContext(AgendarCitaContext)
-
-
+    // Estilos, tema y fuentes
     const fuenteTexto = fuenteTextoStyles();
-    //Estilos
     const styles = useThemedStyles(fechaHoraStyles);
     const tema = useThemedStyles()
 
+    // Usamos el contexto de autenticación y agendar cita
+    const { usuario } = useContext(AuthContext)
+    const { serviciosSeleccionados, subtotal, fecha, seleccionarFecha, hora, seleccionarHora, resetHoraManicuristas, setPasoAgendamiento } = useContext(AgendarCitaContext)
+
+    // Estados
     const [horasManicuristas, setHorasManicuristas] = useState(null)
     const [modalServiciosSelec, setModalServiciosSelec] = useState(false)
 
-
+    // Funcion para seleccionar la fecha
     const diaSeleccionado = async (dia) => {
         const fecha = new Date(dia.dateString);
-        const diaSemana = fecha.getDay(); // 0: Domingo, 6: Sábado
-
-
-        if (diaSemana === 0 || diaSemana === 6) {
+        const diaSemana = fecha.getDay();
+        if (diaSemana === 0 || diaSemana === 6 || horasManicuristas == null) {
             return;
         }
-
-        // day.dateString tiene la fecha en formato 'YYYY-MM-DD'
-        //console.log('Fecha seleccionada:', dia.dateString);
-        //setFechaSeleccionada(day.dateString);
         seleccionarFecha(dia.dateString)
     };
 
+    // UseEffect para cargar las horas cada vez que la fecha cambie
     useEffect(() => {
         if (fecha != null) {
             const cargarHoras = async () => {
@@ -78,24 +72,20 @@ export const FechaHoraCitaScreen = () => {
                 const idsServicios = serviciosSeleccionados.map(servicio => servicio.id);
                 const respuesta = await obtenerHorasManicuristasDisponibles({ idCliente: usuario.datosUsuario.id, fecha: fecha, servicios: idsServicios }) // esto ya es el array correcto
                 setHorasManicuristas(Object.values(respuesta));
-                //console.log(Object.values(respuesta))
-                //setHorasManicuristas({ mensaje: "noHoras" })
-                //console.log("cambiamos horas")
             };
-
             cargarHoras();
             resetHoraManicuristas()
         }
     }, [fecha])
 
+    // UseEffect para seleccionar la fecha actual
     useEffect(() => {
         if (fecha == null) {
-            console.log("tin")
             seleccionarFecha(obtenerFechaActual())
         }
     }, [])
 
-
+    // Funcion para obtener la fecha actual
     const obtenerFechaActual = () => {
         const hoy = new Date();
         const diaSemana = hoy.getDay(); // 0 = domingo, 6 = sábado
@@ -115,8 +105,7 @@ export const FechaHoraCitaScreen = () => {
         return `${yyyy}-${mm}-${dd}`;
     };
 
-
-
+    // Fecha minima
     const hoy = new Date();
 
     const yyyy = hoy.getFullYear();
@@ -125,7 +114,7 @@ export const FechaHoraCitaScreen = () => {
 
     const fechaMin = `${yyyy}-${mm}-${dd}`; // hoy
 
-    // Fecha max 30 días después
+    // Fecha maxima, 30 dias a partir de hoy
     const fechaMaxDate = new Date(hoy);
     fechaMaxDate.setDate(hoy.getDate() + 30);
 
@@ -135,6 +124,7 @@ export const FechaHoraCitaScreen = () => {
 
     const fechaMax = `${yyyyMax}-${mmMax}-${ddMax}`;
 
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
             <ModalServiciosSelec

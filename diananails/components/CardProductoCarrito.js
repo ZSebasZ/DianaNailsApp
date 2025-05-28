@@ -4,14 +4,16 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { BotonTexto } from "./BotonTexto";
 import { ContadorCantidadProducto } from "./ContadorCantidadProducto";
 
-
-
+// Componente CardProductoCarrito
 export const CardProductoCarrito = (props) => {
+
+    // Obtenemos los colores del tema
     const tema = useThemedStyles()
 
+    // Obtenemos una imagen por defecto para el producto
     const productoImgDefault = require("./../assets/images/producto.png");
 
-
+    // Estilos del componente
     const styles = StyleSheet.create({
         contenedorProducto: {
             backgroundColor: tema.secondaryContainer,
@@ -47,6 +49,7 @@ export const CardProductoCarrito = (props) => {
         }
     })
 
+    // Funcion que formatea el precio
     function formatearPrecio(num) {
         // Formatear con dos decimales fijos
         let precio = num.toFixed(2);
@@ -62,6 +65,7 @@ export const CardProductoCarrito = (props) => {
         return `${entero}.${decimal}`;
     }
 
+    // Renderizamos el componente
     return (
         <View>
             <Pressable style={styles.contenedorProducto}>

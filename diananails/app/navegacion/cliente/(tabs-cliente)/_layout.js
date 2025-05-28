@@ -11,6 +11,7 @@ export default function TabsClienteLayout() {
     const styles = useThemedStyles(tabsMainLabelStyles);
     const colors = useThemedStyles();
 
+    //Definimos las tabs principales la screen del cliente
     return (
         <View style={{ flex: 1 }}>
             {<BarraSuperior/>}

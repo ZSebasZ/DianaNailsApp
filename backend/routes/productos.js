@@ -10,22 +10,13 @@ router.get("/get-productos", getProductos)
 //Creamos la ruta para la OBTENCION de los PRODUCTOS - ADMIN
 router.post("/get-productos-admin", getProductosAdmin)
 
-//Creamos la ruta para la OBTENCION de los SERVICIOS
+//Creamos la ruta para la OBTENCION de los detalles de un PRODUCTO
 router.get("/get-producto-detalles", getProductoDetalles)
 
 //Creamos la ruta para la INSERCION de un nuevo PRODUCTO
 router.post("/nuevo-producto", nuevoProducto)
-//JSON DE PRUEBA
-/*
-    {
-        "url_imagen": "",
-        "nombre": "Producto prueba",
-        "descripcion": "Descripcion nuevo producto",
-        "precio": 14.50,
-        "stock": 10
-    }
-*/
 
+//Creamos la ruta para la OBTENCION de un PRODUCTO - ADMIN
 router.post("/get-producto", getProducto)
 
 //Creamos la ruta para la ACTUALIZACION de un nuevo PRODUUCTO

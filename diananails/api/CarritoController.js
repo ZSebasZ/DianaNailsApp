@@ -1,50 +1,50 @@
 import { api } from "./ApiService";
 
+// Funciones para obtener los productos del carrito de la API
 export const obtenerCarritoProductos = async (carrito, cliente) => {
     try {
-        //console.log(`get-productos?carrito=${carrito}`)
-        const carritoCliente = await api("POST", `get-carrito-productos`, { idCarrito: carrito, idCliente: cliente }); // Llamamos al servicio
-        return carritoCliente;  // Devolvemos los datos para ser usados por las pantallas
+        const carritoCliente = await api("POST", `get-carrito-productos`, { idCarrito: carrito, idCliente: cliente });
+        return carritoCliente;
     } catch (error) {
         throw error;
     }
 };
 
+// Funcion para añadir un producto al carrito con la API
 export const anadirCarritoProducto = async (carrito, producto, cantidad) => {
     try {
-        //console.log(`get-productos?carrito=${carrito}`)
-        const productoAnadido = await api("POST", `nuevo-carrito-producto`, { idCarrito: carrito, idProducto: producto, cantidad: cantidad }); // Llamamos al servicio
-        return productoAnadido;  // Devolvemos los datos para ser usados por las pantallas
+        const productoAnadido = await api("POST", `nuevo-carrito-producto`, { idCarrito: carrito, idProducto: producto, cantidad: cantidad });
+        return productoAnadido;
     } catch (error) {
         throw error;
     }
 };
 
+// Funcion para actualizar la cantidad de un producto en el carrito con la API
 export const actualizarCarritoCantidadProducto = async (carrito, producto, cantidad) => {
     try {
-        //console.log(`get-productos?carrito=${carrito}`)
-        const productoAnadido = await api("PATCH", `update-carrito-producto`, { idCarrito: carrito, idProducto: producto, cantidad: cantidad }); // Llamamos al servicio
-        return productoAnadido;  // Devolvemos los datos para ser usados por las pantallas
+        const productoAnadido = await api("PATCH", `update-carrito-producto`, { idCarrito: carrito, idProducto: producto, cantidad: cantidad });
+        return productoAnadido;
     } catch (error) {
         throw error;
     }
 };
 
+// Funcion para hacer el pedido del carrito con la API
 export const hacerPedidoCarrito = async (carrito, cliente, metodoPago, total) => {
     try {
-        //console.log(`get-productos?carrito=${carrito}`)
-        const productoAnadido = await api("PATCH", `nuevo-pedido-cliente`, {idCarrito: carrito, idCliente: cliente, idMetodoPago: metodoPago, total: total}); // Llamamos al servicio
-        return productoAnadido;  // Devolvemos los datos para ser usados por las pantallas
+        const productoAnadido = await api("PATCH", `nuevo-pedido-cliente`, {idCarrito: carrito, idCliente: cliente, idMetodoPago: metodoPago, total: total});
+        return productoAnadido;
     } catch (error) {
         throw error;
     }
 };
 
+// Funcion para vaciar el carrito con la API
 export const vaciarCarrito = async (carrito) => {
     try {
-        //console.log(`get-productos?carrito=${carrito}`)
-        const carritoVaciado = await api("DELETE", `vaciar-carrito`, {idCarrito: carrito}); // Llamamos al servicio
-        return carritoVaciado;  // Devolvemos los datos para ser usados por las pantallas
+        const carritoVaciado = await api("DELETE", `vaciar-carrito`, {idCarrito: carrito});
+        return carritoVaciado;
     } catch (error) {
         throw error;
     }

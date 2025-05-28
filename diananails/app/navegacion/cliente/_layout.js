@@ -1,9 +1,9 @@
 // app/navegacion/cliente/_layout.js
-import { Slot, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import { CarritoProvider } from "../../../contexts/carritoContext";
-import BarraSuperior from "../../../components/BarraSuperior";
 
 export default function ClienteLayout() {
+  //Envolvemos el Stack con el proveedor de carrito
   return (
     <CarritoProvider>
       <Stack

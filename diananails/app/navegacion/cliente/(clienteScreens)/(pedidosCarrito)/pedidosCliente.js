@@ -3,6 +3,7 @@ import { PedidosClienteScreen } from '../../../../../screens/PedidosClienteScree
 import BarraSuperior from '../../../../../components/BarraSuperior';
 
 export default function PedidosCliente() {
+    //Renderizamos la screen PedidosClienteScreen
     return (
         <>
             <BarraSuperior />

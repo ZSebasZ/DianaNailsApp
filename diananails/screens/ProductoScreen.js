@@ -1,5 +1,4 @@
-import { View, useColorScheme, ScrollView, Text } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, ScrollView, Text } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { productoStyles } from '../styles/productoStyles';
@@ -13,41 +12,50 @@ import { obtenerProductoDetalles } from "../api/ProductosController";
 import { useCarrito } from "../contexts/carritoContext";
 import { anadirCarritoProducto } from "../api/CarritoController";
 
-//Pantalla de Login
+//Pantalla de Productos
 export const ProductoScreen = (props) => {
 
-    const { usuario } = useContext(AuthContext)
-    const [producto, setProducto] = useState(null)
-    const [cantidadProducto, setCantidadProducto] = useState(1)
-    const { carritoProductos, dispatch } = useCarrito()
-    const [subtotal, setSubtotal] = useState(0)
-
+    // Estilos y fuentes
     const fuenteTexto = fuenteTextoStyles();
-
-    const productoImgDefault = require("./../assets/images/manicurista.jpg")
-    //Estilos
     const styles = useThemedStyles(productoStyles);
 
+    // Usamos el contexto de autenticación
+    const { usuario } = useContext(AuthContext)
+
+    // Usamos el contexto del carrito
+    const { carritoProductos, dispatch } = useCarrito()
+
+    // Estados
+    const [producto, setProducto] = useState(null)
+    const [cantidadProducto, setCantidadProducto] = useState(1)
+    const [subtotal, setSubtotal] = useState(0)
+
+    // Imagen por defecto
+    const productoImgDefault = require("./../assets/images/manicurista.jpg")
+
+    // UseEffect para obtener los productos
     useEffect(() => {
         const obtenerProducto = async () => {
             const respuesta = await obtenerProductoDetalles(usuario.datosUsuario.id_carrito, props.idProducto)
             setProducto(respuesta[0])
-            //console.log(respuesta[0])
             setSubtotal(calcularTotal(carritoProductos))
         }
         obtenerProducto()
     }, [])
 
+    // UseEffect para calcular el subtotal
     useEffect(() => {
         setSubtotal(calcularTotal(carritoProductos))
     }, [carritoProductos])
 
+    // Funcion para calcular el subtotal
     const calcularTotal = (items) => {
         return items.reduce((total, item) => {
             return total + item.precio * item.cantidad;
         }, 0);
     };
 
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
             <View style={{ flex: 1, paddingHorizontal: 10 }}>

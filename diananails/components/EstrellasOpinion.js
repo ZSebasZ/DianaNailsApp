@@ -3,11 +3,14 @@ import { useThemedStyles } from "../hooks/useThemeStyles";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Icono } from "./Icono";
-import { useEffect, useState } from "react";
 
+// Componente EstrellasOpinion
 export const EstrellasOpinion = (props) => {
+
+    // Obtenemos los colores del tema
     const tema = useThemedStyles();
 
+    // Estilos del componente
     const styles = StyleSheet.create({
         contenedor: {
             flexDirection: "row",
@@ -20,6 +23,7 @@ export const EstrellasOpinion = (props) => {
         },
     });
 
+    // Función que maneja la selección de las estrellas
     const manejarSeleccion = (indice) => {
         const nuevaValoracion = indice + 1;
         if (props.tipo === "filtro") {
@@ -31,6 +35,7 @@ export const EstrellasOpinion = (props) => {
         props.onSeleccion(nuevaValoracion);
     };
 
+    // Renderizamos el componente
     return (
         <View style={styles.contenedor}>
             {[0, 1, 2, 3, 4].map((i) => (

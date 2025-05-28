@@ -1,5 +1,4 @@
-import { View, Text, useColorScheme, ScrollView, Alert } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, ScrollView, Alert } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { perfilStyles } from '../styles/perfilStyles';
@@ -11,9 +10,7 @@ import { BotonIconoTexto } from "../components/BotonIconoTexto";
 import { BotonTexto } from "../components/BotonTexto";
 import { TomarEscogerImagen } from "../components/TomarEscogerImagen";
 import { CampoTextoInput } from "../components/CampoTextoInput";
-import { useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { datosPerfilUsuario, eliminarCuentaCliente, fotoUsuario } from "../api/AuthController";
+import { eliminarCuentaCliente, fotoUsuario } from "../api/AuthController";
 import { AuthContext } from "../contexts/authContext";
 import { Stack } from "expo-router";
 import { Keyboard } from "react-native";
@@ -22,24 +19,24 @@ import { ModalLoader } from "../components/ModalLoader";
 import { ModalFeedback } from "../components/ModalFeedback";
 import { ModalConfirmarAccion } from "../components/ModalConfirmarAccion";
 
-const IMGUR_CLIENT_ID = "fe29c6d3f1dde1a";
-
-//Pantalla de Login
+//Pantalla de Perfil
 export const PerfilScreen = () => {
 
+    //Estilos y fuentes
+    const styles = useThemedStyles(perfilStyles);
+    const fuenteTexto = fuenteTextoStyles();
+
+    // Usamos el contexto de autenticación
     const { usuario, actualizarFotoUsuario, updateDatos, cerrarSesion } = useContext(AuthContext)
 
+    // Estados de los modales
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
     const [modalFeedbackActuDatosVisible, setModalFeedbackActuDatosVisible] = useState(false)
     const [modalFeedbackActuFotoVisible, setModalFeedbackActuFotoVisible] = useState(false)
     const [modalConfirmarAccion, setModalConfirmarAccion] = useState(false)
 
-
-    //Estilos
-    const styles = useThemedStyles(perfilStyles);
-    const fuenteTexto = fuenteTextoStyles();
-
+    // Estados para gestionar validaciones del formulario
     const [deshabilitadoBtnGuardarFoto, setDeshabilitadoBtnGuardarFoto] = useState(true)
     const [errores, setErrores] = useState({})
     const [valoresCampos, setValoresCampos] = useState({
@@ -55,10 +52,12 @@ export const PerfilScreen = () => {
         })
     })
 
+    // Funcion para ir asignando valores al estado valoresCampos
     const onValueChange = (nombreCampo, valor) => {
         setValoresCampos({ ...valoresCampos, [nombreCampo]: valor })
     }
 
+    // Funcion para enviar el formulario
     const onSubmit = async () => {
         Keyboard.dismiss()
         const validacionErrores = validacionUpdateDatos(valoresCampos)
@@ -77,20 +76,23 @@ export const PerfilScreen = () => {
         }
     }
 
+    // Estados de la imagen
     const [imageUri, setImageUri] = useState(null);
     const [imageBase64, setImageBase64] = useState(null);
 
+    // Funcion que pide permisos para abrir la camara y acceder a la galeria
     const pedirPermisos = async () => {
         const permisoCamara = await ImagePicker.requestCameraPermissionsAsync();
         const permisoGaleria = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
         if (!permisoCamara.granted || !permisoGaleria.granted) {
-            Alert.alert('Permisos requeridos', 'Necesitas otorgar permisos para usar la cámara y la galería.');
+            //Alert.alert('Permisos requeridos', 'Necesitas otorgar permisos para usar la cámara y la galería.');
             return false;
         }
         return true;
     };
 
+    // Funcion para tomar una foto
     const tomarFoto = async () => {
         const permiso = await pedirPermisos();
         if (!permiso) return;
@@ -112,6 +114,7 @@ export const PerfilScreen = () => {
         }
     };
 
+    // Funcion para seleccionar una foto de la galeria
     const seleccionarDeGaleria = async () => {
         const permiso = await pedirPermisos();
         if (!permiso) return;
@@ -133,6 +136,7 @@ export const PerfilScreen = () => {
         }
     };
 
+    // Funcion para eliminar la foto
     const eliminarFotoUsuario = async () => {
         try {
             setModalLoaderVisible(true)
@@ -146,6 +150,7 @@ export const PerfilScreen = () => {
         }
     };
 
+    // Funcion para subir la imagen a Imgur
     const nuevaFotoUsuario = async () => {
         console.log("boton guardar")
         if (imageUri != null) {
@@ -170,6 +175,7 @@ export const PerfilScreen = () => {
         }
     };
 
+    // Funcion para eliminar la cuenta
     const eliminarCuenta = async () => {
         try {
             setModalConfirmarAccion(false)
@@ -182,6 +188,7 @@ export const PerfilScreen = () => {
         }
     }
 
+    // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
             <Stack.Screen

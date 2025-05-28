@@ -1,4 +1,4 @@
-import React, { createContext } from 'react'; // Importamos React y creamos el contexto
+import { createContext } from 'react'; // Importamos React y creamos el contexto
 import { useColorScheme } from 'react-native'; // Hook para detectar si el teléfono usa tema claro u oscuro
 import { lightTheme, darkTheme } from './../themes/theme'; // Importamos los temas
 

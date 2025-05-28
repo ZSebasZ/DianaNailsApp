@@ -1,5 +1,6 @@
 import { regex, estaVacio } from "../utils/regexCamposUtils";
 
+// Funcion que se encarga de validar el formulario completo de servicio
 export const validacionServicio = (valoresCampos) => {
     const textCampoObligatorio = "Este campo es obligatorio"
 
@@ -27,6 +28,7 @@ export const validacionServicio = (valoresCampos) => {
 
 }
 
+// Funcion que se encarga de validar los campos del formulario de servicio al perder el foco
 export const servicioValidacionOnBlur = (campo, valor) => {
 
     const textCampoObligatorio = "Este campo es obligatorio"

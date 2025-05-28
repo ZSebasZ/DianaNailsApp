@@ -1,5 +1,6 @@
 import { regex, estaVacio } from "../utils/regexCamposUtils";
 
+// Funcion que se encarga de validar el formulario completo de opinion
 export const validacionOpinion = (valoresCampos) => {
     const textCampoObligatorio = "Este campo es obligatorio"
 
@@ -27,6 +28,7 @@ export const validacionOpinion = (valoresCampos) => {
 
 }
 
+// Funcion que se encarga de validar los campos del formulario de opinion al perder el foco
 export const opinionValidacionOnBlur = (campo, valor) => {
 
     const textCampoObligatorio = "Este campo es obligatorio"
