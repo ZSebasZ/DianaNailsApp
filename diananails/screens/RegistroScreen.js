@@ -13,6 +13,8 @@ import { registroCliente } from "../api/AuthController";
 import { ModalFeedback } from "../components/ModalFeedback";
 import { ModalLoader } from "../components/ModalLoader";
 import { AuthContext } from "../contexts/authContext";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de Registro
 export const RegistroScreen = () => {
@@ -49,6 +51,9 @@ export const RegistroScreen = () => {
     //Estados de los modales
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
+    
 
     // Funcion para ir asignando valores al estado valoresCampos
     const onValueChange = (nombreCampo, valor) => {
@@ -67,16 +72,10 @@ export const RegistroScreen = () => {
                 const respuesta = await registroCliente(valoresCampos);
                 setModalFeedbackVisible(true)
             } catch (error) {
-                const mensajeError = error.response?.data?.mensaje || 'Ocurrió un error inesperado';
-                console.error(mensajeError)
-
-                /*
-                if (mensajeError.includes("correo")) {
-                    setErrores({ ...errores, email: mensajeError });
-                }
-                */
+                setModalLoaderVisible(false)
+                setModalErrorAPI(true)
             } finally {
-                setModalLoaderVisible(false); // Ocultar loader
+                setModalLoaderVisible(false);
             }
         }
     }
@@ -102,6 +101,13 @@ export const RegistroScreen = () => {
                     headerShown: false
                 }}
             />
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
+            
             <ModalLoader
                 visible={modalLoaderVisible}
             />

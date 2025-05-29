@@ -18,6 +18,8 @@ import { productoValidacionOnBlur, validacionProducto } from "../validaciones/pr
 import { actualizarProducto, obtenerProducto, subirImagenImgur } from "../api/ProductosController";
 import { manicuristaValidacionOnBlur, validacionManicurista } from "../validaciones/manicuristaValidacion";
 import { actualizarManicurista, obtenerManucurista } from "../api/ManicuristasController";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de GestionEdicion
 export const GestionEdicionScreen = (props) => {
@@ -95,6 +97,8 @@ export const GestionEdicionScreen = (props) => {
     // Estados para los modales
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
 
     // Estados para las validaciones
     const [errores, setErrores] = useState({});
@@ -115,7 +119,8 @@ export const GestionEdicionScreen = (props) => {
 
                         setTiempoContador(respuesta[0].horas_requeridas);
                     } catch (error) {
-                        console.error("Error al obtener servicio:", error);
+                        setModalLoaderVisible(false)
+                        setModalErrorAPI(true)
                     }
                     break;
 
@@ -130,7 +135,8 @@ export const GestionEdicionScreen = (props) => {
                             stock: respuesta[0].stock.toString(),
                         });
                     } catch (error) {
-                        console.error("Error al obtener servicio:", error);
+                        setModalLoaderVisible(false)
+                        setModalErrorAPI(true)
                     }
                     break;
 
@@ -146,7 +152,8 @@ export const GestionEdicionScreen = (props) => {
                             email: respuesta[0].email,
                         });
                     } catch (error) {
-                        console.error("Error al obtener la manicurista:", error);
+                        setModalLoaderVisible(false)
+                        setModalErrorAPI(true)
                     }
                     break;
                 default:
@@ -239,7 +246,8 @@ export const GestionEdicionScreen = (props) => {
                 setModalLoaderVisible(false)
                 setModalFeedbackVisible(true)
             } catch (error) {
-                console.error("error al añadir el servicio", error)
+                setModalLoaderVisible(false)
+                setModalErrorAPI(true)
             }
         }
     }
@@ -267,7 +275,8 @@ export const GestionEdicionScreen = (props) => {
                 setModalFeedbackVisible(true)
 
             } catch (error) {
-                console.error("error al añadir el servicio", error)
+                setModalLoaderVisible(false)
+                setModalErrorAPI(true)
             }
         }
     }
@@ -292,7 +301,8 @@ export const GestionEdicionScreen = (props) => {
                 setModalFeedbackVisible(true)
 
             } catch (error) {
-                console.error("error al añadir la manicurista", error)
+                setModalLoaderVisible(false)
+                setModalErrorAPI(true)
             }
         }
     }
@@ -307,7 +317,8 @@ export const GestionEdicionScreen = (props) => {
                 setValoresCampos({ ...valoresCampos, imagen: respuesta })
                 return respuesta
             } catch (error) {
-                console.error("Error al subir la nueva foto del usuario:", error);
+                setModalLoaderVisible(false)
+                setModalErrorAPI(true)
             }
         }
     };
@@ -315,6 +326,12 @@ export const GestionEdicionScreen = (props) => {
     // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
 
             <ModalLoader
                 visible={modalLoaderVisible}

@@ -12,6 +12,8 @@ import { BotonTexto } from "../components/BotonTexto";
 import { validacionLogin, loginValidacionOnBlur } from "../validaciones/loginValidacion";
 import { ModalLoader } from "../components/ModalLoader";
 import { AuthContext } from "../contexts/authContext";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de Login
 export const LoginScreen = () => {
@@ -38,6 +40,8 @@ export const LoginScreen = () => {
 
     //Estado del modal
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
 
     // Funcion para ir asignando valores al estado valoresCampos
     const onValueChange = (nombreCampo, valor) => {
@@ -73,8 +77,8 @@ export const LoginScreen = () => {
                         break;
                 }
             } catch (error) {
-                const mensajeError = error.response?.data?.mensaje || 'Ocurrió un error inesperado';
-                console.log(mensajeError)
+                setModalLoaderVisible(false)
+                setModalErrorAPI(true)
                 setCredencialesIncorrectas(true)
             } finally {
                 setModalLoaderVisible(false);

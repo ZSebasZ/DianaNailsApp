@@ -18,6 +18,8 @@ import { productoValidacionOnBlur, validacionProducto } from "../validaciones/pr
 import { nuevoProducto, subirImagenImgur } from "../api/ProductosController";
 import { manicuristaValidacionOnBlur, validacionManicurista } from "../validaciones/manicuristaValidacion";
 import { nuevaManicurista } from "../api/ManicuristasController";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 
 //Pantalla de GestionAgregar
@@ -96,6 +98,8 @@ export const GestionAgregarScreen = (props) => {
     // Estados de los modales
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
 
     // Estados para la validacion
     const [errores, setErrores] = useState({});
@@ -207,7 +211,8 @@ export const GestionAgregarScreen = (props) => {
                 setModalLoaderVisible(false)
                 setModalFeedbackVisible(true)
             } catch (error) {
-                console.error("error al añadir el servicio", error)
+                setModalLoaderVisible(false)
+                setModalErrorAPI(true)
             }
         }
     }
@@ -227,9 +232,9 @@ export const GestionAgregarScreen = (props) => {
                 resetFormulario()
                 setModalLoaderVisible(false)
                 setModalFeedbackVisible(true)
-
             } catch (error) {
-                console.error("error al añadir el servicio", error)
+                setModalLoaderVisible(false)
+                setModalErrorAPI(true)
             }
         }
     }
@@ -250,7 +255,8 @@ export const GestionAgregarScreen = (props) => {
                 setModalLoaderVisible(false)
                 setModalFeedbackVisible(true)
             } catch (error) {
-                console.error("error al añadir el servicio", error)
+                setModalLoaderVisible(false)
+                setModalErrorAPI(true)
             }
         }
     }
@@ -265,7 +271,8 @@ export const GestionAgregarScreen = (props) => {
                 setValoresCampos({ ...valoresCampos, imagen: respuesta })
                 return respuesta
             } catch (error) {
-                console.error("Error al subir la nueva foto del usuario:", error);
+                setModalLoaderVisible(false)
+                setModalErrorAPI(true)
             }
         }
     };
@@ -273,6 +280,12 @@ export const GestionAgregarScreen = (props) => {
     // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
 
             <ModalLoader
                 visible={modalLoaderVisible}

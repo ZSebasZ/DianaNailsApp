@@ -14,6 +14,8 @@ import { ModalLoader } from "../components/ModalLoader";
 import { ModalFeedback } from "../components/ModalFeedback";
 import { AuthContext } from "../contexts/authContext";
 import { obtenerOpiniones, realizarOpinion } from "../api/OpinionesController";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de Opiniones
 export const OpinionesScreen = () => {
@@ -44,6 +46,8 @@ export const OpinionesScreen = () => {
     // Estados para los modales
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
 
     //Funcion en ir asignando valores al estado valoresCampos
     const onValueChange = (nombreCampo, valor) => {
@@ -65,13 +69,8 @@ export const OpinionesScreen = () => {
                 setModalFeedbackVisible(true)
                 cargarOpiniones()
             } catch (error) {
-                const mensajeError = error.response?.data?.mensaje || 'Ocurrió un error inesperado';
-                console.error(mensajeError)
-                /*
-                if (mensajeError.includes("correo")) {
-                    setErrores({ ...errores, email: mensajeError });
-                }
-                */
+                setModalLoaderVisible(false)
+                setModalErrorAPI(true)
             }
         }
     }
@@ -88,12 +87,18 @@ export const OpinionesScreen = () => {
 
     // Funciones que se encargan de la obtencion de las opiniones
     const cargarOpiniones = async () => {
-        const respuesta = await obtenerOpiniones(valoresFiltro); // esto ya es el array correcto
-        if (respuesta.length != 0) {
-            setOpiniones(respuesta);
-        } else {
-            setOpiniones(null)
+        try {
+            const respuesta = await obtenerOpiniones(valoresFiltro);
+            if (respuesta.length != 0) {
+                setOpiniones(respuesta);
+            } else {
+                setOpiniones(null)
+            }
+        } catch (error) {
+            setModalLoaderVisible(false)
+            setModalErrorAPI(true)
         }
+
     };
 
     // UseEffect para cargar las opiniones
@@ -101,7 +106,8 @@ export const OpinionesScreen = () => {
         try {
             cargarOpiniones();
         } catch {
-            console.error("Error al obtener las citas")
+            setModalLoaderVisible(false)
+            setModalErrorAPI(true)
         }
     }, [])
 
@@ -115,12 +121,23 @@ export const OpinionesScreen = () => {
 
     // UseEffect para cargar las opiniones segun el filtro
     useEffect(() => {
-        cargarOpiniones();
+        try {
+            cargarOpiniones();
+        } catch {
+            setModalLoaderVisible(false)
+            setModalErrorAPI(true)
+        }
     }, [valoresFiltro]);
 
     // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
 
             <ModalLoader
                 visible={modalLoaderVisible}

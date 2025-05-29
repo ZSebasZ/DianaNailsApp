@@ -13,6 +13,7 @@ import { useRootNavigationState } from "expo-router";
 import { obtenerServicios } from "../api/ServiciosController";
 import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 import { ModalServiciosSelec } from "../components/ModalServiciosSelec";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
 
 // Pantalla de AgendarCita
 export const AgendarCitaScreen = () => {
@@ -20,7 +21,7 @@ export const AgendarCitaScreen = () => {
     // Estilos y fuentes
     const fuenteTexto = fuenteTextoStyles();
     const styles = useThemedStyles(agendarCitaStyles);
-    
+
     // Logica para salir de la app con darle al boton de atras
     const rootState = useRootNavigationState();
     useEffect(() => {
@@ -51,12 +52,17 @@ export const AgendarCitaScreen = () => {
     // Estados
     const [servicios, setServicios] = useState(null)
     const [modalServiciosSelec, setModalServiciosSelec] = useState(false)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
 
     // Cargamos los servicios
     useEffect(() => {
         const cargarServicios = async () => {
-            const respuesta = await obtenerServicios(); // esto ya es el array correcto
-            setServicios(respuesta);
+            try {
+                const respuesta = await obtenerServicios(); // esto ya es el array correcto
+                setServicios(respuesta);
+            } catch (error) {
+                setModalErrorAPI(true)
+            }
         };
 
         cargarServicios();
@@ -73,11 +79,17 @@ export const AgendarCitaScreen = () => {
     return (
         <Screen enTab={true}>
 
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"No se pudo cargar los servicios"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
+
             <ModalServiciosSelec
                 editable={true}
                 servicios={serviciosSeleccionados}
                 visible={modalServiciosSelec}
-                cerrar={() => {setModalServiciosSelec(false)}}
+                cerrar={() => { setModalServiciosSelec(false) }}
                 eliminarServicio={alternarSeleccionServicio}
             />
 
@@ -127,8 +139,8 @@ export const AgendarCitaScreen = () => {
 
                 </ScrollView>
             </View>
-            <BotonesCancelarVerServicios 
-                verServicios={() => {setModalServiciosSelec(true)}}
+            <BotonesCancelarVerServicios
+                verServicios={() => { setModalServiciosSelec(true) }}
             />
             <BarraResumen
                 onPress={() => {

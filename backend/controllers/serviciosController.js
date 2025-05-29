@@ -8,7 +8,7 @@ const getServicios = (req, res) => {
     //return res.status(200).json({"mensaje": "exito"})
 
     //Sentencia SQL para la obtencion de los datos
-    const queryObtenerServicios = "SELECT id, url_imagen, nombre, precio, horas_requeridas FROM servicios"
+    const queryObtenerServicios = "SELECT id, nombre, precio, horas_requeridas FROM servicios"
 
     //Hacemos la query para la obtencion de los servicios
     connection.query(queryObtenerServicios, (error, results) => {

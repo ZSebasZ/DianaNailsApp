@@ -13,6 +13,8 @@ import { BotonTexto } from "../components/BotonTexto";
 import { obtenerHorasManicuristasDisponibles } from "../api/AgendarCitaController";
 import { AuthContext } from "../contexts/authContext";
 import { ModalServiciosSelec } from "../components/ModalServiciosSelec";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 // Configuracion del calendario en español
 LocaleConfig.locales['es'] = {
@@ -53,6 +55,8 @@ export const FechaHoraCitaScreen = () => {
     // Estados
     const [horasManicuristas, setHorasManicuristas] = useState(null)
     const [modalServiciosSelec, setModalServiciosSelec] = useState(false)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
 
     // Funcion para seleccionar la fecha
     const diaSeleccionado = async (dia) => {
@@ -68,10 +72,14 @@ export const FechaHoraCitaScreen = () => {
     useEffect(() => {
         if (fecha != null) {
             const cargarHoras = async () => {
-                setHorasManicuristas(null)
-                const idsServicios = serviciosSeleccionados.map(servicio => servicio.id);
-                const respuesta = await obtenerHorasManicuristasDisponibles({ idCliente: usuario.datosUsuario.id, fecha: fecha, servicios: idsServicios }) // esto ya es el array correcto
-                setHorasManicuristas(Object.values(respuesta));
+                try {
+                    setHorasManicuristas(null)
+                    const idsServicios = serviciosSeleccionados.map(servicio => servicio.id);
+                    const respuesta = await obtenerHorasManicuristasDisponibles({ idCliente: usuario.datosUsuario.id, fecha: fecha, servicios: idsServicios }) // esto ya es el array correcto
+                    setHorasManicuristas(Object.values(respuesta));
+                } catch (error) {
+                    setModalErrorAPI(true)
+                }
             };
             cargarHoras();
             resetHoraManicuristas()
@@ -127,12 +135,19 @@ export const FechaHoraCitaScreen = () => {
     // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
+
             <ModalServiciosSelec
                 editable={false}
                 servicios={serviciosSeleccionados}
                 visible={modalServiciosSelec}
                 cerrar={() => { setModalServiciosSelec(false) }}
-                
+
             />
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
@@ -211,8 +226,8 @@ export const FechaHoraCitaScreen = () => {
                     />*/}
                 </ScrollView>
             </View>
-            <BotonesCancelarVerServicios 
-                verServicios={() => {setModalServiciosSelec(true)}}
+            <BotonesCancelarVerServicios
+                verServicios={() => { setModalServiciosSelec(true) }}
             />
             <BarraResumen
                 onPress={() => {

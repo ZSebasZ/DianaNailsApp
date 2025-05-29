@@ -12,6 +12,8 @@ import { AuthContext } from "../contexts/authContext";
 import { ModalLoader } from "../components/ModalLoader";
 import { ModalFeedback } from "../components/ModalFeedback";
 import { ModalActuPedido } from "../components/ModalActuPedido";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 
 //Pantalla de PedidosAdmin
@@ -32,17 +34,25 @@ export const PedidosAdminScreen = () => {
     const [modalActuPedido, setModalActuPedido] = useState(false)
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
 
     // Funcion para obtener los pedidos
     const obtenerPedidos = async () => {
-        setModalLoaderVisible(true)
-        const respuesta = await obtenerPedidosClientes(usuario.datosUsuario.id, filtro)
-        if (respuesta.length > 0) {
-            setPedidos(respuesta)
-        } else {
-            setPedidos(null)
+        try {
+            setModalLoaderVisible(true)
+            const respuesta = await obtenerPedidosClientes(usuario.datosUsuario.id, filtro)
+            if (respuesta.length > 0) {
+                setPedidos(respuesta)
+            } else {
+                setPedidos(null)
+            }
+            setModalLoaderVisible(false)
+        } catch (error) {
+            setModalLoaderVisible(false)
+            setModalErrorAPI(true)
         }
-        setModalLoaderVisible(false)
+
     }
 
     // UseEffect para cargar los pedidos
@@ -54,21 +64,26 @@ export const PedidosAdminScreen = () => {
     useEffect(() => {
         setModalLoaderVisible(true)
         const obtenerPedidos = async () => {
-            const respuesta = await obtenerPedidosClientes(usuario.datosUsuario.id, filtro)
-            setPedidos(respuesta)
-            if (respuesta.length > 0) {
+            try {
+                const respuesta = await obtenerPedidosClientes(usuario.datosUsuario.id, filtro)
                 setPedidos(respuesta)
-            } else {
-                setPedidos(null)
-            }
-            setModalLoaderVisible(false)
-            switch (filtro) {
-                case "Pendiente de envío":
-                    setTextoModalActuPedido("¿Desea cambiar el estado de este pedido a ENVIADO?")
-                    break;
-                case "Enviado":
-                    setTextoModalActuPedido("¿Desea cambiar el estado de este pedido a ENTREGADO?")
-                    break;
+                if (respuesta.length > 0) {
+                    setPedidos(respuesta)
+                } else {
+                    setPedidos(null)
+                }
+                setModalLoaderVisible(false)
+                switch (filtro) {
+                    case "Pendiente de envío":
+                        setTextoModalActuPedido("¿Desea cambiar el estado de este pedido a ENVIADO?")
+                        break;
+                    case "Enviado":
+                        setTextoModalActuPedido("¿Desea cambiar el estado de este pedido a ENTREGADO?")
+                        break;
+                }
+            } catch (error) {
+                setModalLoaderVisible(false)
+                setModalErrorAPI(true)
             }
         }
         obtenerPedidos()
@@ -76,25 +91,36 @@ export const PedidosAdminScreen = () => {
 
     // Funcion para actualizar el estado del pedido
     const actualizarEstadoPedido = async () => {
-        setModalActuPedido(false)
-        setModalLoaderVisible(true)
-        switch (filtro) {
-            case "Pendiente de envío":
-                await actualizarPedidoEstado(pedidoSeleccionado, filtro)
-                break;
-            case "Enviado":
-                await actualizarPedidoEstado(pedidoSeleccionado, filtro)
-                break;
+        try {
+            setModalActuPedido(false)
+            setModalLoaderVisible(true)
+            switch (filtro) {
+                case "Pendiente de envío":
+                    await actualizarPedidoEstado(pedidoSeleccionado, filtro)
+                    break;
+                case "Enviado":
+                    await actualizarPedidoEstado(pedidoSeleccionado, filtro)
+                    break;
+            }
+            await obtenerPedidos()
+            setModalLoaderVisible(false)
+            setModalFeedbackVisible(true)
+            setPedidoSeleccionado(null)
+        } catch (error) {
+            setModalLoaderVisible(false)
+            setModalErrorAPI(true)
         }
-        await obtenerPedidos()
-        setModalLoaderVisible(false)
-        setModalFeedbackVisible(true)
-        setPedidoSeleccionado(null)
     }
 
     // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
 
             <ModalLoader
                 visible={modalLoaderVisible}

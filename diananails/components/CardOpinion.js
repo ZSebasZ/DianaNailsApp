@@ -51,6 +51,16 @@ export const CardOpinion = (props) => {
         },
     })
 
+    // Funcion que formatea la fecha
+    function formatearFechaManual(fechaStr) {
+        const meses = [
+            'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+            'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+        ];
+        const [año, mes, dia] = fechaStr.split('-');
+        return `${parseInt(dia)} de ${meses[parseInt(mes) - 1]} de ${año}`;
+    }
+
     // Renderizamos el componente
     return (
         <View style={styles.contenedorOpinion}>
@@ -59,7 +69,7 @@ export const CardOpinion = (props) => {
                 imagen={props.clienteImg}
                 nombre={props.clienteNombre}
             />
-            <Text style={styles.textFechaOpinion}>{props.fecha.split('T')[0]}</Text>
+            <Text style={styles.textFechaOpinion}>{formatearFechaManual(props.fecha)}</Text>
             <Text style={styles.textTextoOpinion}>{props.opinion}</Text>
             <View style={[styles.contenedorEstrellas, { justifyContent: "flex-start" }]}>
                 {[...Array(5)].map((_, i) => (

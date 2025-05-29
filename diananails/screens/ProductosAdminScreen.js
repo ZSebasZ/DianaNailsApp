@@ -9,6 +9,8 @@ import { CardProducto } from "../components/CardProducto";
 import { AuthContext } from "./../contexts/authContext"
 import { obtenerProductosAdmin, obtenerProductosTienda } from "../api/ProductosController";
 import { useFocusEffect } from "expo-router";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de ProductosAdmin
 export const ProductosAdminScreen = () => {
@@ -23,11 +25,18 @@ export const ProductosAdminScreen = () => {
     // Estado de productos
     const [productos, setProductos] = useState(null)
 
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
+
     // UseEffect para obtener los productos
     useEffect(() => {
         const obtenerProductos = async () => {
-            const respuesta = await obtenerProductosAdmin(usuario.datosUsuario.id)
-            setProductos(respuesta)
+            try {
+                const respuesta = await obtenerProductosAdmin(usuario.datosUsuario.id)
+                setProductos(respuesta)
+            } catch (error) {
+                setModalErrorAPI(true)
+            }
         }
         obtenerProductos()
     }, [])
@@ -36,8 +45,12 @@ export const ProductosAdminScreen = () => {
     useFocusEffect(
         useCallback(() => {
             const obtenerProductos = async () => {
-                const respuesta = await obtenerProductosTienda(usuario.datosUsuario.id_carrito)
-                setProductos(respuesta)
+                try {
+                    const respuesta = await obtenerProductosTienda(usuario.datosUsuario.id_carrito)
+                    setProductos(respuesta)
+                } catch (error) {
+                    setModalErrorAPI(true)
+                }
             }
             obtenerProductos()
         }, [])
@@ -46,6 +59,13 @@ export const ProductosAdminScreen = () => {
     // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
+
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <SeccionEnTab

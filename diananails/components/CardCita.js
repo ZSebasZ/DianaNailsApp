@@ -55,6 +55,16 @@ export const CardCita = (props) => {
         return `${entero}.${decimal}`;
     }
 
+    // Funcion que formatea la fecha
+    function formatearFechaManual(fechaStr) {
+        const meses = [
+            'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+            'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+        ];
+        const [año, mes, dia] = fechaStr.split('-');
+        return `${parseInt(dia)} de ${meses[parseInt(mes) - 1]} de ${año}`;
+    }
+
     // Renderizamos el componente
     return (
         <View>
@@ -91,7 +101,7 @@ export const CardCita = (props) => {
                     <View>
                         <View style={{ flexDirection: "row" }}>
                             <Text style={styles.textSubTituloInfoCita}>Fecha: </Text>
-                            <Text style={styles.textInfoCita}>{props.datosCita.fecha.split('T')[0]}</Text>
+                            <Text style={styles.textInfoCita}>{formatearFechaManual(props.datosCita.fecha)}</Text>
                         </View>
                         <View style={{ flexDirection: "row" }}>
                             <Text style={styles.textSubTituloInfoCita}>Hora: </Text>

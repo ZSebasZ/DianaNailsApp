@@ -12,6 +12,8 @@ import { ModalConfirmarAccion } from "../components/ModalConfirmarAccion";
 import { ModalLoader } from "../components/ModalLoader";
 import { ModalFeedback } from "../components/ModalFeedback";
 import { BotonTexto } from "../components/BotonTexto";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de CitasCliente
 export const CitasClienteScreen = () => {
@@ -29,12 +31,19 @@ export const CitasClienteScreen = () => {
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
     const [citaSeleccionada, setCitaSeleccionada] = useState(null)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
 
-    
+
+
     // Funcion para cargar las citas
     const cargarCitas = async () => {
-        const respuesta = await obtenerCitas(usuario.datosUsuario.id)// esto ya es el array correcto
-        setCitas(respuesta.citas);
+        try {
+            const respuesta = await obtenerCitas(usuario.datosUsuario.id)// esto ya es el array correcto
+            setCitas(respuesta.citas);
+        } catch (error) {
+            setModalLoaderVisible(false)
+            setModalErrorAPI(true)
+        }
     };
 
     // UseEffect para cargar las citas
@@ -48,19 +57,26 @@ export const CitasClienteScreen = () => {
             setModalConfirmarAccion(false)
             setModalLoaderVisible(true)
             const respuesta = await cancelarCita(usuario.datosUsuario.id, citaSeleccionada)
-            console.log(respuesta)
             setModalLoaderVisible(false)
             setModalFeedbackVisible(true)
             await cargarCitas();
             setCitaSeleccionada(null)
         } catch (error) {
-            console.error("Error al borrar la cita")
+            setModalLoaderVisible(false)
+            setModalErrorAPI(true)
         }
     }
 
     // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
+
             <ModalLoader
                 visible={modalLoaderVisible}
             />

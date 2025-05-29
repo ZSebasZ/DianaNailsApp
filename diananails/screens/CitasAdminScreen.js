@@ -8,6 +8,8 @@ import { CardCita } from "../components/CardCita";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/authContext";
 import { obtenerCitasClientes } from "../api/CitasController";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de CitasAdmin
 export const CitasAdminScreen = () => {
@@ -21,11 +23,18 @@ export const CitasAdminScreen = () => {
 
     // Estados
     const [citas, setCitas] = useState(null)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
 
     // Funcion para cargar las citas
     const cargarCitas = async () => {
-        const respuesta = await obtenerCitasClientes(usuario.datosUsuario.id)// esto ya es el array correcto
-        setCitas(respuesta.citas);
+        try {
+            const respuesta = await obtenerCitasClientes(usuario.datosUsuario.id)// esto ya es el array correcto
+            setCitas(respuesta.citas);
+        } catch (error) {
+            setModalErrorAPI(true)
+        }
+
     };
 
     // UseEffect para cargar las citas
@@ -36,6 +45,13 @@ export const CitasAdminScreen = () => {
     //Renderizamos la pantalla
     return (
         <Screen enTab={true}>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
+
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <SeccionEnTab

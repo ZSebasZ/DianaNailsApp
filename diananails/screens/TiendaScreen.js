@@ -12,6 +12,8 @@ import { obtenerProductosTienda } from "../api/ProductosController";
 import { anadirCarritoProducto, obtenerCarritoProductos } from "../api/CarritoController";
 import { useCarrito } from "../contexts/carritoContext";
 import { useFocusEffect } from "expo-router";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de Tienda
 export const TiendaScreen = () => {
@@ -27,12 +29,18 @@ export const TiendaScreen = () => {
     // Estados
     const [productos, setProductos] = useState(null)
     const [subtotal, setSubtotal] = useState(0)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
 
     // UseEffect para obtener los productos
     useEffect(() => {
         const obtenerProductos = async () => {
-            const respuesta = await obtenerProductosTienda(usuario.datosUsuario.id_carrito)
-            setProductos(respuesta)
+            try {
+                const respuesta = await obtenerProductosTienda(usuario.datosUsuario.id_carrito)
+                setProductos(respuesta)
+            } catch (error) {
+                setModalErrorAPI(true)
+            }
         }
         obtenerProductos()
     }, [])
@@ -61,14 +69,22 @@ export const TiendaScreen = () => {
     useFocusEffect(
         useCallback(() => {
             const obtenerProductos = async () => {
-                const respuesta = await obtenerProductosTienda(usuario.datosUsuario.id_carrito)
-                setProductos(respuesta)
+                try {
+                    const respuesta = await obtenerProductosTienda(usuario.datosUsuario.id_carrito)
+                    setProductos(respuesta)
+                } catch (error) {
+                    setModalErrorAPI(true)
+                }
             }
 
             const cargarCarrito = async () => {
-                const respuesta = await obtenerCarritoProductos(usuario.datosUsuario.id_carrito, usuario.datosUsuario.id)
-                dispatch({ type: 'CARGAR_CARRITO', payload: respuesta });
-                setSubtotal(calcularTotal(respuesta))
+                try {
+                    const respuesta = await obtenerCarritoProductos(usuario.datosUsuario.id_carrito, usuario.datosUsuario.id)
+                    dispatch({ type: 'CARGAR_CARRITO', payload: respuesta });
+                    setSubtotal(calcularTotal(respuesta))
+                } catch (error) {
+                    setModalErrorAPI(true)
+                }
             }
             obtenerProductos()
             if (carritoProductos.length == 0 && carritoCargado == false) {
@@ -80,6 +96,13 @@ export const TiendaScreen = () => {
     // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
+
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <SeccionEnTab
@@ -117,8 +140,12 @@ export const TiendaScreen = () => {
                                     enCarrito={item.enCarrito}
                                     agotado={item.agotado}
                                     onAnadir={async () => {
-                                        await anadirCarritoProducto(usuario.datosUsuario.id_carrito, item.id, 1)
-                                        dispatch({ type: 'ANADIR_PRODUCTO', payload: { id_producto: item.id, nombre: item.nombre, cantidad: 1, precio: item.precio, stock: item.stock } });
+                                        try {
+                                            await anadirCarritoProducto(usuario.datosUsuario.id_carrito, item.id, 1)
+                                            dispatch({ type: 'ANADIR_PRODUCTO', payload: { id_producto: item.id, nombre: item.nombre, cantidad: 1, precio: item.precio, stock: item.stock } });
+                                        } catch (error) {
+                                            setModalErrorAPI(true)
+                                        }
                                     }}
                                 />
                             }

@@ -16,6 +16,8 @@ import { useRootNavigationState } from "expo-router";
 import { AuthContext } from '../contexts/authContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de Inicio
 export const InicioScreen = () => {
@@ -52,6 +54,9 @@ export const InicioScreen = () => {
     // Estado para verificar la sesion
     const [verificandoSesion, setVerificandoSesion] = useState(true);
 
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
+
     // UseEffect para verificar la sesion
     useEffect(() => {
         const verificarSesion = async () => {
@@ -59,30 +64,31 @@ export const InicioScreen = () => {
                 const email = await AsyncStorage.getItem("email");
                 const contrasena = await AsyncStorage.getItem("contrasena");
 
+                console.log("email", email)
+                console.log("contrasena", contrasena)
+
+
                 if (email && contrasena) {
                     const respuesta = await login({ email, contrasena })
                     switch (respuesta.tipoUsuario) {
                         case 0:
                             router.push("/navegacion/admin/")
-                            //console.log("ADMIN")
                             break;
                         case 1:
                             router.push("/navegacion/manicurista/")
-                            console.log("MANICURISTA")
                             break;
                         case 2:
                             router.push("/navegacion/cliente/")
-                            console.log("CLIENTE")
                             break;
                         default:
-                            console.log("NO SE HA CARGADO TIPO USUARIO")
                             break;
                     }
                 } else {
                     setVerificandoSesion(false);
                 }
+
             } catch (error) {
-                console.log("Error al verificar la sesión:", error);
+                setModalErrorAPI(true)
             }
         };
         verificarSesion();
@@ -91,6 +97,13 @@ export const InicioScreen = () => {
     // Renderizamos la pantalla
     return (
         <Screen>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
+
             <StatusBar style="auto" />
             {verificandoSesion == true ? (
                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>

@@ -10,6 +10,8 @@ import { router } from "expo-router";
 import { obtenerServicios } from "../api/ServiciosController";
 import { useCallback } from "react";
 import { useFocusEffect } from "expo-router";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de Login
 export const ServiciosAdminScreen = () => {
@@ -46,13 +48,19 @@ export const ServiciosAdminScreen = () => {
     // Estados de los servicios
     const [servicios, setServicios] = useState(null)
 
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
+
     // UseEffect para obtener los servicios
     useEffect(() => {
         const cargarServicios = async () => {
-            const respuesta = await obtenerServicios();
-            setServicios(respuesta);
+            try {
+                const respuesta = await obtenerServicios();
+                setServicios(respuesta);
+            } catch (error) {
+                setModalErrorAPI(true)
+            }
         };
-
         cargarServicios();
     }, [])
 
@@ -60,8 +68,12 @@ export const ServiciosAdminScreen = () => {
     useFocusEffect(
         useCallback(() => {
             const cargarServicios = async () => {
-                const respuesta = await obtenerServicios();
-                setServicios(respuesta);
+                try {
+                    const respuesta = await obtenerServicios();
+                    setServicios(respuesta);
+                } catch (error) {
+                    setModalErrorAPI(true)
+                }
             };
             cargarServicios();
         }, [])
@@ -70,6 +82,13 @@ export const ServiciosAdminScreen = () => {
     //Renderizamos la pantalla
     return (
         <Screen enTab={true}>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
+
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
 
                 <ScrollView showsVerticalScrollIndicator={false}>

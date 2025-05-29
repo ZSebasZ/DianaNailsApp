@@ -1,12 +1,13 @@
 -- Creacion de la base de datos
--- CREATE DATABASE IF NOT EXISTS diananailsapp
+DROP DATABASE IF EXISTS diananailsapp;
+CREATE DATABASE IF NOT EXISTS diananailsapp;
 
--- USE diananailsapp
+USE diananailsapp;
 
 -- Tabla usuarios
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    url_imagen VARCHAR(255),
+    url_imagen VARCHAR(255) NULL,
     nombre VARCHAR(50) NOT NULL,
     apellidos VARCHAR(100) NOT NULL,
     telefono VARCHAR(9) NOT NULL,
@@ -17,7 +18,7 @@ CREATE TABLE usuarios (
 -- Tabla clientes (hereda de usuarios)
 CREATE TABLE clientes (
     id INT PRIMARY KEY,
-    direccion_envio VARCHAR(255),
+    direccion_envio VARCHAR(255) NOT NULL,
     FOREIGN KEY (id) REFERENCES usuarios(id)
 );
 
@@ -57,11 +58,10 @@ CREATE TABLE carritos (
 -- Tabla productos
 CREATE TABLE productos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    url_imagen VARCHAR(255) NOT NULL,
+    url_imagen VARCHAR(255) NULL,
     nombre VARCHAR(100) NOT NULL,
     descripcion VARCHAR(255) NOT NULL,
     precio FLOAT NOT NULL,
-    estrellas FLOAT NOT NULL,
     stock INT NOT NULL
 );
 
@@ -113,9 +113,8 @@ CREATE TABLE horas (
 -- Tabla servicios
 CREATE TABLE servicios (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    url_imagen VARCHAR(255) NOT NULL,
     nombre VARCHAR(50) NOT NULL,
-    precio INT NOT NULL,
+    precio FLOAT NOT NULL,
     horas_requeridas INT NOT NULL
 );
 
@@ -125,7 +124,8 @@ CREATE TABLE citas (
     id_manicurista INT NOT NULL,
     id_cliente INT NOT NULL,
     fecha DATE NOT NULL,
-    precio INT NOT NULL,
+    precio FLOAT NOT NULL,
+    id_metodo_pago INT NOT NULL,
     FOREIGN KEY (id_manicurista) REFERENCES manicuristas(id),
     FOREIGN KEY (id_cliente) REFERENCES clientes(id),
     FOREIGN KEY (id_metodo_pago) REFERENCES metodos_pago(id)
@@ -284,59 +284,69 @@ INSERT INTO horas (id, hora, es_laboral) VALUES
 
 -- Datos para la tabla de Administradores, Manicuristas y Clientes
 INSERT INTO usuarios (id, url_imagen, nombre, apellidos, telefono, email, contrasena) VALUES
-(1, '', 'Diana Lorena', 'Jimenez', '657487598', 'admin@diananails.com', 'abc123.'),
-(2, '', 'Sofia', 'Garcia', '666666661', 'sgarcia@diananails.com', 'abc123.'),
-(3, '', 'Ana', 'Ramírez', '666666662', 'nramirez@diananails.com', 'abc123.'),
-(4, '', 'Camila', 'Lopez', '666666663', 'clopez@diananails.com', 'abc123.'),
-(5, '', 'Cliente1', 'Apellido Cliente1', '666666664', 'cliente1@gmail.com', 'abc123.');
+(1, NULL, 'Diana Lorena', 'Jimenez', '657487598', 'admin@diananails.com', 'abc123.'),
+(2, 'https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=600', 'Sofia', 'Garcia', '666666661', 'sgarcia@diananails.com', 'abc123.'),
+-- (3, 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=600', 'Ana', 'Ramírez', '666666662', 'nramirez@diananails.com', 'abc123.'),
+-- (4, 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', 'Camila', 'Lopez', '666666663', 'clopez@diananails.com', 'abc123.'),
+(5, NULL, 'Cliente1', 'Apellido Cliente1', '666666664', 'cliente1@gmail.com', 'abc123.');
 
 INSERT INTO administradores (id, dni) VALUES
 (1, '84811274Q');
 
 INSERT INTO manicuristas (id, dni) VALUES
-(2, '12345678A'),
-(3, '12345678B'),
-(4, '12345678C');
+(2, '12345678A'); -- ,
+-- (3, '12345678B'),
+-- (4, '12345678C');
 
 INSERT INTO clientes (id, direccion_envio) VALUES
-(5, '');
+(5, 'Calle del paseo, 21');
+
+INSERT INTO carritos (id_cliente, subtotal) VALUES 
+(5, 0.00);
 
 -- Datos para la tabal de Servicios
-INSERT INTO servicios (id, url_imagen, nombre, precio, horas_requeridas) VALUES
-(1, '', 'Manicura', 9, 1),
-(2, '', 'Semipermanente básico', 17, 3),
-(3, '', 'Semipermanente con decoración', 20, 4),
-(4, '', 'Retiro de semipermanente', 5, 1),
-(5, '', 'Arreglo de uña semipermanente', 2, 1),
-(6, '', 'Uñas acrílicas', 30, 8),
-(7, '', 'Uñas acrílicas extra largas', 35, 9),
-(8, '', 'Relleno acrílico 1 solo color ', 25, 4),
-(9, '', 'Relleno acrílico con decoración', 30, 6),
-(10, '', 'Arreglo de uña acrílica rota', 5, 1),
-(11, '', 'Retiro de acrílico ', 10, 2),
-(12, '', 'Esmaltado manos tradicional', 12, 2),
-(13, '', 'Refuerzo Kappi 1 solo color', 20, 4),
-(14, '', 'Refuerzo Kappi con decoracion', 25, 6),
-(15, '', 'Pedicura limpieza', 20, 3),
-(16, '', 'Pedicura completa 1 solo color', 25, 4),
-(17, '', 'Pedicura completa con decoración', 28, 5),
-(18, '', 'Esmaltado de pies 1 solo color', 18, 2),
-(19, '', 'Esmaltado de pies con decoración', 21, 3);
+INSERT INTO servicios (id, nombre, precio, horas_requeridas) VALUES
+(1, 'Manicura', 9, 1),
+(2, 'Semipermanente básico', 17, 3),
+(3, 'Semipermanente con decoración', 20, 4),
+(4, 'Retiro de semipermanente', 5, 1),
+(5, 'Arreglo de uña semipermanente', 2, 1),
+(6, 'Uñas acrílicas', 30, 8),
+(7, 'Uñas acrílicas extra largas', 35, 9),
+(8, 'Relleno acrílico 1 solo color ', 25, 4),
+(9, 'Relleno acrílico con decoración', 30, 6),
+(10, 'Arreglo de uña acrílica rota', 5, 1),
+(11, 'Retiro de acrílico ', 10, 2),
+(12, 'Esmaltado manos tradicional', 12, 2),
+(13, 'Refuerzo Kappi 1 solo color', 20, 4),
+(14, 'Refuerzo Kappi con decoracion', 25, 6),
+(15, 'Pedicura limpieza', 20, 3),
+(16, 'Pedicura completa 1 solo color', 25, 4),
+(17, 'Pedicura completa con decoración', 28, 5),
+(18, 'Esmaltado de pies 1 solo color', 18, 2),
+(19, 'Esmaltado de pies con decoración', 21, 3);
 
 -- Datos para la tabla Metodos de pago
 INSERT INTO metodos_pago (metodo) VALUES
 ("Pagar en local"),
-("Tarjeta");
+("Tarjeta"),
+("Efectivo (contra entrega)");
 
 -- Datos para la tabla Productos
-INSERT INTO productos (url_imagen, nombre, descripcion, precio, estrellas, stock) VALUES
-('', 'Esmalte Rosa Pastel', 'Esmalte de uñas color rosa pastel, larga duración.', 5.99, 4.5, 30),
-('', 'Esmalte Rojo Clásico', 'Esmalte de uñas color rojo intenso, secado rápido.', 6.50, 4.7, 25),
-('', 'Kit Básico de Manicura', 'Set de manicura con cortaúñas, lima y empujador de cutículas.', 12.00, 4.8, 15),
-('', 'Crema Hidratante de Manos', 'Crema nutritiva para manos suaves y protegidas.', 8.50, 4.6, 40),
-('', 'Removedor de Cutículas', 'Gel removedor de cutículas para un acabado profesional.', 4.75, 4.4, 20),
-('', 'Limas de Uñas (Pack x5)', 'Juego de limas profesionales para manicura y pedicura.', 3.99, 4.3, 50),
-('', 'Baño Relajante para Pies', 'Sales minerales para baño relajante de pies.', 7.20, 4.2, 18),
-('', 'Kit Pedicura Completo', 'Set profesional de pedicura con piedra pómez, cortaúñas y separadores.', 14.99, 4.7, 10),
-('', 'Base Fortalecedora de Uñas', 'Protector y fortalecedor de uñas antes del esmalte.', 6.80, 4.5, 22),
-('', 'Esmalte en Gel UV', 'Esmalte semipermanente para uñas con acabado brillante.', 9.99, 4.9, 12);
+INSERT INTO productos (url_imagen, nombre, descripcion, precio, stock) VALUES
+(NULL, 'Esmalte Rosa Pastel', 'Esmalte de uñas color rosa pastel, larga duración.', 5.99, 3),
+(NULL, 'Esmalte Rojo Clásico', 'Esmalte de uñas color rojo intenso, secado rápido.', 6.50, 25),
+(NULL, 'Kit Básico de Manicura', 'Set de manicura con cortaúñas, lima y empujador de cutículas.', 12.00, 15),
+(NULL, 'Crema Hidratante de Manos', 'Crema nutritiva para manos suaves y protegidas.', 8.50, 40),
+(NULL, 'Removedor de Cutículas', 'Gel removedor de cutículas para un acabado profesional.', 4.75, 20),
+(NULL, 'Limas de Uñas (Pack x5)', 'Juego de limas profesionales para manicura y pedicura.', 3.99, 50),
+(NULL, 'Baño Relajante para Pies', 'Sales minerales para baño relajante de pies.', 7.20, 18),
+(NULL, 'Kit Pedicura Completo', 'Set profesional de pedicura con piedra pómez, cortaúñas y separadores.', 14.99, 10),
+(NULL, 'Base Fortalecedora de Uñas', 'Protector y fortalecedor de uñas antes del esmalte.', 6.80, 22),
+(NULL, 'Esmalte en Gel UV', 'Esmalte semipermanente para uñas con acabado brillante.', 9.99, 0);
+
+CREATE VIEW `vmanicuristas` 
+AS 
+select `u`.`id` AS `id`,concat(`u`.`nombre`,' ',`u`.`apellidos`) AS `nombre_manicurista`,`u`.`url_imagen` AS `url_imagen` 
+from (`manicuristas` `m` 
+join `usuarios` `u` on((`u`.`id` = `m`.`id`)))

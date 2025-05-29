@@ -1,5 +1,4 @@
-import { View, useColorScheme, ScrollView } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, ScrollView } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { gestionStyles } from '../styles/gestionStyles';

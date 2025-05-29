@@ -10,10 +10,12 @@ import { useContext, useCallback } from "react";
 import { obtenerManicuristasAdmin } from "../api/ManicuristasController";
 import { AuthContext } from "../contexts/authContext";
 import { useFocusEffect } from "expo-router";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de ManicuristasAdmin
 export const ManicuristasAdminScreen = () => {
-    
+
     // Estilos y fuentes
     const fuenteTexto = fuenteTextoStyles();
     const styles = useThemedStyles(manicuristaMetodoPagoStyles);
@@ -23,12 +25,19 @@ export const ManicuristasAdminScreen = () => {
 
     // Estado de las manicuristas
     const [manicuristas, setManicuristas] = useState(null);
-    
+
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
+
     // UseEffect para cargar las manicuristas
     useEffect(() => {
         const obtenerManicuristas = async () => {
-            const respuesta = await obtenerManicuristasAdmin(usuario.datosUsuario.id);
-            setManicuristas(respuesta);
+            try {
+                const respuesta = await obtenerManicuristasAdmin(usuario.datosUsuario.id);
+                setManicuristas(respuesta);
+            } catch (error) {
+                setModalErrorAPI(true)
+            }
         }
         obtenerManicuristas()
     }, [])
@@ -37,8 +46,12 @@ export const ManicuristasAdminScreen = () => {
     useFocusEffect(
         useCallback(() => {
             const obtenerManicuristas = async () => {
-                const respuesta = await obtenerManicuristasAdmin(usuario.datosUsuario.id);
-                setManicuristas(respuesta);
+                try {
+                    const respuesta = await obtenerManicuristasAdmin(usuario.datosUsuario.id);
+                    setManicuristas(respuesta);
+                } catch (error) {
+                    setModalErrorAPI(true)
+                }
             }
             obtenerManicuristas()
         }, [])
@@ -47,6 +60,13 @@ export const ManicuristasAdminScreen = () => {
     // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
+
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
                     <SeccionEnTab

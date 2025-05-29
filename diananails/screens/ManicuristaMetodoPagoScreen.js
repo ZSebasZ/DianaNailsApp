@@ -1,6 +1,5 @@
 import { View, ScrollView, FlatList } from "react-native";
 import { Screen } from '../components/Screen';
-import { useThemedStyles } from '../hooks/useThemeStyles';
 import { useState } from "react";
 import { manicuristaMetodoPagoStyles } from "../styles/manicuristaMetodoPagoStyles";
 import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';

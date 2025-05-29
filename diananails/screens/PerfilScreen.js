@@ -18,6 +18,8 @@ import { validacionUpdateDatos, updateDatosValidacionOnBlur } from "../validacio
 import { ModalLoader } from "../components/ModalLoader";
 import { ModalFeedback } from "../components/ModalFeedback";
 import { ModalConfirmarAccion } from "../components/ModalConfirmarAccion";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de Perfil
 export const PerfilScreen = () => {
@@ -35,6 +37,8 @@ export const PerfilScreen = () => {
     const [modalFeedbackActuDatosVisible, setModalFeedbackActuDatosVisible] = useState(false)
     const [modalFeedbackActuFotoVisible, setModalFeedbackActuFotoVisible] = useState(false)
     const [modalConfirmarAccion, setModalConfirmarAccion] = useState(false)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
 
     // Estados para gestionar validaciones del formulario
     const [deshabilitadoBtnGuardarFoto, setDeshabilitadoBtnGuardarFoto] = useState(true)
@@ -146,13 +150,13 @@ export const PerfilScreen = () => {
             setImageBase64(null)
             setModalLoaderVisible(false)
         } catch (error) {
-            console.error("Error al eliminar la foto del usuario:", error);
+            setModalLoaderVisible(false)
+            setModalErrorAPI(true)
         }
     };
 
     // Funcion para subir la imagen a Imgur
     const nuevaFotoUsuario = async () => {
-        console.log("boton guardar")
         if (imageUri != null) {
             try {
                 setModalLoaderVisible(true)
@@ -160,7 +164,6 @@ export const PerfilScreen = () => {
                     idUsuario: usuario.datosUsuario.id,
                     imagenBase64: imageBase64,
                 });
-
                 actualizarFotoUsuario(respuesta.urlImagen);
                 setDeshabilitadoBtnGuardarFoto(true)
                 setImageUri(null);
@@ -168,7 +171,8 @@ export const PerfilScreen = () => {
                 setModalLoaderVisible(false)
                 setModalFeedbackActuFotoVisible(true)
             } catch (error) {
-                console.error("Error al subir la nueva foto del usuario:", error);
+                setModalLoaderVisible(false)
+                setModalErrorAPI(true)
             }
         } else {
 
@@ -184,7 +188,8 @@ export const PerfilScreen = () => {
             setModalLoaderVisible(false)
             setModalFeedbackVisible(true)
         } catch (error) {
-            console.log(error)
+            setModalLoaderVisible(false)
+            setModalErrorAPI(true)
         }
     }
 
@@ -196,6 +201,13 @@ export const PerfilScreen = () => {
                     headerBackVisible: true,
                 }}
             />
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
+
             <ModalLoader
                 visible={modalLoaderVisible}
             />

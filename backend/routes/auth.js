@@ -14,6 +14,6 @@ router.post("/register-cliente", registerCliente)
 router.get("/get-manicuristas/:idAdmin", getManicuristas)
 
 //Creamos la ruta para resetear contraseñas
-//router.put("/reset-contrasena", resetContrasena)
+router.put("/reset-contrasena", resetContrasena)
 
 export default router;

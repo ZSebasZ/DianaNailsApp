@@ -15,6 +15,8 @@ import { AuthContext } from "../contexts/authContext";
 import { agendarCita } from "../api/AgendarCitaController";
 import { ModalLoader } from "../components/ModalLoader";
 import { ModalFeedback } from "../components/ModalFeedback";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 
 //Pantalla de ResumenCita
@@ -63,17 +65,35 @@ export const ResumenCitaScreen = () => {
             setModalLoaderVisible(false)
             setModalFeedbackVisible(true)
         } catch (error) {
-            console.error("Error al agendar cita:", error)
+            setModalLoaderVisible(false)
+            setModalErrorAPI(true)
         }
     }
 
     // Estados de los modales
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
+    // Funcion que formatea la fecha
+    function formatearFechaManual(fechaStr) {
+        const meses = [
+            'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+            'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+        ];
+        const [año, mes, dia] = fechaStr.split('-');
+        return `${parseInt(dia)} de ${meses[parseInt(mes) - 1]} de ${año}`;
+    }
 
     // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
 
             <ModalLoader
                 visible={modalLoaderVisible}
@@ -156,7 +176,7 @@ export const ResumenCitaScreen = () => {
                         <Text style={styles.textTituloSubSeccion}>Fecha y hora</Text>
                         <View style={styles.contenedorFechaHora}>
                             <Text style={styles.textSubTituloSubSeccion}>Fecha: </Text>
-                            <Text style={styles.textInfoSubSeccion}>{fecha}</Text>
+                            <Text style={styles.textInfoSubSeccion}>{formatearFechaManual(fecha)}</Text>
                         </View>
                         <View style={styles.contenedorFechaHora}>
                             <Text style={styles.textSubTituloSubSeccion}>Hora: </Text>

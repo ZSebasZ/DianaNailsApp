@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Keyboard, FlatList } from "react-native";
+import { View, Text, ScrollView, FlatList } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { opinionesStyles } from '../styles/opinionesStyles';
@@ -7,10 +7,10 @@ import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { BotonTexto } from "../components/BotonTexto";
 import { EstrellasOpinion } from "../components/EstrellasOpinion";
 import { CardOpinion } from "../components/CardOpinion";
-import { useContext, useEffect, useState } from "react";
-import { validacionOpinion } from "../validaciones/opinionValidacion";
-import { AuthContext } from "../contexts/authContext";
-import { obtenerOpiniones, realizarOpinion } from "../api/OpinionesController";
+import { useEffect, useState } from "react";
+import { obtenerOpiniones } from "../api/OpinionesController";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de OpinionesAdmin
 export const OpinionesAdminScreen = () => {
@@ -18,9 +18,6 @@ export const OpinionesAdminScreen = () => {
     // Estilos y fuentes
     const fuenteTexto = fuenteTextoStyles();
     const styles = useThemedStyles(opinionesStyles);
-
-    // Usamos el contexto de autenticación
-    const { usuario } = useContext(AuthContext)
 
     // Estado de las opiniones
     const [opiniones, setOpiniones] = useState(null)
@@ -31,22 +28,30 @@ export const OpinionesAdminScreen = () => {
         estrellas: 0
     })
 
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
+
     // Funciones que se encargan de la obtencion de las opiniones
     const cargarOpiniones = async () => {
-        const respuesta = await obtenerOpiniones(valoresFiltro);
-        if (respuesta.length != 0) {
-            setOpiniones(respuesta);
-        } else {
-            setOpiniones(null)
+        try {
+            const respuesta = await obtenerOpiniones(valoresFiltro);
+            if (respuesta.length != 0) {
+                setOpiniones(respuesta);
+            } else {
+                setOpiniones(null)
+            }
+        } catch (error) {
+            setModalErrorAPI(true)
         }
+
     };
 
     // UseEffect para cargar las citas
     useEffect(() => {
         try {
             cargarOpiniones();
-        } catch {
-            console.error("Error al obtener las citas")
+        } catch (error) {
+            setModalErrorAPI(true)
         }
     }, [])
 
@@ -60,12 +65,23 @@ export const OpinionesAdminScreen = () => {
 
     // UseEffect para cargar las citas segun el filtro
     useEffect(() => {
-        cargarOpiniones();
+        try {
+            cargarOpiniones();
+        } catch (error) {
+            setModalErrorAPI(true)
+        }
     }, [valoresFiltro]);
 
     // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
+
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <SeccionEnTab

@@ -56,6 +56,16 @@ export const CardPedido = (props) => {
         return `${entero}.${decimal}`;
     }
 
+    // Funcion que formatea la fecha
+    function formatearFechaManual(fechaStr) {
+        const meses = [
+            'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+            'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+        ];
+        const [año, mes, dia] = fechaStr.split('-');
+        return `${parseInt(dia)} de ${meses[parseInt(mes) - 1]} de ${año}`;
+    }
+
     // Renderizamos el componente
     return (
         <View>
@@ -123,14 +133,14 @@ export const CardPedido = (props) => {
                 <View style={styles.containerSeccionPedido}>
                     <Text style={styles.textTitleSeccionPedido}>Fecha del pedido</Text>
                     <View>
-                        <Text style={styles.textInfoPedido}>{props.fecha.split(' ')[0]}</Text>
+                        <Text style={styles.textInfoPedido}>{formatearFechaManual(props.fecha.split(' ')[0]) }</Text>
                     </View>
                 </View>
                 <View style={styles.lineaDivisora}></View>
                 <View style={styles.containerSeccionPedido}>
                     <Text style={styles.textTitleSeccionPedido}>Fecha de entrega estimada</Text>
                     <View>
-                        <Text style={styles.textInfoPedido}>{new Date(new Date(props.fecha).setDate(new Date(props.fecha).getDate() + 5)).toISOString().split('T')[0]}</Text>
+                        <Text style={styles.textInfoPedido}>{formatearFechaManual(new Date(new Date(props.fecha).setDate(new Date(props.fecha).getDate() + 5)).toISOString().split('T')[0])}</Text>
                     </View>
                 </View>
                 <View style={styles.lineaDivisora}></View>

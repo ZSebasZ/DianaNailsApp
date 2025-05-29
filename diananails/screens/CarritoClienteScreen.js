@@ -16,6 +16,8 @@ import { router } from "expo-router";
 import { BotonIcono } from "../components/BotonIcono";
 import { ModalConfirmarAccion } from "../components/ModalConfirmarAccion";
 import { ModalUltDetallesPedido } from "../components/ModalUltDetallesPedido";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de CarritoCliente
 export const CarritoClienteScreen = () => {
@@ -34,6 +36,8 @@ export const CarritoClienteScreen = () => {
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
     const [modalConfirmarAccion, setModalConfirmarAccion] = useState(false)
     const [modalUltDetallesPedido, setModalUltDetallesPedido] = useState(false)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
 
     // Metodos de pago
     const metodosPago = [
@@ -48,7 +52,7 @@ export const CarritoClienteScreen = () => {
     ]
 
     // Estado para almacenar el metodo de pago
-    const [metodoPagoSelec, setMetodoPagoSelec] = useState({idMetodoPago: null, metodoPago: null})
+    const [metodoPagoSelec, setMetodoPagoSelec] = useState({ idMetodoPago: null, metodoPago: null })
 
     // Metodo para calcular el subtotal
     useEffect(() => {
@@ -71,6 +75,12 @@ export const CarritoClienteScreen = () => {
     return (
         <Screen enTab={true}>
 
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
+
             <ModalLoader
                 visible={modalLoaderVisible}
             />
@@ -81,7 +91,6 @@ export const CarritoClienteScreen = () => {
                 visible={modalFeedbackVisible}
                 fuenteTexto={fuenteTexto.gantariBold}
                 cerrar={() => {
-                    //reiniciarContexto()
                     setModalFeedbackVisible(false)
                     router.push("../")
                 }}
@@ -94,11 +103,17 @@ export const CarritoClienteScreen = () => {
                     setModalConfirmarAccion(false)
                 }}
                 aceptar={async () => {
-                    setModalConfirmarAccion(false)
-                    setModalLoaderVisible(true)
-                    await vaciarCarrito(usuario.datosUsuario.id_carrito)
-                    dispatch({ type: 'VACIAR_CARRITO' })
-                    setModalLoaderVisible(false)
+                    try {
+                        setModalConfirmarAccion(false)
+                        setModalLoaderVisible(true)
+                        await vaciarCarrito(usuario.datosUsuario.id_carrito)
+                        dispatch({ type: 'VACIAR_CARRITO' })
+                        setModalLoaderVisible(false)
+                    } catch (error) {
+                        setModalLoaderVisible(false)
+                        setModalErrorAPI(true)
+                    }
+
                 }}
             />
             <ModalUltDetallesPedido
@@ -110,15 +125,21 @@ export const CarritoClienteScreen = () => {
                 fuenteTexto={fuenteTexto.gantariBold}
                 cerrar={() => {
                     setModalUltDetallesPedido(false)
-                    setMetodoPagoSelec({idMetodoPago: null, metodoPago: null})
+                    setMetodoPagoSelec({ idMetodoPago: null, metodoPago: null })
                 }}
                 aceptar={async () => {
-                    setModalUltDetallesPedido(false)
-                    setModalLoaderVisible(true)
-                    await hacerPedidoCarrito(usuario.datosUsuario.id_carrito, usuario.datosUsuario.id, metodoPagoSelec.idMetodoPago, subtotal)
-                    dispatch({ type: 'HACER_PEDIDO' })
-                    setModalLoaderVisible(false);
-                    setModalFeedbackVisible(true)
+                    try {
+                        setModalUltDetallesPedido(false)
+                        setModalLoaderVisible(true)
+                        await hacerPedidoCarrito(usuario.datosUsuario.id_carrito, usuario.datosUsuario.id, metodoPagoSelec.idMetodoPago, subtotal)
+                        dispatch({ type: 'HACER_PEDIDO' })
+                        setModalLoaderVisible(false);
+                        setModalFeedbackVisible(true)
+                    } catch (error) {
+                        setModalLoaderVisible(false)
+                        setModalErrorAPI(true)
+                    }
+
                 }}
             />
 
@@ -153,19 +174,36 @@ export const CarritoClienteScreen = () => {
                                     fuenteTextoRegular={fuenteTexto.gantariRegular}
                                     onIncrementar={async () => {
                                         if (item.cantidad < item.stock && item.cantidad < 5) {
-                                            await actualizarCarritoCantidadProducto(usuario.datosUsuario.id_carrito, item.id_producto, 1)
-                                            dispatch({ type: 'ANADIR_PRODUCTO', payload: { ...item } })
+                                            try {
+                                                await actualizarCarritoCantidadProducto(usuario.datosUsuario.id_carrito, item.id_producto, 1)
+                                                dispatch({ type: 'ANADIR_PRODUCTO', payload: { ...item } })
+                                            } catch (error) {
+                                                setModalLoaderVisible(false)
+                                                setModalErrorAPI(true)
+                                            }
+
                                         }
                                     }}
                                     onDecrementar={async () => {
                                         if (item.cantidad > 1) {
-                                            await actualizarCarritoCantidadProducto(usuario.datosUsuario.id_carrito, item.id_producto, -1)
-                                            dispatch({ type: 'QUITAR_CANTIDAD', payload: { ...item } })
+                                            try {
+                                                await actualizarCarritoCantidadProducto(usuario.datosUsuario.id_carrito, item.id_producto, -1)
+                                                dispatch({ type: 'QUITAR_CANTIDAD', payload: { ...item } })
+                                            } catch (error) {
+                                                setModalErrorAPI(true)
+                                            }
+
                                         }
                                     }}
                                     onEliminar={async () => {
-                                        await actualizarCarritoCantidadProducto(usuario.datosUsuario.id_carrito, item.id_producto, 0)
-                                        dispatch({ type: 'ELIMINAR_PRODUCTO', payload: item.id_producto })
+                                        try {
+                                            await actualizarCarritoCantidadProducto(usuario.datosUsuario.id_carrito, item.id_producto, 0)
+                                            dispatch({ type: 'ELIMINAR_PRODUCTO', payload: item.id_producto })
+                                        } catch (error) {
+                                            setModalLoaderVisible(false)
+                                            setModalErrorAPI(true)
+                                        }
+
                                     }}
                                 />
                             }

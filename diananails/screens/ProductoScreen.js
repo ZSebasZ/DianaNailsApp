@@ -11,6 +11,8 @@ import { AuthContext } from "../contexts/authContext";
 import { obtenerProductoDetalles } from "../api/ProductosController";
 import { useCarrito } from "../contexts/carritoContext";
 import { anadirCarritoProducto } from "../api/CarritoController";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de Productos
 export const ProductoScreen = (props) => {
@@ -29,6 +31,8 @@ export const ProductoScreen = (props) => {
     const [producto, setProducto] = useState(null)
     const [cantidadProducto, setCantidadProducto] = useState(1)
     const [subtotal, setSubtotal] = useState(0)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
 
     // Imagen por defecto
     const productoImgDefault = require("./../assets/images/manicurista.jpg")
@@ -36,9 +40,13 @@ export const ProductoScreen = (props) => {
     // UseEffect para obtener los productos
     useEffect(() => {
         const obtenerProducto = async () => {
-            const respuesta = await obtenerProductoDetalles(usuario.datosUsuario.id_carrito, props.idProducto)
-            setProducto(respuesta[0])
-            setSubtotal(calcularTotal(carritoProductos))
+            try {
+                const respuesta = await obtenerProductoDetalles(usuario.datosUsuario.id_carrito, props.idProducto)
+                setProducto(respuesta[0])
+                setSubtotal(calcularTotal(carritoProductos))
+            } catch (error) {
+                setModalErrorAPI(true)
+            }
         }
         obtenerProducto()
     }, [])
@@ -58,6 +66,13 @@ export const ProductoScreen = (props) => {
     // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
+
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 {producto == null ? (
                     <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>

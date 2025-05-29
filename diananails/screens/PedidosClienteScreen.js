@@ -12,6 +12,8 @@ import { AuthContext } from "../contexts/authContext";
 import { ModalConfirmarAccion } from "../components/ModalConfirmarAccion";
 import { ModalLoader } from "../components/ModalLoader";
 import { ModalFeedback } from "../components/ModalFeedback";
+import { ModalErrorAPI } from "../components/ModalErrorAPI";
+
 
 //Pantalla de PedidosCliente
 export const PedidosClienteScreen = () => {
@@ -30,15 +32,23 @@ export const PedidosClienteScreen = () => {
     const [modalConfirmarAccion, setModalConfirmarAccion] = useState(false)
     const [modalLoaderVisible, setModalLoaderVisible] = useState(false)
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
+    const [modalErrorAPI, setModalErrorAPI] = useState(false)
+
 
     // Funcion para obtener los pedidos
     const obtenerPedidos = async () => {
-        setModalLoaderVisible(true)
-        const respuesta = await obtenerPedidosCliente(usuario.datosUsuario.id, filtro)
-        if (respuesta.length > 0) {
-            setPedidos(respuesta)
+        try {
+            setModalLoaderVisible(true)
+            const respuesta = await obtenerPedidosCliente(usuario.datosUsuario.id, filtro)
+            if (respuesta.length > 0) {
+                setPedidos(respuesta)
+            }
+            setModalLoaderVisible(false)
+        } catch (error) {
+            setModalLoaderVisible(false)
+            setModalErrorAPI(true)
         }
-        setModalLoaderVisible(false)
+
     }
 
     // UseEffect para obtener los pedidos
@@ -49,14 +59,19 @@ export const PedidosClienteScreen = () => {
     // UseEffect para obtener los pedidos segun el filtro
     useEffect(() => {
         const obtenerPedidos = async () => {
-            setModalLoaderVisible(true)
-            const respuesta = await obtenerPedidosCliente(usuario.datosUsuario.id, filtro)
-            if (respuesta.length > 0) {
-                setPedidos(respuesta)
-            } else {
-                setPedidos(null)
+            try {
+                setModalLoaderVisible(true)
+                const respuesta = await obtenerPedidosCliente(usuario.datosUsuario.id, filtro)
+                if (respuesta.length > 0) {
+                    setPedidos(respuesta)
+                } else {
+                    setPedidos(null)
+                }
+                setModalLoaderVisible(false)
+            } catch (error) {
+                setModalLoaderVisible(false)
+                setModalErrorAPI(true)
             }
-            setModalLoaderVisible(false)
         }
         obtenerPedidos()
     }, [filtro])
@@ -72,13 +87,20 @@ export const PedidosClienteScreen = () => {
             await obtenerPedidos();
             setPedidoSeleccionado(null)
         } catch (error) {
-            console.error("Error al cancelar el pedido")
+            setModalLoaderVisible(false)
+            setModalErrorAPI(true)  
         }
     }
 
     // Renderizamos la pantalla
     return (
         <Screen enTab={true}>
+
+            <ModalErrorAPI
+                visible={modalErrorAPI}
+                textInfo={"Ha ocurrido un error del lado del servidor"}
+                cerrar={() => { setModalErrorAPI(false) }}
+            />
 
             <ModalLoader
                 visible={modalLoaderVisible}
