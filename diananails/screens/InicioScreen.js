@@ -64,8 +64,8 @@ export const InicioScreen = () => {
                 const email = await AsyncStorage.getItem("email");
                 const contrasena = await AsyncStorage.getItem("contrasena");
 
-                console.log("email", email)
-                console.log("contrasena", contrasena)
+                //console.log("email", email)
+                //console.log("contrasena", contrasena)
 
 
                 if (email && contrasena) {
