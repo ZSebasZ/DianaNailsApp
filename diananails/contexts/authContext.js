@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     // Funcion que se encarga de hacer el login
     const login = async (credenciales) => {
         const respuesta = await loginCliente(credenciales)
-        console.log("Inicio de sesion exitoso:", respuesta)
+        //console.log("Inicio de sesion exitoso:", respuesta)
 
         //await AsyncStorage.setItem('tipoUsuario', String(respuesta.tipoUsuario))
         setUsuario({tipoUsuario: respuesta.tipoUsuario, datosUsuario: respuesta.usuario})
@@ -51,8 +51,9 @@ export const AuthProvider = ({ children }) => {
 
     // Funcion que se encarga de actualizar los datos del cliente
     const updateDatos = async (datos) => {
+        datos.tipoUsuario = usuario.tipoUsuario
         const respuesta = await updateDatosUsuario(usuario.datosUsuario.id, datos)
-        console.log("Datos actualizados: ", respuesta)
+        //console.log("Datos actualizados: ", respuesta)
         setUsuario(prev => ({
             ...prev,
             datosUsuario: {

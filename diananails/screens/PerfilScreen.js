@@ -24,6 +24,8 @@ import { ModalErrorAPI } from "../components/ModalErrorAPI";
 //Pantalla de Perfil
 export const PerfilScreen = () => {
 
+    
+
     //Estilos y fuentes
     const styles = useThemedStyles(perfilStyles);
     const fuenteTexto = fuenteTextoStyles();
@@ -47,14 +49,10 @@ export const PerfilScreen = () => {
         nombre: usuario.datosUsuario.nombre,
         apellidos: usuario.datosUsuario.apellidos,
         telefono: usuario.datosUsuario.telefono,
-        ...(usuario.tipoUsuario == 2 && {
-            direccionEnvio: usuario.datosUsuario.direccion_envio
-        }),
+        ...(usuario.tipoUsuario === 2 && { direccionEnvio: usuario.datosUsuario.direccion_envio }),
+        ...([0, 1].includes(usuario.tipoUsuario) && { dni: usuario.datosUsuario.dni }),
+    });
 
-        ...((usuario.tipoUsuario == 0 || usuario.tipoUsuario == 1) && {
-            dni: usuario.datosUsuario.dni
-        })
-    })
 
     // Funcion para ir asignando valores al estado valoresCampos
     const onValueChange = (nombreCampo, valor) => {
@@ -64,7 +62,7 @@ export const PerfilScreen = () => {
     // Funcion para enviar el formulario
     const onSubmit = async () => {
         Keyboard.dismiss()
-        const validacionErrores = validacionUpdateDatos(valoresCampos)
+        const validacionErrores = validacionUpdateDatos(valoresCampos, usuario.tipoUsuario)
         setErrores(validacionErrores)
         if (Object.keys(validacionErrores).length == 0) {
             try {
@@ -74,8 +72,8 @@ export const PerfilScreen = () => {
                 setModalFeedbackActuDatosVisible(true)
 
             } catch (error) {
-                const mensajeError = error.response?.data?.mensaje || 'Ocurrió un error inesperado';
-                console.log(mensajeError)
+                setModalLoaderVisible(false)
+                setModalErrorAPI(true)
             }
         }
     }

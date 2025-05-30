@@ -53,7 +53,7 @@ export const RegistroScreen = () => {
     const [modalFeedbackVisible, setModalFeedbackVisible] = useState(false)
     const [modalErrorAPI, setModalErrorAPI] = useState(false)
 
-    
+
 
     // Funcion para ir asignando valores al estado valoresCampos
     const onValueChange = (nombreCampo, valor) => {
@@ -72,8 +72,14 @@ export const RegistroScreen = () => {
                 const respuesta = await registroCliente(valoresCampos);
                 setModalFeedbackVisible(true)
             } catch (error) {
-                setModalLoaderVisible(false)
-                setModalErrorAPI(true)
+                if (error.status == 401) {
+                    setModalLoaderVisible(false)
+                    setErrores({ ...errores, email: "Este email ya se encuentra en uso" })
+                } else {
+                    setModalLoaderVisible(false)
+                    setModalErrorAPI(true)
+
+                }
             } finally {
                 setModalLoaderVisible(false);
             }
@@ -107,7 +113,7 @@ export const RegistroScreen = () => {
                 textInfo={"Ha ocurrido un error del lado del servidor"}
                 cerrar={() => { setModalErrorAPI(false) }}
             />
-            
+
             <ModalLoader
                 visible={modalLoaderVisible}
             />

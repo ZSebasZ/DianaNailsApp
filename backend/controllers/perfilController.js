@@ -111,21 +111,35 @@ const updateDatosPersManicurista = (req, res) => {
 
 //Creamos la funcion que se encarga de la ACTUALIZACION de los datos personales de un CLIENTE
 const updateDatosPersCliente = (req, res) => {
-
     //Obtenemos el id del cliente a actualizat
     const { id } = req.params
 
     //Obtenemos los datos enviados
-    const { nombre, apellidos, telefono, direccionEnvio } = req.body;
+    const { nombre, apellidos, telefono, direccionEnvio, tipoUsuario } = req.body;
 
-    //Si alguno de los datos está vació o no se envia, mandamos un error
-    if (!nombre || !apellidos || !telefono) {
-        return res.status(400).json({ mensaje: "Campos incompletos" })
+    if (tipoUsuario == 0 || tipoUsuario == 1) {
+        //Si alguno de los datos está vació o no se envia, mandamos un error
+        if (!nombre || !apellidos || !telefono || tipoUsuario == null || tipoUsuario == undefined) {
+            return res.status(400).json({ mensaje: "Campos incompletos ggg" })
+        }
+        if (!regex.nombre.test(nombre) || !regex.apellidos.test(apellidos) || !regex.telefono.test(telefono)) {
+            return res.status(400).json({ mensaje: "Los campos no cumplen con el formato correcto" })
+        }
+    } else {
+        if (tipoUsuario == 2) {
+
+            //Si alguno de los datos está vació o no se envia, mandamos un error
+            if (!nombre || !apellidos || !telefono || !direccionEnvio || tipoUsuario == null || tipoUsuario == undefined) {
+                return res.status(400).json({ mensaje: "Campos incompletos" })
+            }
+
+            if (!regex.nombre.test(nombre) || !regex.apellidos.test(apellidos) || !regex.telefono.test(telefono) || !regex.direccionEnvio.test(direccionEnvio)) {
+                return res.status(400).json({ mensaje: "Los campos no cumplen con el formato correcto" })
+            }
+        }
     }
 
-    if (!regex.nombre.test(nombre) || !regex.apellidos.test(apellidos) || !regex.telefono.test(telefono) || !regex.direccionEnvio.test(direccionEnvio)) {
-        return res.status(400).json({ mensaje: "Los campos no cumplen con el formato correcto" })
-    }
+
 
     //Setencia SQL para actualizar los datos personales del cliente
     const updateDatosPersCliente = "UPDATE usuarios SET nombre = ?, apellidos = ?, telefono = ? WHERE id = ?"
@@ -141,23 +155,30 @@ const updateDatosPersCliente = (req, res) => {
             return res.status(404).json({ message: "Cliente no encontrado" });
         }
 
-        //Setencia SQL para actualizar la direccion de envio del cliente
-        const updateDatosPersCliente = "UPDATE clientes SET direccion_envio = ? WHERE id = ?"
-        //Hacemos la actualizacion 
-        connection.query(updateDatosPersCliente, [direccionEnvio, id], (error, result) => {
-            //Si ocurre algun error en la actualizacion, mostramos un mensaje
-            if (error) {
-                return res.status(500).json({ mensaje: "Error al actualizar los datos del cliente" });
-            }
+        if (tipoUsuario == 2) {
+            //Setencia SQL para actualizar la direccion de envio del cliente
+            const updateDatosPersCliente = "UPDATE clientes SET direccion_envio = ? WHERE id = ?"
+            //Hacemos la actualizacion 
+            connection.query(updateDatosPersCliente, [direccionEnvio, id], (error, result) => {
+                //Si ocurre algun error en la actualizacion, mostramos un mensaje
+                if (error) {
+                    return res.status(500).json({ mensaje: "Error al actualizar los datos del cliente" });
+                }
 
-            //Comprobamos si alguna fila se actualizó
-            if (result.affectedRows == 0) {
-                return res.status(404).json({ message: "Cliente no encontrado" });
-            }
+                //Comprobamos si alguna fila se actualizó
+                if (result.affectedRows == 0) {
+                    return res.status(404).json({ message: "Cliente no encontrado" });
+                }
 
-            //Si todo el proceso fue exitoso, monstramos un mensaje
-            res.status(200).json({ message: "Cliente actualizado correctamente" });
-        })
+                //Si todo el proceso fue exitoso, monstramos un mensaje
+                res.status(200).json({ message: "Cliente actualizado correctamente" });
+            })
+        } else {
+            if (tipoUsuario == 0 || tipoUsuario == 1) {
+                //Si todo el proceso fue exitoso, monstramos un mensaje
+                res.status(200).json({ message: "Cliente actualizado correctamente" });
+            }
+        }
     })
 }
 

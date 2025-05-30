@@ -104,7 +104,7 @@ const nuevoProducto = (req, res) => {
     }
 
     //Sentencia SQL para la insercion de un nuevo producto
-    const insertNuevoProducto = "INSERT INTO productos (url_imagen, nombre, descripcion, precio, estrellas, stock) VALUES (?, ?, ?, ?, 5, ?)"
+    const insertNuevoProducto = "INSERT INTO productos (url_imagen, nombre, descripcion, precio, stock) VALUES (?, ?, ?, ?, ?)"
 
     //Hacemos la insercion del nuevo producto
     connection.query(insertNuevoProducto, [url_imagen, nombre, descripcion, precio, stock], (error, result) => {

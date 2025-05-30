@@ -1,17 +1,31 @@
 import { regex, estaVacio } from "../utils/regexCamposUtils";
 
 // Funcion que se encarga de validar el formulario completo de actualizacion de datos personales
-export const validacionUpdateDatos = (valoresCampos) => {
+export const validacionUpdateDatos = (valoresCampos, tipoUsuario) => {
+
     const textCampoObligatorio = "Este campo es obligatorio"
 
     const errores = {}
 
-    const camposObligatorios = [
-        "nombre",
-        "apellidos",
-        "telefono",
-        "direccionEnvio"
-    ];
+    let camposObligatorios = []
+
+    if (tipoUsuario == 2) {
+        camposObligatorios = [
+            "nombre",
+            "apellidos",
+            "telefono",
+            "direccionEnvio"
+        ];
+    } else {
+        camposObligatorios = [
+            "nombre",
+            "apellidos",
+            "telefono",
+        ];
+    }
+
+
+
 
     camposObligatorios.forEach((campo) => {
         if (estaVacio(valoresCampos[campo])) {
@@ -28,9 +42,12 @@ export const validacionUpdateDatos = (valoresCampos) => {
     if (!estaVacio(valoresCampos.telefono) && !regex.telefono.test(valoresCampos.telefono)) {
         errores.telefono = "Telefono invalido, solo numeros telefonicos de España"
     }
-    if (!estaVacio(valoresCampos.direccionEnvio) && !regex.direccionEnvio.test(valoresCampos.direccionEnvio)) {
-        errores.direccionEnvio = "Direccion de envio invalida. El formato es: Ciudad, 21, piso 3"
+    if (tipoUsuario === 2) {
+        if (!estaVacio(valoresCampos.direccionEnvio) && !regex.direccionEnvio.test(valoresCampos.direccionEnvio)) {
+            errores.direccionEnvio = "Direccion de envio invalida. El formato es: Ciudad, 21, piso 3"
+        }
     }
+
 
     return errores
 
@@ -90,6 +107,6 @@ export const updateDatosValidacionOnBlur = (campo, valor) => {
             }
             break;
     }
-    
+
     return error
 }
