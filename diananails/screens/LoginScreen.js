@@ -27,12 +27,18 @@ export const LoginScreen = () => {
     const fuenteTexto = fuenteTextoStyles();
 
     // Estado para los campos del login
-    const [valoresCampos, setValoresCampos] = useState({
-        //email: "admin@diananails.com",
-        //email: "sgarcia@diananails.com",
-        email: "prueba1@gmail.com",
-        contrasena: "Abc123."
-    })
+    const [valoresCampos, setValoresCampos] = useState(
+        tipoLogin == 0 ? {
+            //email: "admin@diananails.com",
+            //email: "sgarcia@diananails.com",
+            email: "admin@diananails.com",
+            contrasena: "Abc123."
+        }
+            :
+            {
+                email: "cliente1@gmail.com",
+                contrasena: "Abc123."
+            })
 
     // Estados para las validaciones
     const [errores, setErrores] = useState({})
@@ -62,18 +68,18 @@ export const LoginScreen = () => {
                 switch (respuesta.tipoUsuario) {
                     case 0:
                         router.push("/navegacion/admin/")
-                        console.log("ADMIN")
+                        //console.log("ADMIN")
                         break;
                     case 1:
                         router.push("/navegacion/manicurista/")
-                        console.log("MANICURISTA")
+                        //console.log("MANICURISTA")
                         break;
                     case 2:
                         router.push("/navegacion/cliente/")
-                        console.log("CLIENTE")
+                        //console.log("CLIENTE")
                         break;
                     default:
-                        console.log("NO SE HA CARGADO TIPO USUARIO")
+                        //console.log("NO SE HA CARGADO TIPO USUARIO")
                         break;
                 }
             } catch (error) {

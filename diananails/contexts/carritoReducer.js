@@ -9,7 +9,7 @@ export function carritoReducer(carrito, action) {
     switch (action.type) {
         //Cargamos el carrito
         case 'CARGAR_CARRITO':
-            console.log("carrito cargado")
+            //console.log("carrito cargado")
             return {
                 ...carrito,
                 items: action.payload.map(p => ({ ...p })),
@@ -18,7 +18,7 @@ export function carritoReducer(carrito, action) {
 
         //Añadimos un producto
         case 'ANADIR_PRODUCTO':
-            console.log('Añadir producto:', action.payload);
+            //console.log('Añadir producto:', action.payload);
             const existingItem = carrito.items.find(item => item.id_producto === action.payload.id_producto);
             if (existingItem) {
                 // Si ya existe, no agregar otra entrada, solo aumentar cantidad
@@ -51,7 +51,7 @@ export function carritoReducer(carrito, action) {
 
         //Eliminamos un producto
         case 'ELIMINAR_PRODUCTO':
-            console.log(action.payload)
+            //console.log(action.payload)
             return {
                 ...carrito,
                 items: carrito.items.filter(item => item.id_producto !== action.payload),

@@ -70,7 +70,7 @@ export const CardProductoCarrito = (props) => {
         <View>
             <Pressable style={styles.contenedorProducto}>
                 <View>
-                    <Image source={props.productoImg ? { uri: productoImg } : productoImgDefault} style={styles.productoImg}></Image>
+                    <Image source={props.productoImg ? { uri: props.productoImg } : productoImgDefault} style={styles.productoImg}></Image>
                     <View style={{ gap: hp(1) }}>
                         <View style={styles.contenedorSeccionInfoProducto}>
                             <Text style={[props.fuenteTextoBold, styles.textSubTituloInfoProducto]}>Producto: </Text>

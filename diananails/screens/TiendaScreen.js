@@ -82,6 +82,7 @@ export const TiendaScreen = () => {
                     const respuesta = await obtenerCarritoProductos(usuario.datosUsuario.id_carrito, usuario.datosUsuario.id)
                     dispatch({ type: 'CARGAR_CARRITO', payload: respuesta });
                     setSubtotal(calcularTotal(respuesta))
+                    //console.log(respuesta)
                 } catch (error) {
                     setModalErrorAPI(true)
                 }
@@ -142,7 +143,7 @@ export const TiendaScreen = () => {
                                     onAnadir={async () => {
                                         try {
                                             await anadirCarritoProducto(usuario.datosUsuario.id_carrito, item.id, 1)
-                                            dispatch({ type: 'ANADIR_PRODUCTO', payload: { id_producto: item.id, nombre: item.nombre, cantidad: 1, precio: item.precio, stock: item.stock } });
+                                            dispatch({ type: 'ANADIR_PRODUCTO', payload: { id_producto: item.id, url_imagen: item.url_imagen, nombre: item.nombre, cantidad: 1, precio: item.precio, stock: item.stock } });
                                         } catch (error) {
                                             setModalErrorAPI(true)
                                         }

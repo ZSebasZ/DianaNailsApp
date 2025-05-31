@@ -9,8 +9,8 @@ export const TomarEscogerImagen = (props) => {
     const tema = useThemedStyles()
 
     // Imagenes por defecto
-    const perfilImgDefault = require("./../assets/images/perfilDefault.png");
-    const productoImgDefault = require("./../assets/images/sinImagen.png");
+    const perfilImgDefault = require("./../assets/images/perfil_default.png");
+    const productoImgDefault = require("./../assets/images/sin_imagen.png");
 
     // Estilos del componente
     const styles = StyleSheet.create({

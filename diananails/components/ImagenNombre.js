@@ -9,7 +9,7 @@ export const ImagenNombre = (props) => {
     const tema = useThemedStyles()
 
     // Imagen por defecto
-    const imgDefault = require("./../assets/images/perfilDefault.png");
+    const imgDefault = require("./../assets/images/perfil_default.png");
 
     // Estilos del componente
     const styles = StyleSheet.create({

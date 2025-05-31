@@ -91,7 +91,7 @@ export const ProductoScreen = (props) => {
                             <CardProductoDetalles
                                 fuenteTextoBold={fuenteTexto.gantariBold}
                                 fuenteTextoRegular={fuenteTexto.gantariRegular}
-                                producto={productoImgDefault}
+                                productoImg={producto.url_imagen}
                                 descripcion={producto.descripcion}
                                 precio={producto.precio}
                                 enCarrito={producto.enCarrito}
@@ -111,7 +111,7 @@ export const ProductoScreen = (props) => {
                                 onAnadir={async () => {
                                     await anadirCarritoProducto(usuario.datosUsuario.id_carrito, producto.id, cantidadProducto)
                                     setProducto({ ...producto, enCarrito: 1 })
-                                    dispatch({ type: 'ANADIR_PRODUCTO', payload: { id_producto: producto.id, nombre: producto.nombre, precio: producto.precio, stock: producto.stock, cantidad: cantidadProducto } })
+                                    dispatch({ type: 'ANADIR_PRODUCTO', payload: { id_producto: producto.id, url_imagen: producto.url_imagen, nombre: producto.nombre, precio: producto.precio, stock: producto.stock, cantidad: cantidadProducto } })
                                 }}
                             />
                         </View>
@@ -124,7 +124,7 @@ export const ProductoScreen = (props) => {
                 subtotal={subtotal}
                 botonCarrito={true}
                 cantidadProductos={carritoProductos.length}
-                hrefCarrito={"/navegacion/(clienteScreens)/(pedidosCarrito)/carritoCliente"}
+                hrefCarrito={"/navegacion/cliente/(clienteScreens)/(pedidosCarrito)/carritoCliente"}
             />
         </Screen >
     );

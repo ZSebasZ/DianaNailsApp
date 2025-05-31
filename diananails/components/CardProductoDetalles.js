@@ -60,7 +60,7 @@ export const CardProductoDetalles = (props) => {
     return (
         <View>
             <View style={{ alignItems: "center" }}>
-                <Image source={props.productoImg ? { uri: productoImg } : productoImgDefault} style={styles.productoImg}></Image>
+                <Image source={props.productoImg ? { uri: props.productoImg } : productoImgDefault} style={styles.productoImg}></Image>
             </View>
             <View style={styles.lineaDivisora}></View>
             <View>

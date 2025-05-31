@@ -138,6 +138,7 @@ const getCarritoProductos = (req, res) => {
                     carritoProductos.carritoProductos.push({
                         id: row.id_producto,
                         nombre: row.nombre,
+                        url_imagen: row.url_imagen,
                         cantidad: row.cantidad,
                         totalPrecio: row.totalPrecio
                     });

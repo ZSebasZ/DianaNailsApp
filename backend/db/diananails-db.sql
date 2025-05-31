@@ -284,11 +284,11 @@ INSERT INTO horas (id, hora, es_laboral) VALUES
 
 -- Datos para la tabla de Administradores, Manicuristas y Clientes
 INSERT INTO usuarios (id, url_imagen, nombre, apellidos, telefono, email, contrasena) VALUES
-(1, NULL, 'Diana Lorena', 'Jimenez', '657487598', 'admin@diananails.com', 'abc123.'),
+(1, 'https://images.pexels.com/photos/3750717/pexels-photo-3750717.jpeg', 'Diana Lorena', 'Jimenez', '657487598', 'admin@diananails.com', 'abc123.'),
 (2, 'https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=600', 'Sofia', 'Garcia', '666666661', 'sgarcia@diananails.com', 'abc123.'),
 -- (3, 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=600', 'Ana', 'Ramírez', '666666662', 'nramirez@diananails.com', 'abc123.'),
 -- (4, 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', 'Camila', 'Lopez', '666666663', 'clopez@diananails.com', 'abc123.'),
-(5, NULL, 'Cliente1', 'Apellido Cliente1', '666666664', 'cliente1@gmail.com', 'abc123.');
+(5, 'https://images.pexels.com/photos/12204293/pexels-photo-12204293.jpeg', 'Cliente uno', 'Apellidos uno', '666666664', 'cliente1@gmail.com', 'abc123.');
 
 INSERT INTO administradores (id, dni) VALUES
 (1, '84811274Q');
@@ -334,16 +334,16 @@ INSERT INTO metodos_pago (metodo) VALUES
 
 -- Datos para la tabla Productos
 INSERT INTO productos (url_imagen, nombre, descripcion, precio, stock) VALUES
-(NULL, 'Esmalte Rosa Pastel', 'Esmalte de uñas color rosa pastel, larga duración.', 5.99, 3),
-(NULL, 'Esmalte Rojo Clásico', 'Esmalte de uñas color rojo intenso, secado rápido.', 6.50, 25),
-(NULL, 'Kit Básico de Manicura', 'Set de manicura con cortaúñas, lima y empujador de cutículas.', 12.00, 15),
-(NULL, 'Crema Hidratante de Manos', 'Crema nutritiva para manos suaves y protegidas.', 8.50, 40),
-(NULL, 'Removedor de Cutículas', 'Gel removedor de cutículas para un acabado profesional.', 4.75, 20),
-(NULL, 'Limas de Uñas (Pack x5)', 'Juego de limas profesionales para manicura y pedicura.', 3.99, 50),
-(NULL, 'Baño Relajante para Pies', 'Sales minerales para baño relajante de pies.', 7.20, 18),
-(NULL, 'Kit Pedicura Completo', 'Set profesional de pedicura con piedra pómez, cortaúñas y separadores.', 14.99, 10),
-(NULL, 'Base Fortalecedora de Uñas', 'Protector y fortalecedor de uñas antes del esmalte.', 6.80, 22),
-(NULL, 'Esmalte en Gel UV', 'Esmalte semipermanente para uñas con acabado brillante.', 9.99, 0);
+('https://upsalacosmetic.com/wp-content/uploads/2021/12/H095-8.jpg', 'Esmalte Rosa Pastel', 'Esmalte de uñas color rosa pastel, larga duración.', 5.99, 3),
+('https://seminails.com/5025-large_default/esmalte-permanente-wemmi-15-ml-rojo-clasico.jpg', 'Esmalte Rojo Clásico', 'Esmalte de uñas color rojo intenso, secado rápido.', 6.50, 25),
+('https://imbeauty.es/cdn/shop/files/16176-thickbox_default.png?v=1690878525&width=1445', 'Kit Básico de Manicura', 'Set de manicura con cortaúñas, lima y empujador de cutículas.', 12.00, 15),
+('https://www.delauz.es/documents/10180/12111/4005808584864_G.jpg', 'Crema Hidratante de Manos', 'Crema nutritiva para manos suaves y protegidas.', 8.50, 40),
+('https://www.clipshair.es/17066-large_default/removedor-de-cuticula-en-gel-120-ml-masg.jpg', 'Removedor de Cutículas', 'Gel removedor de cutículas para un acabado profesional.', 4.75, 20),
+('https://www.bysmaquillaje.es/media/catalog/product/l/i/limes-ongles-x5.jpg', 'Limas de Uñas (Pack x5)', 'Juego de limas profesionales para manicura y pedicura.', 3.99, 50),
+('https://shop.farmariba.com/4809-large_default/crema-bals%C3%A1mica-relajante-pies-cansados-saltratos-50-ml-laboratorios-vi%C3%B1as.jpg', 'Baño Relajante para Pies', 'Sales minerales para baño relajante de pies.', 7.20, 18),
+('https://veki.es/2743-thickbox_default/snb-kit-de-pedicura-profesional.webp', 'Kit Pedicura Completo', 'Set profesional de pedicura con piedra pómez, cortaúñas y separadores.', 14.99, 10),
+('https://fiduciamakeupbo.com/wp-content/uploads/2024/04/vogue-base-fortalecedora1234.jpg', 'Base Fortalecedora de Uñas', 'Protector y fortalecedor de uñas antes del esmalte.', 6.80, 22),
+('https://www.druni.es/media/catalog/product/5/6/5637.jpg', 'Esmalte en Gel UV', 'Esmalte semipermanente para uñas con acabado brillante.', 9.99, 0);
 
 CREATE VIEW `vmanicuristas` 
 AS 
