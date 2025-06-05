@@ -115,7 +115,7 @@ export const InicioScreen = () => {
                         <LogoPrincipal screen={"inicio"} />
                         <View>
                             <Text style={[fuenteTexto.gantariBold, styles.textTitulo]}>Bienvenido a</Text>
-                            <Text style={[fuenteTexto.caveatBold, styles.textNombreApp]}>DianaNails App</Text>
+                            <Text style={[fuenteTexto.caveatBold, styles.textNombreApp]}>DianaNailsApp</Text>
                             <Text style={[fuenteTexto.gantariBold, styles.textTitulo]}>¿Como desea iniciar?</Text>
                         </View>
                     </View>

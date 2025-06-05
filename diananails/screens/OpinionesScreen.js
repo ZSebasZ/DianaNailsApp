@@ -144,8 +144,8 @@ export const OpinionesScreen = () => {
             />
 
             <ModalFeedback
-                titulo={"Opinion enviada"}
-                feedback={"Tu opinion de ha realizado con exito"}
+                titulo={"Opinión enviada"}
+                feedback={"Tu opinión de ha realizado con éxito"}
                 visible={modalFeedbackVisible}
                 fuenteTexto={fuenteTexto.gantariBold}
                 cerrar={() => {
@@ -167,7 +167,7 @@ export const OpinionesScreen = () => {
                             fuenteTexto={fuenteTexto.gantariRegular}
                             placeHolder={"Excelente servicio..."}
                             conLabel={true}
-                            textLabel={"Titulo"}
+                            textLabel={"Título"}
                             labelCentrado={false}
                             fuenteTextoLabel={fuenteTexto.gantariBold}
                             contrasena={false}
@@ -224,10 +224,10 @@ export const OpinionesScreen = () => {
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
                         tituloSeccion={"Opiniones"}
-                        textInfo1={"Mira las opiniones de los demas"}
+                        textInfo1={"Mira las opiniones de los demás"}
                     />
                     <View>
-                        <Text style={[styles.textTituloInput, { textAlign: "center", marginBottom: 10 }]}>Antiguedad</Text>
+                        <Text style={[styles.textTituloInput, { textAlign: "center", marginBottom: 10 }]}>Antigüedad</Text>
                         <View style={styles.contenedorFiltroOpiniones}>
                             <BotonTexto
                                 botonNavegacion={true}
@@ -242,7 +242,7 @@ export const OpinionesScreen = () => {
                                 esLink={false}
                                 fondo={valoresFiltro.antiguedad === "antiguas"}
                                 fuenteTexto={fuenteTexto.gantariBold}
-                                textoBoton={"Antiguas"}
+                                textoBoton={"Antigüas"}
                                 onPress={() => seleccionarAntiguedad("antiguas")}
                             />
                         </View>

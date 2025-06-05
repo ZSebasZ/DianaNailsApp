@@ -148,8 +148,8 @@ export const PedidosAdminScreen = () => {
                     <SeccionEnTab
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
-                        tituloSeccion={"Mis pedidos"}
-                        textInfo1={"Aqui se muestran todos tus pedidos"}
+                        tituloSeccion={"Pedidos"}
+                        textInfo1={"Aquí puedes ver y gestionar todos los pedidos de los clientes"}
                     />
                     <View style={styles.contenedorFiltroPedidos}>
                         <BotonTexto

@@ -101,7 +101,7 @@ export const ResumenCitaScreen = () => {
 
             <ModalFeedback
                 titulo={"Cita agendada"}
-                feedback={"Tu cita ha sido agendad correctamente"}
+                feedback={"Tu cita ha sido agendada correctamente"}
                 visible={modalFeedbackVisible}
                 fuenteTexto={fuenteTexto.gantariBold}
                 cerrar={() => {
@@ -119,7 +119,7 @@ export const ResumenCitaScreen = () => {
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
                         tituloSeccion={"Resumen de tu cita"}
-                        textInfo1={"La cita se agendará con los siguientes detalles"}
+                        textInfo1={"La cita se agendará con los siguientes datos"}
                     />
                     <View style={styles.contenedorSeccionDetalle}>
                         <Text style={styles.textTituloSubSeccion}>Servicios</Text>
@@ -196,7 +196,7 @@ export const ResumenCitaScreen = () => {
                         </View>
                     </View>
                     <View style={[styles.contenedorSeccionDetalle, { paddingBottom: 70 }]}>
-                        <Text style={styles.textTituloSubSeccion}>Metodo de pago</Text>
+                        <Text style={styles.textTituloSubSeccion}>Método de pago</Text>
                         <Text style={styles.textInfoSubSeccion}>{metodoPago.metodoPago}</Text>
                     </View>
 

@@ -87,7 +87,7 @@ export const CarritoClienteScreen = () => {
 
             <ModalFeedback
                 titulo={"Pedido realizado"}
-                feedback={"Tu pedido se ha realizado con exito y se encuentra pendiente de envio"}
+                feedback={"Tu pedido se ha realizado con éxito y se encuentra pendiente de envío"}
                 visible={modalFeedbackVisible}
                 fuenteTexto={fuenteTexto.gantariBold}
                 cerrar={() => {
@@ -97,7 +97,7 @@ export const CarritoClienteScreen = () => {
             />
 
             <ModalConfirmarAccion
-                titulo={"¿Está seguro que quiere vaciar el carrito?"}
+                titulo={"¿Está seguro de que quiere vaciar el carrito?"}
                 visible={modalConfirmarAccion}
                 cerrar={() => {
                     setModalConfirmarAccion(false)
@@ -115,6 +115,7 @@ export const CarritoClienteScreen = () => {
                     }
 
                 }}
+                fuenteTexto={fuenteTexto.gantariBold}
             />
             <ModalUltDetallesPedido
                 direccionDeEnvio={usuario.datosUsuario.direccion_envio}
@@ -252,6 +253,7 @@ export const CarritoClienteScreen = () => {
                 botonSiguiente={true}
                 btnSiguienteDeshabilitado={carritoProductos.length == 0 ? true : false}
                 subtotal={subtotal}
+                esTotal={true}
                 esRealizarPedido={true}
                 onPress={() => {
                     setModalUltDetallesPedido(true)

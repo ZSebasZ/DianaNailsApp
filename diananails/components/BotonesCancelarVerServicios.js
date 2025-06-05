@@ -42,7 +42,7 @@ export const BotonesCancelarVerServicios = (props) => {
     return (
         <View>
             <ModalConfirmarAccion
-                titulo={"¿Está seguro eliminar todo el progreso de la cita que esta agendando?"}
+                titulo={"¿Está seguro que desea eliminar todo el progreso de la cita que esta agendando?"}
                 visible={modalConfirmarAccion}
                 cerrar={() => {
                     setModalConfirmarAccion(false)
@@ -51,6 +51,7 @@ export const BotonesCancelarVerServicios = (props) => {
                     cancelarAgendamientoCita()
                     setModalConfirmarAccion(false)
                 }}
+                fuenteTexto={fuenteTexto.gantariBold}
             />
 
             <View style={styles.contenedorBotonVerServicios}>

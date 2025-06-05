@@ -347,7 +347,8 @@ const getCitasClientesPorManicurista = (req, res) => {
                                 uc.url_imagen AS clienteImg,
 
                                 h_inicio.hora AS horaInicio,
-                                h_fin.hora AS horaFin
+                                h_fin.hora AS horaFin,
+                                mp.metodo as metodoPago
 
                             FROM citas c
 
@@ -373,6 +374,7 @@ const getCitasClientesPorManicurista = (req, res) => {
                                 JOIN horas h2 ON h2.id = h.id + 1
                                 GROUP BY ch.id_cita
                             ) h_fin ON h_fin.id_cita = c.id
+                            JOIN metodos_pago mp ON c.id_metodo_pago = mp.id
 
                             -- Condiciones de fecha y hora
                             WHERE c.id_manicurista = ? AND (
@@ -409,7 +411,8 @@ const getCitasClientesPorManicurista = (req, res) => {
                             horaInicio: row.horaInicio,
                             horaFin: row.horaFin,
                             cliente: row.cliente,
-                            clienteImg: row.clienteImg
+                            clienteImg: row.clienteImg,
+                            metodoPago: row.metodoPago
                         }
                     });
                     citaAnterior = row.id_cita;

@@ -91,7 +91,7 @@ export const OpinionesAdminScreen = () => {
                         textInfo1={"Mira las opiniones de los clientes"}
                     />
                     <View>
-                        <Text style={[styles.textTituloInput, { textAlign: "center", marginBottom: 10 }]}>Antiguedad</Text>
+                        <Text style={[styles.textTituloInput, { textAlign: "center", marginBottom: 10 }]}>Antigüedad</Text>
                         <View style={styles.contenedorFiltroOpiniones}>
                             <BotonTexto
                                 botonNavegacion={true}
@@ -106,7 +106,7 @@ export const OpinionesAdminScreen = () => {
                                 esLink={false}
                                 fondo={valoresFiltro.antiguedad === "antiguas"}
                                 fuenteTexto={fuenteTexto.gantariBold}
-                                textoBoton={"Antiguas"}
+                                textoBoton={"Antigüas"}
                                 onPress={() => seleccionarAntiguedad("antiguas")}
                             />
                         </View>

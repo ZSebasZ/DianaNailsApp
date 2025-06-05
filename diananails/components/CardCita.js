@@ -124,7 +124,7 @@ export const CardCita = (props) => {
                 )}
                 <View style={styles.lineaDivisora}></View>
                 <View>
-                    <Text style={styles.textTituloSeccionCita}>Metodo de pago</Text>
+                    <Text style={styles.textTituloSeccionCita}>Método de pago</Text>
                     <View>
                         <Text style={styles.textInfoCita}>{props.datosCita.metodoPago}</Text>
                     </View>

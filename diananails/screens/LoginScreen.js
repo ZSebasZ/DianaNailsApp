@@ -31,13 +31,17 @@ export const LoginScreen = () => {
         tipoLogin == 0 ? {
             //email: "admin@diananails.com",
             //email: "sgarcia@diananails.com",
-            email: "admin@diananails.com",
-            contrasena: "Abc123."
+            //email: "admin@diananails.com",
+            //contrasena: "Abc123."
+            email: null,
+            contrasena: null
         }
             :
             {
-                email: "cliente1@gmail.com",
-                contrasena: "Abc123."
+                //email: "cliente1@gmail.com",
+                //contrasena: "Abc123."
+                email: null,
+                contrasena: null
             })
 
     // Estados para las validaciones
@@ -67,15 +71,15 @@ export const LoginScreen = () => {
                 setCredencialesIncorrectas(false)
                 switch (respuesta.tipoUsuario) {
                     case 0:
-                        router.push("/navegacion/admin/")
+                        router.replace("/navegacion/admin/")
                         //console.log("ADMIN")
                         break;
                     case 1:
-                        router.push("/navegacion/manicurista/")
+                        router.replace("/navegacion/manicurista/")
                         //console.log("MANICURISTA")
                         break;
                     case 2:
-                        router.push("/navegacion/cliente/")
+                        router.replace("/navegacion/cliente/")
                         //console.log("CLIENTE")
                         break;
                     default:

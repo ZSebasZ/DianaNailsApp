@@ -58,7 +58,7 @@ export const CitasAdminScreen = () => {
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
                         tituloSeccion={"Citas"}
-                        textInfo1={"Proximas citas de los clientes"}
+                        textInfo1={"Citas próximas de los clientes"}
                     />
                     {citas === null ? (
                         <View style={{ alignItems: "center", justifyContent: "center" }}>

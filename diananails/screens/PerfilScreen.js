@@ -210,8 +210,8 @@ export const PerfilScreen = () => {
                 visible={modalLoaderVisible}
             />
             <ModalFeedback
-                titulo={"Cuenta eliminada con exito"}
-                feedback={"Su cuenta y todos los datos relacionados a ella se han eliminado con exito"}
+                titulo={"Cuenta eliminada con éxito"}
+                feedback={"Su cuenta y todos los datos relacionados a ella se han eliminado correctamente"}
                 visible={modalFeedbackVisible}
                 fuenteTexto={fuenteTexto.gantariBold}
                 cerrar={() => {
@@ -221,8 +221,8 @@ export const PerfilScreen = () => {
             />
 
             <ModalFeedback
-                titulo={"Datos actualzados"}
-                feedback={"Sus datos personales se han actualizado con exito"}
+                titulo={"Datos actualizados"}
+                feedback={"Sus datos personales se han actualizados con éxito"}
                 visible={modalFeedbackActuDatosVisible}
                 fuenteTexto={fuenteTexto.gantariBold}
                 cerrar={() => {
@@ -233,7 +233,7 @@ export const PerfilScreen = () => {
 
             <ModalFeedback
                 titulo={"Foto de perfil actualizada"}
-                feedback={"Su foto de perfil se ha actualizado con exito"}
+                feedback={"Su foto de perfil se ha actualizado con éxito"}
                 visible={modalFeedbackActuFotoVisible}
                 fuenteTexto={fuenteTexto.gantariBold}
                 cerrar={() => {
@@ -242,12 +242,13 @@ export const PerfilScreen = () => {
                 }}
             />
             <ModalConfirmarAccion
-                titulo={"¿Está seguro que quiere eliminar su cuenta y todos los datos relacionados a ella?"}
+                titulo={"¿Está seguro de que quiere eliminar su cuenta y todos los datos relacionados a ella?"}
                 visible={modalConfirmarAccion}
                 cerrar={() => {
                     setModalConfirmarAccion(false)
                 }}
                 aceptar={eliminarCuenta}
+                fuenteTexto={fuenteTexto.gantariBold}
             />
 
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
@@ -335,7 +336,7 @@ export const PerfilScreen = () => {
                                     conIcono={true}
                                     nombreIcono={"account"}
                                     fuenteTexto={fuenteTexto.gantariRegular}
-                                    placeHolder={"Nombre"}
+                                    placeHolder={"Sebastian"}
                                     conLabel={true}
                                     textLabel={"Nombre"}
                                     labelCentrado={true}
@@ -351,7 +352,7 @@ export const PerfilScreen = () => {
                                     conIcono={true}
                                     nombreIcono={"account"}
                                     fuenteTexto={fuenteTexto.gantariRegular}
-                                    placeHolder={"Apellidos"}
+                                    placeHolder={"Jiménez"}
                                     conLabel={true}
                                     textLabel={"Apellidos"}
                                     labelCentrado={true}
@@ -367,9 +368,9 @@ export const PerfilScreen = () => {
                                     conIcono={true}
                                     nombreIcono={"phone"}
                                     fuenteTexto={fuenteTexto.gantariRegular}
-                                    placeHolder={"Telefono"}
+                                    placeHolder={"656473827"}
                                     conLabel={true}
-                                    textLabel={"Telefono"}
+                                    textLabel={"Teléfono"}
                                     labelCentrado={true}
                                     fuenteTextoLabel={fuenteTexto.gantariBold}
                                     contrasena={false}
@@ -384,9 +385,9 @@ export const PerfilScreen = () => {
                                         conIcono={true}
                                         nombreIcono={"map-marker"}
                                         fuenteTexto={fuenteTexto.gantariRegular}
-                                        placeHolder={"Direccion de envio"}
+                                        placeHolder={"Calle del paseo, 21"}
                                         conLabel={true}
-                                        textLabel={"Direccion de envio"}
+                                        textLabel={"Dirección de envío"}
                                         labelCentrado={true}
                                         fuenteTextoLabel={fuenteTexto.gantariBold}
                                         contrasena={false}
@@ -401,7 +402,7 @@ export const PerfilScreen = () => {
                                     conIcono={true}
                                     nombreIcono={"email"}
                                     fuenteTexto={fuenteTexto.gantariRegular}
-                                    placeHolder={"Email"}
+                                    placeHolder={"example@gmail.com"}
                                     conLabel={true}
                                     textLabel={"Email"}
                                     labelCentrado={true}

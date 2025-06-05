@@ -110,7 +110,7 @@ export const TiendaScreen = () => {
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
                         tituloSeccion={"Tienda"}
-                        textInfo1={"Bienvenid@ a nuestra tienda, aqui encontraras productos sobre manicura y pedicura"}
+                        textInfo1={"Te damos la bienvenida a nuestra tienda. Aquí encontrarás productos de manicura y pedicura"}
                     />
                     {productos == null ? (
                         <View style={{ alignItems: "center", justifyContent: "center" }}>

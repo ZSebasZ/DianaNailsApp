@@ -152,7 +152,7 @@ export const CardPedido = (props) => {
                 </View>
                 <View style={styles.lineaDivisora}></View>
                 <View style={styles.containerSeccionPedido}>
-                    <Text style={styles.textTitleSeccionPedido}>Metodo de pago</Text>
+                    <Text style={styles.textTitleSeccionPedido}>Método de pago</Text>
                     <View>
                         <Text style={styles.textInfoPedido}>{props.metodoPago}</Text>
                     </View>

@@ -18,10 +18,10 @@ export const validacionOpinion = (valoresCampos) => {
     });
 
     if (!estaVacio(valoresCampos.titulo) && !regex.tituloOpinion.test(valoresCampos.titulo)) {
-        errores.titulo = "Titulo invalido, solo caracteres alfabeticos y maximo 50"
+        errores.titulo = "Titulo inválido, solo carácteres alfabéticos y máximo 50"
     }
     if (!estaVacio(valoresCampos.descripcion) && !regex.descripcionOpinion.test(valoresCampos.descripcion)) {
-        errores.descripcion = "Descripcion invalida, maximo 500 caracteres"
+        errores.descripcion = "Opinión inválida, máximo 500 caracteres"
     }
 
     return errores
@@ -41,7 +41,7 @@ export const opinionValidacionOnBlur = (campo, valor) => {
                 error = textCampoObligatorio;
             } else {
                 if (!regex.tituloOpinion.test(valor)) {
-                    error = "Titulo invalido, solo caracteres alfabeticos y maximo 50"
+                    error = "Titulo inválido, solo carácteres alfabéticos y máximo 50"
                 } else {
                     error = 0
                 }
@@ -52,7 +52,7 @@ export const opinionValidacionOnBlur = (campo, valor) => {
                 error = textCampoObligatorio;
             } else {
                 if (!regex.descripcionOpinion.test(valor)) {
-                    error = "Descripcion invalida, maximo 500 caracteres"
+                    error = "Opinión inválida, máximo 500 carácteres"
                 } else {
                     error = 0
                 }

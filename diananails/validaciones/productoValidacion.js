@@ -28,16 +28,16 @@ export const validacionProducto = (valoresCampos) => {
 
     //console.log("ternmina bucle")
     if (!estaVacio(valoresCampos.nombre) && !regex.nombreProducto.test(valoresCampos.nombre)) {
-        errores.nombre = "Nombre invalido, solo caracteres alfabeticos y maximo 50"
+        errores.nombre = "Nombre inválido, solo carácteres alfabéticos y máximo 50"
     }
     if (!estaVacio(valoresCampos.descripcion) && !regex.descripcionProducto.test(valoresCampos.descripcion)) {
-        errores.descripcion = "Descripcion invalida, maximo 255 caracteres"
+        errores.descripcion = "Descripción inválida, máximo 255 carácteres"
     }
     if (!estaVacio(valoresCampos.precio) && !regex.precioProducto.test(valoresCampos.precio)) {
-        errores.precio = "Precio invalido, solo numeros enteros o decimales con maximo 2 decimales"
+        errores.precio = "Precio inválido, solo números enteros o decimales con máximo 2 decimales"
     }
     if (!estaVacio(valoresCampos.stock) && !regex.stockProducto.test(valoresCampos.stock)) {
-        errores.stock = "Stock invalido, solo numeros enteros"
+        errores.stock = "Stock inválido, solo números enteros"
     }
 
     //console.log(errores)
@@ -59,7 +59,7 @@ export const productoValidacionOnBlur = (campo, valor) => {
                 error = textCampoObligatorio;
             } else {
                 if (!regex.nombreServicio.test(valor)) {
-                    error = "Nombre invalido, solo caracteres alfabeticos y maximo 50"
+                    error = "Nombre inválido, solo carácteres alfabéticos y máximo 50"
                 } else {
                     error = 0
                 }
@@ -70,7 +70,7 @@ export const productoValidacionOnBlur = (campo, valor) => {
                 error = textCampoObligatorio;
             } else {
                 if (!regex.descripcionProducto.test(valor)) {
-                    error = "Descripcion invalida, maximo 255 caracteres"
+                    error = "Descripción inválida, máximo 255 carácteres"
                 } else {
                     error = 0
                 }
@@ -81,7 +81,7 @@ export const productoValidacionOnBlur = (campo, valor) => {
                 error = textCampoObligatorio;
             } else {
                 if (!regex.precioServicio.test(valor)) {
-                    error = "Precio invalido, numeros enteros o decimales con maximo 2 decimales"
+                    error = "Precio inválido, solo números enteros o decimales con máximo 2 decimales"
                 } else {
                     error = 0
                 }
@@ -92,7 +92,7 @@ export const productoValidacionOnBlur = (campo, valor) => {
                 error = textCampoObligatorio;
             } else {
                 if (!regex.stockProducto.test(valor)) {
-                    error = "Stock invalido, solo numeros enteros"
+                    error = "Stock inválido, solo números enteros"
                 } else {
                     error = 0
                 }

@@ -106,13 +106,14 @@ export const PedidosClienteScreen = () => {
                 visible={modalLoaderVisible}
             />
             <ModalConfirmarAccion
-                titulo={"¿Está seguro que quiere cancelar este pedido?"}
+                titulo={"¿Está seguro de que quiere cancelar este pedido?"}
                 visible={modalConfirmarAccion}
                 cerrar={() => {
                     setPedidoSeleccionado(null)
                     setModalConfirmarAccion(false)
                 }}
                 aceptar={cancelarPedido}
+                fuenteTexto={fuenteTexto.gantariBold}
             />
             <ModalFeedback
                 titulo={"Pedido cancelado"}
@@ -127,7 +128,7 @@ export const PedidosClienteScreen = () => {
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
                         tituloSeccion={"Mis pedidos"}
-                        textInfo1={"Aqui se muestran todos tus pedidos"}
+                        textInfo1={"Aquí puedes ver todos tus pedidos"}
                     />
                     <View style={styles.contenedorFiltroPedidos}>
                         <BotonTexto

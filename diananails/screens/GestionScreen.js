@@ -23,7 +23,7 @@ export const GestionScreen = () => {
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
                         tituloSeccion={"Gestión"}
-                        textInfo1={"Desde puedes gestionar tus servicios, productos y manicuristas"}
+                        textInfo1={"Aquí puedes gestionar los servicios, productos y manicuristas de tu negocio"}
                     />
                     <View style={styles.containerSeccion}>
                         <BotonIconoTexto

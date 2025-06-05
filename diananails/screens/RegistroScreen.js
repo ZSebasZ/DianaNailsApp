@@ -120,7 +120,7 @@ export const RegistroScreen = () => {
 
             <ModalFeedback
                 titulo={"Registro completado"}
-                feedback={"Te ha registrado con exito, ahora inicia sesion"}
+                feedback={"Te ha registrado con éxito, ahora inicia sesión"}
                 navegacion={true}
                 href={"../"}
                 visible={modalFeedbackVisible}
@@ -165,7 +165,7 @@ export const RegistroScreen = () => {
                                 conIcono={true}
                                 fuenteTexto={fuenteTexto.gantariRegular}
                                 nombreIcono={"phone"}
-                                placeHolder={"Telefono"}
+                                placeHolder={"Teléfono"}
                                 contrasena={false}
                                 nombreCampo={"telefono"}
                                 valorCampo={valoresCampos.telefono}
@@ -177,7 +177,7 @@ export const RegistroScreen = () => {
                                 conIcono={true}
                                 fuenteTexto={fuenteTexto.gantariRegular}
                                 nombreIcono={"map-marker"}
-                                placeHolder={"Direccion de envio"}
+                                placeHolder={"Dirección de envío"}
                                 contrasena={false}
                                 nombreCampo={"direccionEnvio"}
                                 valorCampo={valoresCampos.direccionEnvio}
@@ -239,7 +239,7 @@ export const RegistroScreen = () => {
                                 href={"../"}
                                 fondo={false}
                                 fuenteTexto={fuenteTexto.gantariBold}
-                                textoBoton={"Volver"}
+                                textoBoton={"Iniciar sesión"}
                             />
                         </View>
                     </View>

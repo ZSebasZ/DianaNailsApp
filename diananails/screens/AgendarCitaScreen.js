@@ -91,6 +91,7 @@ export const AgendarCitaScreen = () => {
                 visible={modalServiciosSelec}
                 cerrar={() => { setModalServiciosSelec(false) }}
                 eliminarServicio={alternarSeleccionServicio}
+                fuenteTexto={fuenteTexto.gantariBold}
             />
 
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
@@ -100,7 +101,7 @@ export const AgendarCitaScreen = () => {
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
                         tituloSeccion={"Agenda tu cita"}
-                        textInfo1={"Selecciona los servicios deseados"}
+                        textInfo1={"Seleccione los servicios deseados"}
                         textInfo2={"3 como máximo"}
                     />
 

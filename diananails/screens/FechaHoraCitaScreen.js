@@ -147,7 +147,7 @@ export const FechaHoraCitaScreen = () => {
                 servicios={serviciosSeleccionados}
                 visible={modalServiciosSelec}
                 cerrar={() => { setModalServiciosSelec(false) }}
-
+                fuenteTexto={fuenteTexto.gantariBold}
             />
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>

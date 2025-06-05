@@ -22,7 +22,7 @@ export const ActividadClienteScreen = () => {
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
                         tituloSeccion={"Mi actividad"}
-                        textInfo1={"Desde aqui puede ver tus citas, opinar, ver opiniones y ver tus pedidos"}
+                        textInfo1={"Aquí puedes ver tus citas, revisar tus pedidos fácilmente, leer opiniones y dejar la tuya"}
                     />
                     <View style={styles.containerSeccion}>
                         <BotonIconoTexto

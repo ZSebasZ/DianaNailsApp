@@ -96,8 +96,8 @@ export const ServiciosAdminScreen = () => {
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
                         tituloSeccion={"Servicios"}
-                        textInfo1={"Gestione los servicios que ofrece DianaNails"}
-                        textInfo2={"Para editar alguno, solo haga tap sobre el"}
+                        textInfo1={"Administre los servicios disponibles"}
+                        textInfo2={"Si desea actualizar alguno, solo púlselo"}
                     />
                     {servicios == null ? (
                         <View style={{ alignItems: "center", justifyContent: "center" }}>

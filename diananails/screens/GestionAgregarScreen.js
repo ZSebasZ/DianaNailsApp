@@ -112,19 +112,30 @@ export const GestionAgregarScreen = (props) => {
             }
             : props.tipo == "producto" ? {
                 imagen: null,
-                nombre: "Prueba producto",
-                descripcion: "Descrpcion del prioeucto de prueba",
-                precio: "10.99",
-                stock: "10"
+                nombre: null,
+                descripcion: null,
+                precio: null,
+                stock: null
+                //nombre: "Prueba producto",
+                //descripcion: "Descrpcion del prioeucto de prueba",
+                //precio: "10.99",
+                //stock: "10"
             } : props.tipo == "manicurista" && {
                 imagen: null,
-                dniNie: "98789878A",
-                nombre: "PruebaM",
-                apellidos: "Apellidos M",
-                telefono: "675757686",
-                email: "pruebam1@diananails.com",
-                contrasena: "Abc123.",
-                confirmarContrasena: "Abc123."
+                dniNie: null,
+                nombre: null,
+                apellidos: null,
+                telefono: null,
+                email: null,
+                contrasena: null,
+                confirmarContrasena: null
+                //dniNie: "98789878A",
+                //nombre: "PruebaM",
+                //apellidos: "Apellidos M",
+                //telefono: "675757686",
+                //email: "pruebam1@diananails.com",
+                //contrasena: "Abc123.",
+                //confirmarContrasena: "Abc123."
             }
     );
 
@@ -298,9 +309,9 @@ export const GestionAgregarScreen = (props) => {
                             : props.tipo == "manicurista" && "Manicurista añadida"
                 }
                 feedback={
-                    props.tipo == "servicio" ? "El servicio se ha añadico correctamente y esta a disposicion de los clientes"
-                        : props.tipo == "producto" ? "El prodcuto se ha añadico correctamente y esta a disponible en la tienda"
-                            : props.tipo == "manicurista" && "La manicurista se ha añadico correctamente y esta lista para atender citas"
+                    props.tipo == "servicio" ? "El servicio se ha añadido correctamente y está a disposición de los clientes"
+                        : props.tipo == "producto" ? "El producto se ha añadido correctamente y está disponible en la tienda"
+                            : props.tipo == "manicurista" && "La manicurista se ha añadido correctamente y está lista para atender citas"
                 }
                 visible={modalFeedbackVisible}
                 fuenteTexto={fuenteTexto.gantariBold}
@@ -315,7 +326,7 @@ export const GestionAgregarScreen = (props) => {
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
                         tituloSeccion={`Agregar ${props.tipo == "producto" || props.tipo == "servicio" ? "un nuevo" : "una nueva"} ${props.tipo}`}
-                        textInfo1={`Completa todos los campos para agregar ${props.tipo == "manicurista" ? "una nueva" : "un nuevo"} ${props.tipo}`}
+                        textInfo1={`Complete todos los campos para agregar ${props.tipo == "manicurista" ? "una nueva" : "un nuevo"} ${props.tipo}`}
                     />
                     <View style={{ gap: 20 }}>
                         {(props.tipo == "producto" || props.tipo == "manicurista") && (
@@ -326,6 +337,7 @@ export const GestionAgregarScreen = (props) => {
                                     tomarFoto={tomarFoto}
                                     seleccionarDeGaleria={seleccionarDeGaleria}
                                     imageUri={imageUri != null && imageUri}
+                                    esProducto={props.tipo == "producto" ? true : undefined}
                                 />
                                 <View style={{ justifyContent: "center", alignItems: "center", gap: 10 }}>
                                     <BotonIconoTexto
@@ -362,7 +374,7 @@ export const GestionAgregarScreen = (props) => {
                                             conIcono={true}
                                             nombreIcono={"assistant"}
                                             fuenteTexto={fuenteTexto.gantariRegular}
-                                            placeHolder={"Manicura clasica"}
+                                            placeHolder={"Manicura clásica"}
                                             conLabel={true}
                                             textLabel={"Nombre"}
                                             labelCentrado={true}
@@ -411,7 +423,7 @@ export const GestionAgregarScreen = (props) => {
                                             conIcono={true}
                                             nombreIcono={"shopping"}
                                             fuenteTexto={fuenteTexto.gantariRegular}
-                                            placeHolder={"Nombre del producto"}
+                                            placeHolder={"Esmalte protector"}
                                             conLabel={true}
                                             textLabel={"Nombre"}
                                             labelCentrado={true}
@@ -426,9 +438,9 @@ export const GestionAgregarScreen = (props) => {
                                         <CampoTextoInput
                                             conIcono={false}
                                             fuenteTexto={fuenteTexto.gantariRegular}
-                                            placeHolder={"Lima de grano 5 especial para uñas gruesas..."}
+                                            placeHolder={"Esmalte protector ideal para uñas débiles o desgastadas"} 
                                             conLabel={true}
-                                            textLabel={"Descripcion"}
+                                            textLabel={"Descripción"}
                                             labelCentrado={true}
                                             fuenteTextoLabel={fuenteTexto.gantariBold}
                                             contrasena={false}
@@ -445,7 +457,7 @@ export const GestionAgregarScreen = (props) => {
                                             conIcono={true}
                                             nombreIcono={"currency-eur"}
                                             fuenteTexto={fuenteTexto.gantariRegular}
-                                            placeHolder={"99.99"}
+                                            placeHolder={"08.99"}
                                             conLabel={true}
                                             textLabel={"Precio"}
                                             labelCentrado={true}
@@ -462,7 +474,7 @@ export const GestionAgregarScreen = (props) => {
                                             conIcono={true}
                                             nombreIcono={"package-variant"}
                                             fuenteTexto={fuenteTexto.gantariRegular}
-                                            placeHolder={"999"}
+                                            placeHolder={"32"}
                                             conLabel={true}
                                             textLabel={"Stock"}
                                             labelCentrado={true}
@@ -498,7 +510,7 @@ export const GestionAgregarScreen = (props) => {
                                             conIcono={true}
                                             nombreIcono={"account"}
                                             fuenteTexto={fuenteTexto.gantariRegular}
-                                            placeHolder={"Nombre"}
+                                            placeHolder={"María"}
                                             conLabel={true}
                                             textLabel={"Nombre"}
                                             labelCentrado={true}
@@ -514,7 +526,7 @@ export const GestionAgregarScreen = (props) => {
                                             conIcono={true}
                                             nombreIcono={"account"}
                                             fuenteTexto={fuenteTexto.gantariRegular}
-                                            placeHolder={"Apellidos"}
+                                            placeHolder={"Hernández Pérez"}
                                             conLabel={true}
                                             textLabel={"Apellidos"}
                                             labelCentrado={true}
@@ -530,9 +542,9 @@ export const GestionAgregarScreen = (props) => {
                                             conIcono={true}
                                             nombreIcono={"phone"}
                                             fuenteTexto={fuenteTexto.gantariRegular}
-                                            placeHolder={"Telefono"}
+                                            placeHolder={"657483756"}
                                             conLabel={true}
-                                            textLabel={"Telefono"}
+                                            textLabel={"Teléfono"}
                                             labelCentrado={true}
                                             fuenteTextoLabel={fuenteTexto.gantariBold}
                                             contrasena={false}

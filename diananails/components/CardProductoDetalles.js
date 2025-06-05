@@ -65,7 +65,7 @@ export const CardProductoDetalles = (props) => {
             <View style={styles.lineaDivisora}></View>
             <View>
                 <View style={styles.contenedorSeccionInfo}>
-                    <Text style={[props.fuenteTextoBold, styles.textTituloInfoProducto]}>Descripcion</Text>
+                    <Text style={[props.fuenteTextoBold, styles.textTituloInfoProducto]}>Descripción</Text>
                     <Text style={[props.fuenteTextoRegular, styles.textInfoProducto]}>{props.descripcion}</Text>
                 </View>
                 <View style={styles.contenedorSeccionInfo}>

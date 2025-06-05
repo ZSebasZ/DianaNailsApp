@@ -43,24 +43,24 @@ export const validacionManicurista = (valoresCampos, esEdicion = false) => {
     });
 
     if (!estaVacio(valoresCampos.dniNie) && !regex.dniNie.test(valoresCampos.dniNie)) {
-        errores.dniNie = "DNI/NIE invalido, solo 1 letras inicial en caso de NIE, seguido de 8 numeros y una letra final"
+        errores.dniNie = "DNI/NIE inválido, solo una letra inicial en caso de NIE, seguido de 8 números y una letra final"
     }
     if (!estaVacio(valoresCampos.nombre) && !regex.nombre.test(valoresCampos.nombre)) {
-        errores.nombre = "Nombre invalido, solo caracteres albaticos y 50 como maximo"
+        errores.nombre = "Nombre inválido, solo carácteres alfabéticos y 50 como máximo"
     }
     if (!estaVacio(valoresCampos.apellidos) && !regex.apellidos.test(valoresCampos.apellidos)) {
-        errores.apellidos = "Apellidos invalidos, solo caracteres albaticos y 100 como maximo"
+        errores.apellidos = "Apellidos inválidos, solo carácteres alfabéticos y 100 como máximo"
     }
     if (!estaVacio(valoresCampos.telefono) && !regex.telefono.test(valoresCampos.telefono)) {
-        errores.telefono = "Telefono invalido, solo numeros telefonicos de España"
+        errores.telefono = "Teléfono inválido, solo números telefónicos de España"
     }
     if (!estaVacio(valoresCampos.email) && !regex.emailDianaNails.test(valoresCampos.email)) {
-        errores.email = "Email invalido"
+        errores.email = "Email inválido"
     }
 
     if (esEdicion == false) {
         if (!estaVacio(valoresCampos.contrasena) && !regex.contrasena.test(valoresCampos.contrasena)) {
-            errores.contrasena = "Contraseña invalida, minimo 6 caracteres, una letra mayuscula y caracterer especial"
+            errores.contrasena = "Contraseña inválida, mínimo 6 carácteres, una letra mayuscula y un carácter especial"
         }
         if (!estaVacio(valoresCampos.confirmarContrasena) && !estaVacio(valoresCampos.contrasena) && (valoresCampos.confirmarContrasena != valoresCampos.contrasena)) {
             errores.confirmarContrasena = "Las contraseñas no coinciden"
@@ -84,7 +84,7 @@ export const manicuristaValidacionOnBlur = (campo, valor, confirmarContrasena = 
                 error = textCampoObligatorio;
             } else {
                 if (!regex.dniNie.test(valor)) {
-                    error = "DNI/NIE invalido, solo 1 letras inicial en caso de NIE, seguido de 8 numeros y una letra final"
+                    error = "DNI/NIE inválido, solo una letra inicial en caso de NIE, seguido de 8 números y una letra final"
                 } else {
                     error = 0
                 }
@@ -95,7 +95,7 @@ export const manicuristaValidacionOnBlur = (campo, valor, confirmarContrasena = 
                 error = textCampoObligatorio;
             } else {
                 if (!regex.nombre.test(valor)) {
-                    error = "Nombre invalido, solo caracteres albaticos y 50 como maximo onblur"
+                    error = "Nombre inválido, solo carácteres alfabéticos y 50 como máximo"
                 } else {
                     error = 0
                 }
@@ -106,7 +106,7 @@ export const manicuristaValidacionOnBlur = (campo, valor, confirmarContrasena = 
                 error = textCampoObligatorio;
             } else {
                 if (!regex.apellidos.test(valor)) {
-                    error = "Apellidos invalidos, solo caracteres albaticos y 100 como maximo"
+                    error = "Apellidos inválidos, solo carácteres alfabéticos y 100 como máximo"
                 } else {
                     error = 0
                 }
@@ -117,7 +117,7 @@ export const manicuristaValidacionOnBlur = (campo, valor, confirmarContrasena = 
                 error = textCampoObligatorio;
             } else {
                 if (!regex.telefono.test(valor)) {
-                    error = "Telefono invalido, solo numeros telefonicos de España"
+                    error = "Teléfono inválido, solo números telefónicos de España"
                 } else {
                     error = 0
                 }
@@ -128,7 +128,7 @@ export const manicuristaValidacionOnBlur = (campo, valor, confirmarContrasena = 
                 error = textCampoObligatorio;
             } else {
                 if (!regex.emailDianaNails.test(valor)) {
-                    error = "Email invalido"
+                    error = "Email inválido"
                 } else {
                     error = 0
                 }
@@ -139,7 +139,7 @@ export const manicuristaValidacionOnBlur = (campo, valor, confirmarContrasena = 
                 error = textCampoObligatorio;
             } else {
                 if (!regex.contrasena.test(valor)) {
-                    error = "Contraseña invalida, minimo 6 caracteres, una letra mayuscula y caracterer especial"
+                    error = "Contraseña inválida, mínimo 6 carácteres, una letra mayuscula y un carácter especial"
                 } else {
                     error = 0
                 }

@@ -129,7 +129,10 @@ export const CampoTextoInput = (props) => {
                         placeholderTextColor={tema.secondary}
                         secureTextEntry={props.contrasena}
                         value={props.valorCampo}
+                        autoCapitalize={props.nombreCampo == "email" ? "none" : undefined}
                         onChangeText={(text) => {
+                            //const valor = props.nombreCampo === "email" ? text.toLowerCase() : text;
+
                             if (props.tipoLogin) {
                                 props.onValueChange(props.nombreCampo, text, props.tipoLogin)
                             } else {
@@ -168,6 +171,7 @@ export const CampoTextoInput = (props) => {
                                 placeholderTextColor={tema.secondary}
                                 secureTextEntry={props.contrasena}
                                 value={props.valorCampo}
+                                autoCapitalize={props.nombreCampo == "email" ? "none" : undefined}
                                 onChangeText={(text) => {
                                     if (props.tipoLogin) {
                                         props.onValueChange(props.nombreCampo, text, props.tipoLogin)

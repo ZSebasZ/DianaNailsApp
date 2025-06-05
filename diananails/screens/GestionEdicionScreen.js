@@ -361,7 +361,7 @@ export const GestionEdicionScreen = (props) => {
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
                         tituloSeccion={"Actualizar " + props.tipo}
-                        textInfo1={`Actualiza los datos de ${props.tipo == "manicurista" ? "esta" : "este"} ${props.tipo}`}
+                        textInfo1={`Actualice los datos de ${props.tipo == "manicurista" ? "esta" : "este"} ${props.tipo}`}
                     />
                     {valoresCampos == null ? (
                         <View style={{ alignItems: "center", justifyContent: "center" }}>
@@ -415,7 +415,7 @@ export const GestionEdicionScreen = (props) => {
                                                 conIcono={true}
                                                 nombreIcono={"assistant"}
                                                 fuenteTexto={fuenteTexto.gantariRegular}
-                                                placeHolder={"Manicura clasica"}
+                                                placeHolder={"Manicura clásica"}
                                                 conLabel={true}
                                                 textLabel={"Nombre"}
                                                 labelCentrado={true}
@@ -464,7 +464,7 @@ export const GestionEdicionScreen = (props) => {
                                                 conIcono={true}
                                                 nombreIcono={"shopping"}
                                                 fuenteTexto={fuenteTexto.gantariRegular}
-                                                placeHolder={"Nombre del producto"}
+                                                placeHolder={"Lima de grano 8"}
                                                 conLabel={true}
                                                 textLabel={"Nombre"}
                                                 labelCentrado={true}
@@ -479,9 +479,9 @@ export const GestionEdicionScreen = (props) => {
                                             <CampoTextoInput
                                                 conIcono={false}
                                                 fuenteTexto={fuenteTexto.gantariRegular}
-                                                placeHolder={"Lima de grano 5 especial para uñas gruesas..."}
+                                                placeHolder={"Lima de grano 8 especial para uñas gruesas..."}
                                                 conLabel={true}
-                                                textLabel={"Descripcion"}
+                                                textLabel={"Descripción"}
                                                 labelCentrado={true}
                                                 fuenteTextoLabel={fuenteTexto.gantariBold}
                                                 contrasena={false}
@@ -498,7 +498,7 @@ export const GestionEdicionScreen = (props) => {
                                                 conIcono={true}
                                                 nombreIcono={"currency-eur"}
                                                 fuenteTexto={fuenteTexto.gantariRegular}
-                                                placeHolder={"99.99"}
+                                                placeHolder={"10.30"}
                                                 conLabel={true}
                                                 textLabel={"Precio"}
                                                 labelCentrado={true}
@@ -515,7 +515,7 @@ export const GestionEdicionScreen = (props) => {
                                                 conIcono={true}
                                                 nombreIcono={"package-variant"}
                                                 fuenteTexto={fuenteTexto.gantariRegular}
-                                                placeHolder={"999"}
+                                                placeHolder={"15"}
                                                 conLabel={true}
                                                 textLabel={"Stock"}
                                                 labelCentrado={true}
@@ -552,7 +552,7 @@ export const GestionEdicionScreen = (props) => {
                                                 conIcono={true}
                                                 nombreIcono={"account"}
                                                 fuenteTexto={fuenteTexto.gantariRegular}
-                                                placeHolder={"Nombre"}
+                                                placeHolder={"Adriana"}
                                                 conLabel={true}
                                                 textLabel={"Nombre"}
                                                 labelCentrado={true}
@@ -568,7 +568,7 @@ export const GestionEdicionScreen = (props) => {
                                                 conIcono={true}
                                                 nombreIcono={"account"}
                                                 fuenteTexto={fuenteTexto.gantariRegular}
-                                                placeHolder={"Apellidos"}
+                                                placeHolder={"García Marín"}
                                                 conLabel={true}
                                                 textLabel={"Apellidos"}
                                                 labelCentrado={true}
@@ -584,9 +584,9 @@ export const GestionEdicionScreen = (props) => {
                                                 conIcono={true}
                                                 nombreIcono={"phone"}
                                                 fuenteTexto={fuenteTexto.gantariRegular}
-                                                placeHolder={"Telefono"}
+                                                placeHolder={"678598798"}
                                                 conLabel={true}
-                                                textLabel={"Telefono"}
+                                                textLabel={"Teléfono"}
                                                 labelCentrado={true}
                                                 fuenteTextoLabel={fuenteTexto.gantariBold}
                                                 contrasena={false}

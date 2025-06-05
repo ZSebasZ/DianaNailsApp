@@ -44,7 +44,7 @@ export const ManicuristaMetodoPagoScreen = () => {
                 servicios={serviciosSeleccionados}
                 visible={modalServiciosSelec}
                 cerrar={() => { setModalServiciosSelec(false) }}
-                
+                fuenteTexto={fuenteTexto.gantariBold}
             />
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <ScrollView nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
@@ -52,7 +52,7 @@ export const ManicuristaMetodoPagoScreen = () => {
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
                         tituloSeccion={"Manicuristas"}
-                        textInfo1={"Seleccione la manicurista que quiere que la atienda"}
+                        textInfo1={"Seleccione la manicurista que quiere que le atienda"}
                     />
                     <FlatList
                         data={manicuristas}
@@ -89,8 +89,8 @@ export const ManicuristaMetodoPagoScreen = () => {
                     <SeccionEnTab
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
-                        tituloSeccion={"Metodo de pago"}
-                        textInfo1={"Seleccione el metodo de pago"}
+                        tituloSeccion={"Método de pago"}
+                        textInfo1={"Seleccione el método de pago"}
                     />
                     {/*<ListaDropdown
                         items={items}

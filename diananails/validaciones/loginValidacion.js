@@ -19,16 +19,16 @@ export const validacionLogin = (valoresCampos, tipoLogin) => {
 
     if (tipoLogin == 0) {
         if (!estaVacio(valoresCampos.email) && !regex.emailDianaNails.test(valoresCampos.email)) {
-            errores.email = "Email invalido, el dominio debe ser el de al empresa"
+            errores.email = "Email inválido, el dominio debe ser el de la empresa"
         }
     } else {
         if (!estaVacio(valoresCampos.email) && !regex.email.test(valoresCampos.email)) {
-            errores.email = "Email invalido"
+            errores.email = "Email inválido"
         }
     }
 
     if (!estaVacio(valoresCampos.contrasena) && !regex.contrasena.test(valoresCampos.contrasena)) {
-        errores.contrasena = "Contraseña invalida, minimo 6 caracteres, una letra mayuscula y caracterer especial"
+        errores.contrasena = "Contraseña inválida, mínimo 6 caracteres, una letra mayúscula y un carácter especial"
     }
 
     return errores
@@ -49,13 +49,13 @@ export const loginValidacionOnBlur = (campo, valor, tipoLogin) => {
             } else {
                 if (tipoLogin == 0) {
                     if (!regex.emailDianaNails.test(valor)) {
-                        error = "Email invalido, el dominio debe ser el de al empresa"
+                        error = "Email inválido, el dominio debe ser el de la empresa"
                     } else {
                         error = 0
                     }
                 } else {
                     if (!regex.email.test(valor)) {
-                        error = "Email invalido"
+                        error = "Email inválido"
                     } else {
                         error = 0
                     }
@@ -68,7 +68,7 @@ export const loginValidacionOnBlur = (campo, valor, tipoLogin) => {
                 error = textCampoObligatorio;
             } else {
                 if (!regex.contrasena.test(valor)) {
-                    error = "Contraseña invalida, minimo 6 caracteres, una letra mayuscula y caracterer especial"
+                    error = "Contraseña inválida, mínimo 6 caracteres, una letra mayúscula y un carácter especial"
                 } else {
                     error = 0
                 }

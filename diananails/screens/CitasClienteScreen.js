@@ -81,13 +81,14 @@ export const CitasClienteScreen = () => {
                 visible={modalLoaderVisible}
             />
             <ModalConfirmarAccion
-                titulo={"¿Está seguro que quiere cancelar la cita?"}
+                titulo={"¿Está seguro de que quiere cancelar la cita?"}
                 visible={modalConfirmarAccion}
                 cerrar={() => {
                     setCitaSeleccionada(null)
                     setModalConfirmarAccion(false)
                 }}
                 aceptar={eliminarCita}
+                fuenteTexto={fuenteTexto.gantariBold}
             />
             <ModalFeedback
                 titulo={"Cita eliminada"}
@@ -103,8 +104,8 @@ export const CitasClienteScreen = () => {
                         fuenteTextoBold={fuenteTexto.gantariBold}
                         fuenteTextoRegular={fuenteTexto.gantariRegular}
                         tituloSeccion={"Mis citas"}
-                        textInfo1={"Aqui se muestran las próximas citas que tienes agendadas"}
-                        textInfo2={"Para cancelar una cita, solo haga click sobre ella"}
+                        textInfo1={"Aquí se muestran tus próximas citas agendadas"}
+                        textInfo2={"Para cancelar una cita, solo haz tap sobre ella y confirma"}
                     />
 
                     {citas === null ? (

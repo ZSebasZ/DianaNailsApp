@@ -18,10 +18,10 @@ export const validacionServicio = (valoresCampos) => {
     });
 
     if (!estaVacio(valoresCampos.nombre) && !regex.nombreServicio.test(valoresCampos.nombre)) {
-        errores.nombre = "Nombre invalido, solo caracteres alfabeticos y maximo 50"
+        errores.nombre = "Nombre inválido, solo carácteres alfabéticos y máximo 50"
     }
     if (!estaVacio(valoresCampos.precio) && !regex.precioServicio.test(valoresCampos.precio)) {
-        errores.precio = "Precio invalido, solo numeros enteros o decimales con maximo 2 decimales"
+        errores.precio = "Precio inválido, solo números enteros o decimales con máximo 2 decimales"
     }
 
     return errores
@@ -41,7 +41,7 @@ export const servicioValidacionOnBlur = (campo, valor) => {
                 error = textCampoObligatorio;
             } else {
                 if (!regex.nombreServicio.test(valor)) {
-                    error = "Nombre invalido, solo caracteres alfabeticos y maximo 50"
+                    error = "Nombre inválido, solo carácteres alfabéticos y máximo 50"
                 } else {
                     error = 0
                 }
@@ -52,7 +52,7 @@ export const servicioValidacionOnBlur = (campo, valor) => {
                 error = textCampoObligatorio;
             } else {
                 if (!regex.precioServicio.test(valor)) {
-                    error = "Precio invalido, numeros enteros o decimales con maximo 2 decimales"
+                    error = "Precio inválido, solo números enteros o decimales con máximo 2 decimales"
                 } else {
                     error = 0
                 }
