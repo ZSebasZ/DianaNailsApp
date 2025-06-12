@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text } from "react-native"
 import { useThemedStyles } from "../hooks/useThemeStyles"
-import { Link } from "expo-router"
+import { Link, router } from "expo-router"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 // Componente CardServicio
@@ -12,8 +12,8 @@ export const CardServicio = (props) => {
     // Estilos del componente
     const styles = StyleSheet.create({
         contenedorServicio: {
-            borderColor: tema.primary,
-            backgroundColor: props.estaSeleccionado ? tema.primary : tema.background,
+            /*borderColor: tema.primary,*/
+            /*backgroundColor: props.estaSeleccionado ? tema.primary : tema.background,*/
             borderWidth: 2,
             borderRadius: 10,
             padding: hp(1),
@@ -59,19 +59,34 @@ export const CardServicio = (props) => {
     // Renderizamos el componente
     return (
         props.esLink ? (
-            <Link href={props.href} asChild style={[styles.contenedorServicio]}>
-                <Pressable
-                    onPress={props.onPress}
-                >
-                    <Text style={[props.fuenteTextoBold, styles.textTituloServicio]}>{props.servicio.nombre}</Text>
-                    <Text style={[props.fuenteTextoBold, styles.textTituloInfo]}>Tiempo requerido</Text>
-                    <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{calcularTiempoRequerido(props.servicio.horas_requeridas)}</Text>
-                    <Text style={[props.fuenteTextoBold, styles.textTituloInfo]}>Precio</Text>
-                    <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{props.servicio.precio} €</Text>
-                </Pressable>
-            </Link>
+            <Pressable
+                style={({ pressed }) => [
+                    {
+                        backgroundColor: pressed ? (props.estaSeleccionado ? tema.primary + "CC" : tema.primary + "80") : (props.estaSeleccionado ? tema.primary : tema.background),
+                        borderColor: pressed ? (props.estaSeleccionado ? tema.primary + "CC" : tema.primary) : (tema.primary)
+                    },
+                    styles.contenedorServicio,
+                ]}
+                onPress={() => {
+                    props.onPress?.()
+                    router.push(props.href)
+                }}
+            >
+                <Text style={[props.fuenteTextoBold, styles.textTituloServicio]}>{props.servicio.nombre}</Text>
+                <Text style={[props.fuenteTextoBold, styles.textTituloInfo]}>Tiempo requerido</Text>
+                <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{calcularTiempoRequerido(props.servicio.horas_requeridas)}</Text>
+                <Text style={[props.fuenteTextoBold, styles.textTituloInfo]}>Precio</Text>
+                <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{props.servicio.precio} €</Text>
+            </Pressable>
         ) : (
-            <Pressable style={[styles.contenedorServicio]}
+            <Pressable
+                style={({ pressed }) => [
+                    {
+                        backgroundColor: pressed ? (props.estaSeleccionado ? tema.primary + "CC" : tema.primary + "80") : (props.estaSeleccionado ? tema.primary : tema.background),
+                        borderColor: pressed ? (props.estaSeleccionado ? tema.primary + "CC" : tema.primary) : (tema.primary)
+                    },
+                    styles.contenedorServicio,
+                ]}
                 onPress={props.onPress}
             >
                 <Text style={[props.fuenteTextoBold, styles.textTituloServicio]}>{props.servicio.nombre}</Text>

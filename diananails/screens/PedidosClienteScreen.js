@@ -197,6 +197,7 @@ export const PedidosClienteScreen = () => {
                                         setPedidoSeleccionado(item.id)
                                         setModalConfirmarAccion(true)
                                     }}
+                                    esCliente={true}
                                 />
                             }
                             scrollEnabled={false}

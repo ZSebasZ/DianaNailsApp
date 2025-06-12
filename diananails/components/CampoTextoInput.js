@@ -16,6 +16,7 @@ export const CampoTextoInput = (props) => {
     const [mostrarError, setMostrarError] = useState(false)
     const [estilosError, setEstilosError] = useState(false)
     const [errorOnBlur, setErrorOnBlur] = useState(null)
+    const [campoActivo, setCampoActivo] = useState(false)
     const inputRef = useRef(null);
 
     // UseEffect para mostrar los errores
@@ -58,6 +59,7 @@ export const CampoTextoInput = (props) => {
 
     // Funcion para manejar el onBlur del campo
     const onBlur = () => {
+        setCampoActivo(false)
         if (props.verificarContrasena) {
             setErrorOnBlur(props.onBlurValidacion(props.nombreCampo, props.valorCampo?.trim(), props.verificarContrasena))
             inputRef.current.setNativeProps({ text: props.valorCampo?.trim() });
@@ -84,7 +86,7 @@ export const CampoTextoInput = (props) => {
         },
         contenedorInputs: {
             flexDirection: 'row',
-            borderWidth: 1,
+            borderWidth: campoActivo ? 2 : 1,
             borderRadius: 10,
             borderColor: estilosError ? tema.error : tema.primary,
             color: tema.primary,
@@ -142,6 +144,7 @@ export const CampoTextoInput = (props) => {
                         onBlur={onBlur}
                         ref={inputRef}
                         editable={props.deshabilitado && false}
+                        onFocus={() => setCampoActivo(true)}
                     />
                 </View>
                 {mostrarError &&
@@ -182,6 +185,7 @@ export const CampoTextoInput = (props) => {
                                 onBlur={onBlur}
                                 ref={inputRef}
                                 editable={props.deshabilitado && false}
+                                onFocus={() => setCampoActivo(true)}
                             />
                         </View>
                         {mostrarError &&

@@ -3,7 +3,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Icono } from "./Icono";
 import { useThemedStyles } from '../hooks/useThemeStyles';
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
 // Componente BotonIcono
 export const BotonIcono = (props) => {
@@ -19,10 +19,10 @@ export const BotonIcono = (props) => {
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 100,
-            backgroundColor: props.fondo ? tema.primary : tema.background,
+            /*backgroundColor: props.fondo ? tema.primary : tema.background,*/
         },
         botonEliminar: {
-            backgroundColor: props.fondo ? tema.error : tema.errorContainer,
+            /*backgroundColor: props.fondo ? tema.error : tema.errorContainer,*/
         },
         iconoBoton: {
             color: props.fondo ? tema.onPrimary : tema.onBackground,
@@ -59,25 +59,37 @@ export const BotonIcono = (props) => {
     // Renderizamos el componente
     return (
         props.esLink ? (
-            <Link href={props.href} asChild style={[styles.boton, props.esEliminar && styles.botonEliminar]}>
-                <Pressable
-                >
-                    {props.fotoPerfil ? (
-                        <Image source={{ uri: props.fotoPerfil }} style={{ width: hp(4), height: hp(4), borderRadius: 100, resizeMode: "contain", borderWidth: 1, borderColor: tema.background}} />
-                    ) : (
-                        <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} style={[styles.iconoBoton, props.esEliminar && styles.iconoBotonEliminar]} />
+            <Pressable
+                style={({ pressed }) => [
+                    {
+                        backgroundColor: pressed ? (props.fondo ? (props.esEliminar ? tema.error + "CC" : tema.primary + "CC") : props.esEliminar ? tema.error + "80" : tema.primary + "80") : props.fondo ? (props.esEliminar ? tema.error : tema.primary) : tema.background,
+                    },
+                    styles.boton, props.esEliminar && styles.botonEliminar,
+                ]}
+                onPress={() => {
+                    router.push(props.href);
+                }}
+            >
+                {props.fotoPerfil ? (
+                    <Image source={{ uri: props.fotoPerfil }} style={{ width: hp(4), height: hp(4), borderRadius: 100, resizeMode: "contain", borderWidth: 1, borderColor: tema.background }} />
+                ) : (
+                    <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} style={[styles.iconoBoton, props.esEliminar && styles.iconoBotonEliminar]} />
 
-                    )}
-                    {props.conBurbuja && (
-                        <View style={styles.burbuja}>
-                            <Text style={[props.fuenteTexto, styles.textBurbuja]}>{props.cantidad}</Text>
-                        </View>
-                    )}
-                </Pressable>
-            </Link>
+                )}
+                {props.conBurbuja && (
+                    <View style={styles.burbuja}>
+                        <Text style={[props.fuenteTexto, styles.textBurbuja]}>{props.cantidad}</Text>
+                    </View>
+                )}
+            </Pressable>
         ) : (
             <Pressable
-                style={[styles.boton, props.esEliminar && styles.botonEliminar]}
+                style={({ pressed }) => [
+                    {
+                        backgroundColor: pressed ? (props.fondo ? (props.esEliminar ? tema.error + "CC" : tema.primary + "CC") : props.esEliminar ? tema.error + "80" : tema.primary + "80") : props.fondo ? (props.esEliminar ? tema.error : tema.primary) : tema.background,
+                    },
+                    styles.boton, props.esEliminar && styles.botonEliminar,
+                ]}
                 onPress={props.onPress}
             >
                 <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} style={[styles.iconoBoton, props.esEliminar && styles.iconoBotonEliminar]} />

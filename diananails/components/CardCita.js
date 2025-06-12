@@ -12,7 +12,7 @@ export const CardCita = (props) => {
     // Estilos del componente
     const styles = StyleSheet.create({
         contenedorCita: {
-            backgroundColor: tema.secondaryContainer,
+            /*backgroundColor: tema.secondaryContainer,*/
             padding: 10,
             borderRadius: 10,
         },
@@ -69,7 +69,12 @@ export const CardCita = (props) => {
     return (
         <View>
             <Pressable
-                style={styles.contenedorCita}
+                style={({ pressed }) => [
+                    {
+                        backgroundColor: (pressed && props.esCliente) ? tema.secondaryContainer + "80" : tema.secondaryContainer,
+                    },
+                    styles.contenedorCita,
+                ]}
                 onPress={props.onPress}
             >
                 {props.mostrarCliente && (

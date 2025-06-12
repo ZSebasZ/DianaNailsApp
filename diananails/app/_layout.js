@@ -4,8 +4,12 @@ import { ThemeProvider } from './../contexts/themeContext';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { AuthProvider } from '../contexts/authContext';
+import { useCustomRouter } from '../hooks/useCustomRouter';
 
 export default function Layout() {
+
+  useCustomRouter();
+
   //Cargamos las fuentes
   const [fontsLoaded] = useFonts({
     'GantariRegular': require('./../assets/fonts/Gantari/Gantari-Regular.ttf'),
@@ -22,7 +26,7 @@ export default function Layout() {
   }, [fontsLoaded]);
 
   if (!fontsLoaded) {
-    return null; // o un splash temporal
+    return null;
   }
   return (
     <AuthProvider>

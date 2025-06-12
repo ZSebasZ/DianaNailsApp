@@ -143,6 +143,7 @@ export const CitasClienteScreen = () => {
                                             setCitaSeleccionada(item.cita.id)
                                             setModalConfirmarAccion(true)
                                         }}
+                                        esCliente={true}
                                     />
                                 }
                                 scrollEnabled={false}

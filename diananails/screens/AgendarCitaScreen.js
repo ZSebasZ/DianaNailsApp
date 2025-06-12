@@ -7,9 +7,9 @@ import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
 import { CardServicio } from "../components/CardServicio";
 import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerServicios";
 import { BarraResumen } from "../components/BarraResumen";
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useCallback } from 'react';
 import { BackHandler } from 'react-native';
-import { useRootNavigationState } from "expo-router";
+import { useRootNavigationState, useFocusEffect } from "expo-router";
 import { obtenerServicios } from "../api/ServiciosController";
 import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 import { ModalServiciosSelec } from "../components/ModalServiciosSelec";
@@ -24,27 +24,30 @@ export const AgendarCitaScreen = () => {
 
     // Logica para salir de la app con darle al boton de atras
     const rootState = useRootNavigationState();
-    useEffect(() => {
-        const onBackPress = () => {
-            if (!rootState) return false;
 
-            const currentRoute = rootState.routes[rootState.index];
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                if (!rootState) return false;
 
-            console.log(currentRoute.name)
+                const currentRoute = rootState.routes[rootState.index];
 
-            // Ajusta esto según tu ruta real
-            if (currentRoute.name === "navegacion/cliente") {
-                BackHandler.exitApp(); // salir de la app
-                return true;
-            }
+                console.log(currentRoute.name);
 
-            return false; // permite navegación normal hacia atrás
-        };
+                if (currentRoute.name === "navegacion/cliente") {
+                    BackHandler.exitApp();
+                    return true;
+                }
 
-        const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+                return false;
+            };
 
-        return () => backHandler.remove();
-    }, [rootState]);
+            const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => backHandler.remove();
+        }, [rootState])
+    );
+
 
     // Usamos el contexto
     const { serviciosSeleccionados, alternarSeleccionServicio, fecha, resetHoraManicuristas, subtotal, setPasoAgendamiento } = useContext(AgendarCitaContext)

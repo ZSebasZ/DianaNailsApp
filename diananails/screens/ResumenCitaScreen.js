@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, FlatList } from "react-native";
+import { View, Text, ScrollView, FlatList, BackHandler } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { useState } from "react";
@@ -9,18 +9,46 @@ import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerSer
 import { BarraResumen } from "../components/BarraResumen";
 import { CardManicurista } from "../components/CardManicurista";
 import { CardServicioResumen } from "../components/CardServicioResumen";
-import { useContext } from "react";
+import { useContext, useCallback } from "react";
 import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 import { AuthContext } from "../contexts/authContext";
 import { agendarCita } from "../api/AgendarCitaController";
 import { ModalLoader } from "../components/ModalLoader";
 import { ModalFeedback } from "../components/ModalFeedback";
 import { ModalErrorAPI } from "../components/ModalErrorAPI";
+import { useRootNavigationState, useFocusEffect, router } from "expo-router";
+
 
 
 
 //Pantalla de ResumenCita
 export const ResumenCitaScreen = () => {
+
+    // Logica para pantalla anterior
+    const rootState = useRootNavigationState();
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                if (!rootState) return false;
+
+                const currentRoute = rootState.routes[rootState.index];
+
+                console.log(currentRoute.name);
+
+                if (currentRoute.name === "navegacion/cliente") {
+                    setPasoAgendamiento(3)
+                    return true;
+                }
+
+                return false;
+            };
+
+            const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => backHandler.remove();
+        }, [rootState])
+    );
 
     // Estilos y fuentes
     const fuenteTexto = fuenteTextoStyles();
@@ -51,7 +79,7 @@ export const ResumenCitaScreen = () => {
     // Funcion para agendar la cita
     const agendarCitaCliente = async () => {
         try {
-            setModalLoaderVisible(true)            
+            setModalLoaderVisible(true)
             const idsServicios = serviciosSeleccionados.map(servicio => servicio.id);
             const respuesta = await agendarCita({
                 idCliente: usuario.datosUsuario.id,

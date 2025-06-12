@@ -5,6 +5,9 @@ import { gestionStyles } from '../styles/gestionStyles';
 import { SeccionEnTab } from "../components/SeccionEnTab";
 import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { BotonIconoTexto } from "../components/BotonIconoTexto";
+import { useCallback } from 'react';
+import { BackHandler } from 'react-native';
+import { useRootNavigationState, useFocusEffect, router } from "expo-router";
 
 // Pantalla de ActividadCliente
 export const ActividadClienteScreen = () => {
@@ -12,6 +15,32 @@ export const ActividadClienteScreen = () => {
     // Estilos y fuentes
     const fuenteTexto = fuenteTextoStyles();
     const styles = useThemedStyles(gestionStyles);
+
+    // Logica para ir a la tab inicial
+    const rootState = useRootNavigationState();
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                if (!rootState) return false;
+
+                const currentRoute = rootState.routes[rootState.index];
+
+                console.log(currentRoute.name);
+
+                if (currentRoute.name === "navegacion/cliente") {
+                    router.replace("/navegacion/cliente/(tabs-cliente)/(agendarCita)");
+                    return true;
+                }
+
+                return false;
+            };
+
+            const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => backHandler.remove();
+        }, [rootState])
+    );
 
     // Renderizamos la pantalla
     return (

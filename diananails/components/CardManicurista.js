@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, Image, View } from "react-native"
 import { useThemedStyles } from "../hooks/useThemeStyles"
-import { Link } from "expo-router"
+import { Link, router } from "expo-router"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 // Componente CardManicurista
@@ -12,8 +12,8 @@ export const CardManicurista = (props) => {
     // Estilos del componente
     const styles = StyleSheet.create({
         contenedorManicurista: {
-            backgroundColor: props.estaSeleccionada ? tema.primary : tema.background,
-            borderColor: tema.primary,
+            /*backgroundColor: props.estaSeleccionada ? tema.primary : tema.background,*/
+            /*borderColor: tema.primary,*/
             borderWidth: 2,
             borderRadius: 10,
             width: wp(40),
@@ -38,22 +38,35 @@ export const CardManicurista = (props) => {
     return (
         props.esLink ? (
             <View>
-                <Link href={props.href} asChild>
-                    <Pressable
-                        style={styles.contenedorManicurista}
-                        onPress={props.onPress}
-                    >
-                        <Image source={{ uri: props.manicuristaImg }} style={styles.manicuristaImg}></Image>
-                        <View style={{ flex: 1, justifyContent: "center" }}>
-                            <Text style={[props.fuenteTextoBold, styles.textTituloManicurista]}>{props.nombreManicurista}</Text>
-                        </View>
-                    </Pressable>
-                </Link>
+                <Pressable
+                    style={({ pressed }) => [
+                        {
+                            backgroundColor: pressed ? (props.estaSeleccionada ? tema.primary + "CC" : tema.primary + "80") : (props.estaSeleccionada ? tema.primary : tema.background),
+                            borderColor: pressed ? (props.estaSeleccionada ? tema.primary + "CC" : tema.primary) : (tema.primary)
+                        },
+                        styles.contenedorManicurista,
+                    ]}
+                    onPress={() => {
+                        props.onPress?.()
+                        router.push(props.href)
+                    }}
+                >
+                    <Image source={{ uri: props.manicuristaImg }} style={styles.manicuristaImg}></Image>
+                    <View style={{ flex: 1, justifyContent: "center" }}>
+                        <Text style={[props.fuenteTextoBold, styles.textTituloManicurista]}>{props.nombreManicurista}</Text>
+                    </View>
+                </Pressable>
             </View>
         ) : (
             <View>
                 <Pressable
-                    style={styles.contenedorManicurista}
+                    style={({ pressed }) => [
+                        {
+                            backgroundColor: pressed ? (props.estaSeleccionada ? tema.primary + "CC" : tema.primary + "80") : (props.estaSeleccionada ? tema.primary : tema.background),
+                            borderColor: pressed ? (props.estaSeleccionada ? tema.primary + "CC" : tema.primary) : (tema.primary)
+                        },
+                        styles.contenedorManicurista,
+                    ]}
                     onPress={props.onPress}
                 >
                     <Image source={{ uri: props.manicuristaImg }} style={styles.manicuristaImg}></Image>

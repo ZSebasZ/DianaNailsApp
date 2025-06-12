@@ -211,6 +211,7 @@ export const PedidosAdminScreen = () => {
                                         setPedidoSeleccionado(item.id)
                                         setModalActuPedido(true)
                                     }}
+                                    esAdmin={true}
                                 />
                             }
                             scrollEnabled={false}

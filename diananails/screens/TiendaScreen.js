@@ -1,4 +1,4 @@
-import { View, ScrollView, FlatList, Text } from "react-native";
+import { View, ScrollView, FlatList, Text, BackHandler } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { useContext, useEffect, useState, useCallback } from "react";
@@ -11,12 +11,38 @@ import { AuthContext } from "./../contexts/authContext"
 import { obtenerProductosTienda } from "../api/ProductosController";
 import { anadirCarritoProducto, obtenerCarritoProductos } from "../api/CarritoController";
 import { useCarrito } from "../contexts/carritoContext";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useRootNavigationState, router } from "expo-router";
 import { ModalErrorAPI } from "../components/ModalErrorAPI";
 
 
 //Pantalla de Tienda
 export const TiendaScreen = () => {
+
+    // Logica para ir a la tab inicial
+    const rootState = useRootNavigationState();
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                if (!rootState) return false;
+
+                const currentRoute = rootState.routes[rootState.index];
+
+                console.log(currentRoute.name);
+
+                if (currentRoute.name === "navegacion/cliente") {
+                    router.replace("/navegacion/cliente/(tabs-cliente)/(agendarCita)");
+                    return true;
+                }
+
+                return false;
+            };
+
+            const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => backHandler.remove();
+        }, [rootState])
+    );
 
     // Estilos y fuentes
     const fuenteTexto = fuenteTextoStyles();

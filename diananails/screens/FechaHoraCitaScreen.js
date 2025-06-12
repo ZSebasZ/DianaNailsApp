@@ -1,4 +1,4 @@
-import { View, FlatList, ScrollView, Text } from "react-native";
+import { View, FlatList, ScrollView, Text, BackHandler } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { fechaHoraStyles } from "../styles/fechaHoraStyles";
@@ -7,13 +7,14 @@ import { SeccionEnTab } from "../components/SeccionEnTab";
 import { fuenteTextoStyles } from '../styles/fuenteTextoStyles';
 import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerServicios";
 import { BarraResumen } from "../components/BarraResumen";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 import { BotonTexto } from "../components/BotonTexto";
 import { obtenerHorasManicuristasDisponibles } from "../api/AgendarCitaController";
 import { AuthContext } from "../contexts/authContext";
 import { ModalServiciosSelec } from "../components/ModalServiciosSelec";
 import { ModalErrorAPI } from "../components/ModalErrorAPI";
+import { useRootNavigationState, useFocusEffect, router } from "expo-router";
 
 
 // Configuracion del calendario en español
@@ -42,6 +43,33 @@ LocaleConfig.defaultLocale = 'es';
 
 //Pantalla de FechaHoraCita
 export const FechaHoraCitaScreen = () => {
+
+    // Logica para pantalla anterior
+    const rootState = useRootNavigationState();
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                if (!rootState) return false;
+
+                const currentRoute = rootState.routes[rootState.index];
+
+                console.log(currentRoute.name);
+
+                if (currentRoute.name === "navegacion/cliente") {
+                    setPasoAgendamiento(1)
+                    return true;
+                }
+
+                return false;
+            };
+
+            const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => backHandler.remove();
+        }, [rootState])
+    );
+
 
     // Estilos, tema y fuentes
     const fuenteTexto = fuenteTextoStyles();

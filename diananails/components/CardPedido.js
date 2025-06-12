@@ -13,7 +13,7 @@ export const CardPedido = (props) => {
     // Estilos del componente
     const styles = StyleSheet.create({
         containerPedido: {
-            backgroundColor: tema.secondaryContainer,
+            /*backgroundColor: tema.secondaryContainer,*/
             padding: 10,
             borderRadius: 10,
         },
@@ -70,7 +70,12 @@ export const CardPedido = (props) => {
     return (
         <View>
             <Pressable 
-                style={styles.containerPedido}
+                style={({ pressed }) => [
+                    {
+                        backgroundColor: ((pressed && props.esCliente && props.estado == "Pendiente de envío") || (pressed && props.esAdmin && props.estado != "Recibido")) ? tema.secondaryContainer + "80" : tema.secondaryContainer,
+                    },
+                    styles.containerPedido,
+                ]}
                 onPress={props.cancelarPedido == true ? props.onPress : undefined}
             >
                 {props.mostrarCliente && (

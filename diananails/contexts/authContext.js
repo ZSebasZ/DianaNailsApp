@@ -2,6 +2,7 @@ import { createContext, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { loginCliente, updateDatosUsuario } from "../api/AuthController";
 import { router } from "expo-router";
+import { navigationRef } from "./../utils/navigationRef";
 
 // Creamos el contexto
 export const AuthContext = createContext()
@@ -19,18 +20,23 @@ export const AuthProvider = ({ children }) => {
         //console.log("Inicio de sesion exitoso:", respuesta)
 
         //await AsyncStorage.setItem('tipoUsuario', String(respuesta.tipoUsuario))
-        setUsuario({tipoUsuario: respuesta.tipoUsuario, datosUsuario: respuesta.usuario})
+        setUsuario({ tipoUsuario: respuesta.tipoUsuario, datosUsuario: respuesta.usuario })
         await AsyncStorage.setItem('email', credenciales.email)
         await AsyncStorage.setItem('contrasena', credenciales.contrasena)
-        
+
         return respuesta
     }
 
     // Funcion que se encarga de cerrar la sesion
     const cerrarSesion = async () => {
-        await AsyncStorage.removeItem("email")
-        await AsyncStorage.removeItem("contrasena")
-        router.replace("/")
+        await AsyncStorage.removeItem("email");
+        await AsyncStorage.removeItem("contrasena");
+
+        navigationRef.reset({
+            index: 0,
+            routes: [{ name: "index" }],
+        });
+
     }
 
     // Funcion que se encarga de actualizar la foto del usuario
@@ -64,7 +70,7 @@ export const AuthProvider = ({ children }) => {
                 direccion_envio: datos.direccionEnvio
             }
         }))
-    } 
+    }
 
     // Retornamos el proveedor, el cual va a envolver toda la App
     return (

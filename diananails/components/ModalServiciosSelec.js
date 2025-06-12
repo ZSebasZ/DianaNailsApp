@@ -104,10 +104,15 @@ export const ModalServiciosSelec = (props) => {
                                 {props.editable == true && (
                                     <View style={{ width: "19%" }}>
                                         <Pressable
-                                            style={{ flex: 1, backgroundColor: tema.errorContainer, padding: 10, borderRadius: 10, justifyContent: "center", alignItems: "center" }}
+                                            style={({pressed}) => [
+                                                {
+                                                    backgroundColor: pressed ? tema.error + "CC" : tema.error
+                                                },
+                                                {flex: 1, padding: 10, borderRadius: 10, justifyContent: "center", alignItems: "center"}
+                                            ]}
                                             onPress={() => props.eliminarServicio(item)}
                                         >
-                                            <Icono IconComponent={MaterialCommunityIcons} name={"delete"} style={{ color: tema.error, fontSize: hp(3.5) }} />
+                                            <Icono IconComponent={MaterialCommunityIcons} name={"delete"} style={{ color: tema.errorContainer, fontSize: hp(3.5) }} />
                                         </Pressable>
                                     </View>
                                 )}

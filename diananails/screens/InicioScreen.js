@@ -17,10 +17,15 @@ import { AuthContext } from '../contexts/authContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { ModalErrorAPI } from "../components/ModalErrorAPI";
+import { useNavigationState } from '@react-navigation/native';
+
 
 
 //Pantalla de Inicio
 export const InicioScreen = () => {
+
+    //const routes = useNavigationState(state => state.routes);
+    //console.log("Stack actual:", routes.map(r => r.name));
 
     //Estilos, tema, y fuentes
     const styles = useThemedStyles(inicioStyles);
@@ -61,6 +66,8 @@ export const InicioScreen = () => {
     useEffect(() => {
         const verificarSesion = async () => {
             try {
+
+
                 const email = await AsyncStorage.getItem("email");
                 const contrasena = await AsyncStorage.getItem("contrasena");
 
@@ -89,6 +96,7 @@ export const InicioScreen = () => {
 
             } catch (error) {
                 setModalErrorAPI(true)
+                console.log(error)
             }
         };
         verificarSesion();

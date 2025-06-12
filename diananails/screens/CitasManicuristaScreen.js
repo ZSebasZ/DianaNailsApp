@@ -1,18 +1,46 @@
-import { View, ScrollView, FlatList, Text } from "react-native";
+import { View, ScrollView, FlatList, Text, BackHandler } from "react-native";
 import { Screen } from '../components/Screen';
 import { useThemedStyles } from '../hooks/useThemeStyles';
 import { citasClienteStyles } from '../styles/citasClienteStyles';
 import { SeccionEnTab } from "../components/SeccionEnTab";
 import { fuenteTextoStyles } from "../styles/fuenteTextoStyles";
 import { CardCita } from "../components/CardCita";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { AuthContext } from "../contexts/authContext";
 import { obtenerCitasPorManicurista } from "../api/CitasController";
 import { ModalErrorAPI } from "../components/ModalErrorAPI";
+import { useRootNavigationState, useFocusEffect } from "expo-router";
+
 
 
 //Pantalla de CitasManicurista
 export const CitasManicuristaScreen = () => {
+
+    // Logica para salir de la app con darle al boton de atras
+    const rootState = useRootNavigationState();
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                if (!rootState) return false;
+
+                const currentRoute = rootState.routes[rootState.index];
+
+                console.log(currentRoute.name);
+
+                if (currentRoute.name === "navegacion/manicurista") {
+                    BackHandler.exitApp();
+                    return true;
+                }
+
+                return false;
+            };
+
+            const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => backHandler.remove();
+        }, [rootState])
+    );
 
     // Estilos y fuentes
     const fuenteTexto = fuenteTextoStyles();

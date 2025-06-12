@@ -19,7 +19,7 @@ export const ContadorCantidadProducto = (props) => {
             gap: wp(7)
         },
         botonCantidadProducto: {
-            backgroundColor: tema.primary,
+            /*backgroundColor: tema.primary,*/
             borderRadius: 100,
             padding: 10
         },
@@ -48,7 +48,12 @@ export const ContadorCantidadProducto = (props) => {
         <View style={styles.containerCantidadProducto}>
 
             <Pressable
-                style={[styles.botonCantidadProducto, { opacity: (props.stock == 0 || props.enCarrito == 1 || props.cantidad == 1 || props.tiempoRequerido == 1) ? 0.5 : 1 }]}
+                style={({ pressed }) => [
+                    {
+                        backgroundColor: pressed ? tema.primary + "CC" : tema.primary,
+                    },
+                    styles.botonCantidadProducto, { opacity: (props.stock == 0 || props.enCarrito == 1 || props.cantidad == 1 || props.tiempoRequerido == 1) ? 0.5 : 1 },
+                ]}
                 disabled={(props.stock == 0 || props.enCarrito == 1 || props.cantidad == 1 || props.tiempoRequerido == 1) ? true : false}
                 onPress={props.onDecrementar}
             >
@@ -61,7 +66,12 @@ export const ContadorCantidadProducto = (props) => {
             }
 
             <Pressable
-                style={[styles.botonCantidadProducto, { opacity: (props.stock == 0 || props.enCarrito == 1 || props.cantidad == 5 || ((props.cantidad == props.stock) && (props.cantidad && props.stock)) || ((props.tiempoRequerido == props.maxTiempo) && props.tiempoRequerido && props.maxTiempo)) ? 0.5 : 1 }]}
+                style={({ pressed }) => [
+                    {
+                        backgroundColor: pressed ? tema.primary + "CC" : tema.primary,
+                    },
+                    styles.botonCantidadProducto, { opacity: (props.stock == 0 || props.enCarrito == 1 || props.cantidad == 5 || ((props.cantidad == props.stock) && (props.cantidad && props.stock)) || ((props.tiempoRequerido == props.maxTiempo) && props.tiempoRequerido && props.maxTiempo)) ? 0.5 : 1 },
+                ]}
                 disabled={(props.stock == 0 || props.enCarrito == 1 || props.cantidad == 5 || ((props.cantidad == props.stock) && (props.cantidad && props.stock)) || ((props.tiempoRequerido == props.maxTiempo) && props.tiempoRequerido && props.maxTiempo)) ? true : false}
                 onPress={props.onIncrementar}
             >

@@ -1,12 +1,12 @@
 import { Pressable, StyleSheet, Text, Image, View } from "react-native"
 import { useThemedStyles } from "../hooks/useThemeStyles"
-import { Link } from "expo-router"
+import { Link, router } from "expo-router"
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { BotonTexto } from "./BotonTexto";
 
 // Componente CardProducto
 export const CardProducto = (props) => {
-    
+
     // Obtenemos los colores del tema
     const tema = useThemedStyles()
 
@@ -69,33 +69,41 @@ export const CardProducto = (props) => {
     // Renderizamos el componente
     return (
         <View>
-            <Link href={props.href} asChild>
-                <Pressable style={styles.contenedorProducto}>
-                    <Image source={ props.productoImg ? {uri: props.productoImg} : productoImgDefault} style={styles.productoImg}></Image>
-                    <View style={styles.contenedorInfoProducto}>
-                        <Text style={[props.fuenteTextoBold, styles.textTituloProducto]}>{props.nombre}</Text>
-                        <Text style={[props.fuenteTextoRegular, styles.textPrecioProducto]}>{formatearPrecio(props.precio)} €</Text>
+            <Pressable
+                style={({ pressed }) => [
+                    {
+                        backgroundColor: pressed ? tema.primary + "80" : tema.backgroundColor,
+                    },
+                    styles.contenedorProducto,
+                ]}
+                onPress={() => {
+                    router.push(props.href);
+                }}
+            >
+                <Image source={props.productoImg ? { uri: props.productoImg } : productoImgDefault} style={styles.productoImg}></Image>
+                <View style={styles.contenedorInfoProducto}>
+                    <Text style={[props.fuenteTextoBold, styles.textTituloProducto]}>{props.nombre}</Text>
+                    <Text style={[props.fuenteTextoRegular, styles.textPrecioProducto]}>{formatearPrecio(props.precio)} €</Text>
 
-                        <View style={styles.contenedorBotonAccionProducto}>
-                            <BotonTexto
-                                botonNavegacion={true}
-                                esLink={false}
-                                fondo={true}
-                                deshabilitado={props.enCarrito != 0 || props.agotado != 0}
-                                enCarrito={props.enCarrito == 0 ? false : true}
-                                agotado={props.agotado == 0 ? false : true}
-                                fuenteTexto={props.fuenteTextoBold}
-                                textoBoton={
-                                    props.enCarrito != 0 || props.agotado != 0
-                                        ? (props.agotado != 0 ? "Agotado" : "Producto en carrito")
-                                        : props.vistaAdmin ? "En stock" : "Añadir"
-                                }
-                                onPress={props.onAnadir}
-                            />
-                        </View>
+                    <View style={styles.contenedorBotonAccionProducto}>
+                        <BotonTexto
+                            botonNavegacion={true}
+                            esLink={false}
+                            fondo={true}
+                            deshabilitado={props.enCarrito != 0 || props.agotado != 0}
+                            enCarrito={props.enCarrito == 0 ? false : true}
+                            agotado={props.agotado == 0 ? false : true}
+                            fuenteTexto={props.fuenteTextoBold}
+                            textoBoton={
+                                props.enCarrito != 0 || props.agotado != 0
+                                    ? (props.agotado != 0 ? "Agotado" : "Producto en carrito")
+                                    : props.vistaAdmin ? "En stock" : "Añadir"
+                            }
+                            onPress={props.onAnadir}
+                        />
                     </View>
-                </Pressable>
-            </Link>
+                </View>
+            </Pressable>
         </View>
     )
 }

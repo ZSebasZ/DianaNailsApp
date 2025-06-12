@@ -3,7 +3,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Icono } from "./Icono";
 import { useThemedStyles } from '../hooks/useThemeStyles';
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
 // Componente BotonIconoTexto
 export const BotonIconoTexto = (props) => {
@@ -19,9 +19,9 @@ export const BotonIconoTexto = (props) => {
             justifyContent: "center",
             alignItems: "center",
             gap: props.enTab ? wp(2) : wp(1),
-            backgroundColor: props.fondo ? (props.tipoError ? tema.error : tema.primary) : tema.background,
+            /*backgroundColor: props.fondo ? (props.tipoError ? tema.error : tema.primary) : tema.background,*/
             borderWidth: 1,
-            borderColor: props.tipoError ? tema.error : tema.primary,
+            /*borderColor: props.tipoError ? tema.error : tema.primary,*/
             borderRadius: 10,
             opacity: props.deshabilitado ? 0.5 : 1
         },
@@ -37,25 +37,39 @@ export const BotonIconoTexto = (props) => {
             color: props.fondo ? tema.onPrimary : (props.tipoError ? tema.error : tema.primary),
         },
 
-        
+
     })
 
     // Renderizamos el componente
     return (
         props.esLink ? (
-            <Link href={props.href} asChild>
-                <Pressable
-                    style={styles.boton}
-                    onPress={props.onPress}
-                    disabled={props.deshabilitado && true}
-                >
-                    <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} style={[styles.iconoBoton, styles.iconoBotonInicioScreen]} />
-                    <Text style={[props.enTab ? props.fuenteTextoNormal : props.fuenteTexto, styles.textBotonInicioScreen]}>{props.textoBoton}</Text>
-                </Pressable>
-            </Link>
+            <Pressable
+                style={({ pressed }) => [
+                    {
+                        backgroundColor: pressed ? (props.fondo ? (props.tipoError ? tema.error + "CC" : tema.primary + "CC") : props.tipoError ? tema.error + "80" : tema.primary + "80") : props.fondo ? (props.tipoError ? tema.error : tema.primary) : tema.background,
+                        borderColor: pressed ? (props.tipoError ? tema.error + "CC" : tema.primary + "CC") : props.tipoError ? tema.error : tema.primary
+                    },
+                    styles.boton,
+                ]}
+                onPress={() => {
+                    props.onPress?.();
+                    router.push(props.href);
+                }}
+                disabled={props.deshabilitado && true}
+            >
+                <Icono IconComponent={MaterialCommunityIcons} name={props.nombreIcono} style={[styles.iconoBoton, styles.iconoBotonInicioScreen]} />
+                <Text style={[props.enTab ? props.fuenteTextoNormal : props.fuenteTexto, styles.textBotonInicioScreen]}>{props.textoBoton}</Text>
+            </Pressable>
+
         ) : (
             <Pressable
-                style={styles.boton}
+                style={({ pressed }) => [
+                    {
+                        backgroundColor: pressed ? (props.fondo ? (props.tipoError ? tema.error + "CC" : tema.primary + "CC") : props.tipoError ? tema.error + "80" : tema.primary + "80") : props.fondo ? (props.tipoError ? tema.error : tema.primary) : tema.background,
+                        borderColor: pressed ? (props.tipoError ? tema.error + "CC" : tema.primary + "CC") : props.tipoError ? tema.error : tema.primary
+                    },
+                    styles.boton,
+                ]}
                 onPress={props.onPress}
                 disabled={props.deshabilitado && true}
             >

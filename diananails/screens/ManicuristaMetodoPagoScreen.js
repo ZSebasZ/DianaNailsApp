@@ -1,4 +1,4 @@
-import { View, ScrollView, FlatList } from "react-native";
+import { View, ScrollView, FlatList, BackHandler } from "react-native";
 import { Screen } from '../components/Screen';
 import { useState } from "react";
 import { manicuristaMetodoPagoStyles } from "../styles/manicuristaMetodoPagoStyles";
@@ -7,13 +7,41 @@ import { SeccionEnTab } from "../components/SeccionEnTab";
 import { BotonesCancelarVerServicios } from "../components/BotonesCancelarVerServicios";
 import { BarraResumen } from "../components/BarraResumen";
 import { CardManicurista } from "../components/CardManicurista";
-import { useContext } from "react";
+import { useContext, useCallback } from "react";
 import { AgendarCitaContext } from "../contexts/agendarCitaContext";
 import { BotonTexto } from "../components/BotonTexto";
 import { ModalServiciosSelec } from "../components/ModalServiciosSelec";
+import { useRootNavigationState, useFocusEffect, router } from "expo-router";
+
 
 //Pantalla de ManicuristaMetodoPago
 export const ManicuristaMetodoPagoScreen = () => {
+
+    // Logica para pantalla anterior
+    const rootState = useRootNavigationState();
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                if (!rootState) return false;
+
+                const currentRoute = rootState.routes[rootState.index];
+
+                console.log(currentRoute.name);
+
+                if (currentRoute.name === "navegacion/cliente") {
+                    setPasoAgendamiento(2)
+                    return true;
+                }
+
+                return false;
+            };
+
+            const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => backHandler.remove();
+        }, [rootState])
+    );
 
     //Fuentes
     const fuenteTexto = fuenteTextoStyles();
@@ -123,8 +151,8 @@ export const ManicuristaMetodoPagoScreen = () => {
                     ></FlatList>
                 </ScrollView>
             </View>
-            <BotonesCancelarVerServicios 
-                verServicios={() => {setModalServiciosSelec(true)}}
+            <BotonesCancelarVerServicios
+                verServicios={() => { setModalServiciosSelec(true) }}
             />
             <BarraResumen
                 onPress={() => {
