@@ -56,6 +56,22 @@ export const CardServicio = (props) => {
         return resultado || "0 minutos";
     };
 
+    // Funcion que formatea el precio
+    function formatearPrecio(num) {
+        // Formatear con dos decimales fijos
+        let precio = num.toFixed(2);
+
+        // Separar parte entera y decimal
+        let [entero, decimal] = precio.split('.');
+
+        // Asegurar que la parte entera tenga al menos dos dígitos
+        if (entero.length < 2) {
+            entero = '0' + entero;
+        }
+
+        return `${entero}.${decimal}`;
+    }
+
     // Renderizamos el componente
     return (
         props.esLink ? (
@@ -76,7 +92,7 @@ export const CardServicio = (props) => {
                 <Text style={[props.fuenteTextoBold, styles.textTituloInfo]}>Tiempo requerido</Text>
                 <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{calcularTiempoRequerido(props.servicio.horas_requeridas)}</Text>
                 <Text style={[props.fuenteTextoBold, styles.textTituloInfo]}>Precio</Text>
-                <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{props.servicio.precio} €</Text>
+                <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{formatearPrecio(props.servicio.precio)} €</Text>
             </Pressable>
         ) : (
             <Pressable
@@ -93,7 +109,7 @@ export const CardServicio = (props) => {
                 <Text style={[props.fuenteTextoBold, styles.textTituloInfo]}>Tiempo requerido</Text>
                 <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{calcularTiempoRequerido(props.servicio.horas_requeridas)}</Text>
                 <Text style={[props.fuenteTextoBold, styles.textTituloInfo]}>Precio</Text>
-                <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{props.servicio.precio} €</Text>
+                <Text style={[props.fuenteTextoRegular, styles.textInfo]}>{formatearPrecio(props.servicio.precio)} €</Text>
             </Pressable>
         )
     )

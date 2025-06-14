@@ -148,6 +148,7 @@ export const RegistroScreen = () => {
                                 onValueChange={onValueChange}
                                 errorValidacion={errores.nombre}
                                 onBlurValidacion={registroValidacionOnBlur}
+                                returnKeyType="next"
                             />
                             <CampoTextoInput
                                 conIcono={true}
@@ -160,6 +161,7 @@ export const RegistroScreen = () => {
                                 onValueChange={onValueChange}
                                 errorValidacion={errores.apellidos}
                                 onBlurValidacion={registroValidacionOnBlur}
+                                returnKeyType="next"
                             />
                             <CampoTextoInput
                                 conIcono={true}
@@ -172,6 +174,7 @@ export const RegistroScreen = () => {
                                 onValueChange={onValueChange}
                                 errorValidacion={errores.telefono}
                                 onBlurValidacion={registroValidacionOnBlur}
+                                returnKeyType="next"
                             />
                             <CampoTextoInput
                                 conIcono={true}
@@ -184,6 +187,7 @@ export const RegistroScreen = () => {
                                 onValueChange={onValueChange}
                                 errorValidacion={errores.direccionEnvio}
                                 onBlurValidacion={registroValidacionOnBlur}
+                                returnKeyType="next"
                             />
                             <CampoTextoInput
                                 conIcono={true}
@@ -197,6 +201,7 @@ export const RegistroScreen = () => {
                                 errorValidacion={errores.email}
                                 onBlurValidacion={registroValidacionOnBlur}
                                 tipoLogin={tipoLogin}
+                                returnKeyType="next"
                             />
                             <CampoTextoInput
                                 conIcono={true}
@@ -209,6 +214,7 @@ export const RegistroScreen = () => {
                                 onValueChange={onValueChange}
                                 errorValidacion={errores.contrasena}
                                 onBlurValidacion={registroValidacionOnBlur}
+                                returnKeyType="next"
                             />
                             <CampoTextoInput
                                 conIcono={true}
@@ -222,6 +228,7 @@ export const RegistroScreen = () => {
                                 errorValidacion={errores.confirmarContrasena}
                                 verificarContrasena={valoresCampos.contrasena}
                                 onBlurValidacion={registroValidacionOnBlur}
+                                returnKeyType="send"
                             />
                         </ContenedorInputs>
                         <View style={styles.contenedorBotones}>

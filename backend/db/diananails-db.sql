@@ -284,19 +284,19 @@ INSERT INTO horas (id, hora, es_laboral) VALUES
 
 -- Datos para la tabla de Administradores, Manicuristas y Clientes
 INSERT INTO usuarios (id, url_imagen, nombre, apellidos, telefono, email, contrasena) VALUES
-(1, 'https://images.pexels.com/photos/3750717/pexels-photo-3750717.jpeg', 'Diana Lorena', 'Jimenez', '657487598', 'admin@diananails.com', 'abc123.'),
-(2, 'https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=600', 'Sofia', 'Garcia', '666666661', 'sgarcia@diananails.com', 'abc123.'),
--- (3, 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=600', 'Ana', 'Ramírez', '666666662', 'nramirez@diananails.com', 'abc123.'),
--- (4, 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', 'Camila', 'Lopez', '666666663', 'clopez@diananails.com', 'abc123.'),
-(5, 'https://images.pexels.com/photos/12204293/pexels-photo-12204293.jpeg', 'Cliente uno', 'Apellidos uno', '666666664', 'cliente1@gmail.com', 'abc123.');
+(1, 'https://images.pexels.com/photos/3750717/pexels-photo-3750717.jpeg', 'Diana Lorena', 'Jimenez', '657487598', 'admin@diananails.com', '$2b$10$uKtb4f3mX1D.cJAEkFMAX.12SsrS.9gXzD5rfF9LfDxsE/UIejhRC'),
+(2, 'https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=600', 'Sofia', 'Garcia', '666666661', 'sgarcia@diananails.com', '$2b$10$EwBOipKLzggTGWCuK8wsE.TupNQ2Lsy9P0sB9pkuBM7LhNuITDhOW'),
+(3, 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=600', 'Ana', 'Ramírez', '666666662', 'nramirez@diananails.com', '$2b$10$tTLMjeEUi.YqywDzKgV97OsApX5f4jttkm614tlzTZqn1TKYYeHlS'),
+(4, 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', 'Camila', 'Lopez', '666666663', 'clopez@diananails.com', '$2b$10$Q8cOFyf/lJ9HHQrt1MJHDuVSAZGR4qfQNvfy2ivNNsVfiHrt1DVdS'),
+(5, 'https://images.pexels.com/photos/30068229/pexels-photo-30068229.jpeg', 'Sebastian', 'Jimenez', '666666664', 'cliente1@gmail.com', '$2b$10$/q9dDTDQj2aCgwjPxYA9euY3N14HZhUh4ceBtCLMB3Lp4JGr54RsW');
 
 INSERT INTO administradores (id, dni) VALUES
 (1, '84811274Q');
 
 INSERT INTO manicuristas (id, dni) VALUES
-(2, '12345678A'); -- ,
--- (3, '12345678B'),
--- (4, '12345678C');
+(2, '12345678A'),
+(3, '12345678B'),
+(4, '12345678C');
 
 INSERT INTO clientes (id, direccion_envio) VALUES
 (5, 'Calle del paseo, 21');
@@ -306,25 +306,25 @@ INSERT INTO carritos (id_cliente, subtotal) VALUES
 
 -- Datos para la tabal de Servicios
 INSERT INTO servicios (id, nombre, precio, horas_requeridas) VALUES
-(1, 'Manicura', 9, 1),
-(2, 'Semipermanente básico', 17, 3),
-(3, 'Semipermanente con decoración', 20, 4),
-(4, 'Retiro de semipermanente', 5, 1),
-(5, 'Arreglo de uña semipermanente', 2, 1),
-(6, 'Uñas acrílicas', 30, 8),
-(7, 'Uñas acrílicas extra largas', 35, 9),
-(8, 'Relleno acrílico 1 solo color ', 25, 4),
-(9, 'Relleno acrílico con decoración', 30, 6),
-(10, 'Arreglo de uña acrílica rota', 5, 1),
-(11, 'Retiro de acrílico ', 10, 2),
-(12, 'Esmaltado manos tradicional', 12, 2),
-(13, 'Refuerzo Kappi 1 solo color', 20, 4),
-(14, 'Refuerzo Kappi con decoracion', 25, 6),
-(15, 'Pedicura limpieza', 20, 3),
-(16, 'Pedicura completa 1 solo color', 25, 4),
-(17, 'Pedicura completa con decoración', 28, 5),
-(18, 'Esmaltado de pies 1 solo color', 18, 2),
-(19, 'Esmaltado de pies con decoración', 21, 3);
+(1, 'Manicura', 9.00, 1),
+(2, 'Semipermanente básico', 17.00, 3),
+(3, 'Semipermanente con decoración', 20.00, 4),
+(4, 'Retiro de semipermanente', 5.00, 1),
+(5, 'Arreglo de uña semipermanente', 2.00, 1),
+(6, 'Uñas acrílicas', 30.00, 8),
+(7, 'Uñas acrílicas extra largas', 35.00, 9),
+(8, 'Relleno acrílico 1 solo color ', 25.00, 4),
+(9, 'Relleno acrílico con decoración', 30.00, 6),
+(10, 'Arreglo de uña acrílica rota', 5.00, 1),
+(11, 'Retiro de acrílico ', 10.00, 2),
+(12, 'Esmaltado manos tradicional', 12.00, 2),
+(13, 'Refuerzo Kappi 1 solo color', 20.00, 4),
+(14, 'Refuerzo Kappi con decoracion', 25.00, 6),
+(15, 'Pedicura limpieza', 20.00, 3),
+(16, 'Pedicura completa 1 solo color', 25.00, 4),
+(17, 'Pedicura completa con decoración', 28.00, 5),
+(18, 'Esmaltado de pies 1 solo color', 18.00, 2),
+(19, 'Esmaltado de pies con decoración', 21.00, 3);
 
 -- Datos para la tabla Metodos de pago
 INSERT INTO metodos_pago (metodo) VALUES
@@ -344,6 +344,25 @@ INSERT INTO productos (url_imagen, nombre, descripcion, precio, stock) VALUES
 ('https://veki.es/2743-thickbox_default/snb-kit-de-pedicura-profesional.webp', 'Kit Pedicura Completo', 'Set profesional de pedicura con piedra pómez, cortaúñas y separadores.', 14.99, 10),
 ('https://fiduciamakeupbo.com/wp-content/uploads/2024/04/vogue-base-fortalecedora1234.jpg', 'Base Fortalecedora de Uñas', 'Protector y fortalecedor de uñas antes del esmalte.', 6.80, 22),
 ('https://www.druni.es/media/catalog/product/5/6/5637.jpg', 'Esmalte en Gel UV', 'Esmalte semipermanente para uñas con acabado brillante.', 9.99, 0);
+
+-- Datos para la tabla Opiniones
+INSERT INTO opiniones (id_cliente, titulo, descripcion, estrellas, fecha)
+VALUES
+(5, 'Servicio deficiente', 
+'La atención fue lenta y no me gustó el resultado de la manicura. El esmalte se despegó al segundo día y no parecía profesional.', 
+2, '2025-06-01'),
+
+(5, 'Aceptable pero mejorable', 
+'El salón está limpio y el personal es amable, pero la pedicura no duró mucho. Creo que podrían mejorar la calidad de los productos.', 
+3, '2025-06-03'),
+
+(5, 'Muy buen servicio', 
+'Me encantó el ambiente del salón, relajante y acogedor. La profesional que me atendió fue muy detallista con la manicura. Volvería.', 
+4, '2025-06-05'),
+
+(5, 'Excelente experiencia', 
+'Desde que entré, el trato fue impecable. Me hicieron una pedicura perfecta, y me ofrecieron té mientras esperaba. ¡Muy recomendado!', 
+5, '2025-06-10');
 
 CREATE VIEW `vmanicuristas` 
 AS 

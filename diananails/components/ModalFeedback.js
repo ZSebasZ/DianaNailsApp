@@ -25,6 +25,7 @@ export const ModalFeedback = (props) => {
             alignItems: 'center'
         },
         textTituloModal: {
+            textAlign: "center",
             color: tema.onBackground,
             fontFamily: "GantariBold",
             fontSize: hp(3)

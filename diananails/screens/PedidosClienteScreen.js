@@ -42,6 +42,8 @@ export const PedidosClienteScreen = () => {
             const respuesta = await obtenerPedidosCliente(usuario.datosUsuario.id, filtro)
             if (respuesta.length > 0) {
                 setPedidos(respuesta)
+            } else {
+                setPedidos(null)
             }
             setModalLoaderVisible(false)
         } catch (error) {
@@ -88,7 +90,7 @@ export const PedidosClienteScreen = () => {
             setPedidoSeleccionado(null)
         } catch (error) {
             setModalLoaderVisible(false)
-            setModalErrorAPI(true)  
+            setModalErrorAPI(true)
         }
     }
 

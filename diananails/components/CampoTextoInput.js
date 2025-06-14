@@ -145,6 +145,7 @@ export const CampoTextoInput = (props) => {
                         ref={inputRef}
                         editable={props.deshabilitado && false}
                         onFocus={() => setCampoActivo(true)}
+                        returnKeyType={props.returnKeyType}
                     />
                 </View>
                 {mostrarError &&
@@ -186,6 +187,7 @@ export const CampoTextoInput = (props) => {
                                 ref={inputRef}
                                 editable={props.deshabilitado && false}
                                 onFocus={() => setCampoActivo(true)}
+                                returnKeyType={props.returnKeyType}
                             />
                         </View>
                         {mostrarError &&

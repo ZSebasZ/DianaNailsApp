@@ -130,6 +130,7 @@ export const LoginScreen = () => {
                             errorValidacion={errores.email}
                             onBlurValidacion={loginValidacionOnBlur}
                             tipoLogin={tipoLogin}
+                            returnKeyType="next"
                         />
                         <CampoTextoInput
                             conIcono={true}
@@ -142,6 +143,7 @@ export const LoginScreen = () => {
                             onValueChange={onValueChange}
                             errorValidacion={errores.contrasena}
                             onBlurValidacion={loginValidacionOnBlur}
+                            returnKeyType="send"
                         />
                         {credencialesIncorrectas && (
                             <Text style={styles.credencialesIncorrectas}>Credenciales incorrectas, intentelo de nuevo</Text>

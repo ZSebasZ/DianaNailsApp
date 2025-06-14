@@ -177,6 +177,7 @@ export const OpinionesScreen = () => {
                             errorValidacion={errores.titulo}
                             anchoCompleto={true}
                             onBlurValidacion={opinionValidacionOnBlur}
+                            returnKeyType="next"
                         />
                         <CampoTextoInput
                             conIcono={false}
@@ -194,6 +195,7 @@ export const OpinionesScreen = () => {
                             anchoCompleto={true}
                             esTextArea={true}
                             onBlurValidacion={opinionValidacionOnBlur}
+                            returnKeyType="send"
                         />
 
                         <View>

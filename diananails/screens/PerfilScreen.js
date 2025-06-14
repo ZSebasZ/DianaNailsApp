@@ -347,6 +347,7 @@ export const PerfilScreen = () => {
                                     onValueChange={onValueChange}
                                     errorValidacion={errores.nombre}
                                     onBlurValidacion={updateDatosValidacionOnBlur}
+                                    returnKeyType="next"
                                 />
                                 <CampoTextoInput
                                     conIcono={true}
@@ -363,6 +364,7 @@ export const PerfilScreen = () => {
                                     onValueChange={onValueChange}
                                     errorValidacion={errores.apellidos}
                                     onBlurValidacion={updateDatosValidacionOnBlur}
+                                    returnKeyType="next"
                                 />
                                 <CampoTextoInput
                                     conIcono={true}
@@ -379,6 +381,7 @@ export const PerfilScreen = () => {
                                     onValueChange={onValueChange}
                                     errorValidacion={errores.telefono}
                                     onBlurValidacion={updateDatosValidacionOnBlur}
+                                    returnKeyType="next"
                                 />
                                 {usuario.tipoUsuario == 2 &&
                                     <CampoTextoInput
@@ -396,6 +399,7 @@ export const PerfilScreen = () => {
                                         onValueChange={onValueChange}
                                         errorValidacion={errores.direccionEnvio}
                                         onBlurValidacion={updateDatosValidacionOnBlur}
+                                        returnKeyType="next"
                                     />
                                 }
                                 <CampoTextoInput

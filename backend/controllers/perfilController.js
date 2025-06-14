@@ -221,7 +221,7 @@ const deleteCliente = (req, res) => {
                 if (results.length > 0) {
                     const idsCitasCliente = results.map(row => row.id);
 
-                    console.log(idsCitasCliente)
+                    //console.log(idsCitasCliente)
                     //Borramos todas las citas_horas del cliente
                     const deleteCitasHorasCliente = "DELETE FROM citas_horas WHERE id_cita IN (?)"
                     connection.query(deleteCitasHorasCliente, [idsCitasCliente], (error, result) => {
@@ -232,7 +232,7 @@ const deleteCliente = (req, res) => {
                             })
                         }
 
-                        console.log("citas horas eliminadas")
+                        //console.log("citas horas eliminadas")
                         //Borramos todas las citas_servicios del cliente
                         const deleteCitasServiciosCliente = "DELETE FROM citas_servicios WHERE id_cita IN (?)"
                         connection.query(deleteCitasServiciosCliente, [idsCitasCliente], (error, result) => {

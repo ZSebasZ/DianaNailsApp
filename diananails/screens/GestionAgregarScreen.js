@@ -385,6 +385,7 @@ export const GestionAgregarScreen = (props) => {
                                             onValueChange={onValueChange}
                                             errorValidacion={errores.nombre}
                                             onBlurValidacion={servicioValidacionOnBlur}
+                                            returnKeyType="next"
                                         />
                                         <CampoTextoInput
                                             tipoCantidad={true}
@@ -402,6 +403,7 @@ export const GestionAgregarScreen = (props) => {
                                             onValueChange={onValueChange}
                                             errorValidacion={errores.precio}
                                             onBlurValidacion={servicioValidacionOnBlur}
+                                            returnKeyType="next"
                                         />
                                         <CampoTextoInput
                                             fuenteTexto={fuenteTexto.gantariRegular}
@@ -434,6 +436,7 @@ export const GestionAgregarScreen = (props) => {
                                             onValueChange={onValueChange}
                                             errorValidacion={errores.nombre}
                                             onBlurValidacion={productoValidacionOnBlur}
+                                            returnKeyType="next"
                                         />
                                         <CampoTextoInput
                                             conIcono={false}
@@ -451,6 +454,7 @@ export const GestionAgregarScreen = (props) => {
                                             onValueChange={onValueChange}
                                             errorValidacion={errores.descripcion}
                                             onBlurValidacion={productoValidacionOnBlur}
+                                            returnKeyType="next"
                                         />
                                         <CampoTextoInput
                                             tipoCantidad={true}
@@ -468,6 +472,7 @@ export const GestionAgregarScreen = (props) => {
                                             onValueChange={onValueChange}
                                             errorValidacion={errores.precio}
                                             onBlurValidacion={productoValidacionOnBlur}
+                                            returnKeyType="next"
                                         />
                                         <CampoTextoInput
                                             tipoCantidad={true}
@@ -485,6 +490,7 @@ export const GestionAgregarScreen = (props) => {
                                             onValueChange={onValueChange}
                                             errorValidacion={errores.stock}
                                             onBlurValidacion={productoValidacionOnBlur}
+                                            returnKeyType="send"
                                         />
                                     </>
                                 )}
@@ -505,6 +511,7 @@ export const GestionAgregarScreen = (props) => {
                                             onValueChange={onValueChange}
                                             errorValidacion={errores.dniNie}
                                             onBlurValidacion={manicuristaValidacionOnBlur}
+                                            returnKeyType="next"
                                         />
                                         <CampoTextoInput
                                             conIcono={true}
@@ -521,6 +528,7 @@ export const GestionAgregarScreen = (props) => {
                                             onValueChange={onValueChange}
                                             errorValidacion={errores.nombre}
                                             onBlurValidacion={manicuristaValidacionOnBlur}
+                                            returnKeyType="next"
                                         />
                                         <CampoTextoInput
                                             conIcono={true}
@@ -537,6 +545,7 @@ export const GestionAgregarScreen = (props) => {
                                             onValueChange={onValueChange}
                                             errorValidacion={errores.apellidos}
                                             onBlurValidacion={manicuristaValidacionOnBlur}
+                                            returnKeyType="next"
                                         />
                                         <CampoTextoInput
                                             conIcono={true}
@@ -553,6 +562,7 @@ export const GestionAgregarScreen = (props) => {
                                             onValueChange={onValueChange}
                                             errorValidacion={errores.telefono}
                                             onBlurValidacion={manicuristaValidacionOnBlur}
+                                            returnKeyType="next"
                                         />
                                         <CampoTextoInput
                                             conIcono={true}
@@ -569,6 +579,7 @@ export const GestionAgregarScreen = (props) => {
                                             onValueChange={onValueChange}
                                             errorValidacion={errores.email}
                                             onBlurValidacion={manicuristaValidacionOnBlur}
+                                            returnKeyType="next"
                                         />
                                         <CampoTextoInput
                                             conIcono={true}
@@ -585,6 +596,7 @@ export const GestionAgregarScreen = (props) => {
                                             onValueChange={onValueChange}
                                             errorValidacion={errores.contrasena}
                                             onBlurValidacion={manicuristaValidacionOnBlur}
+                                            returnKeyType="next"
                                         />
                                         <CampoTextoInput
                                             conIcono={true}
@@ -602,6 +614,7 @@ export const GestionAgregarScreen = (props) => {
                                             errorValidacion={errores.confirmarContrasena}
                                             verificarContrasena={valoresCampos.contrasena}
                                             onBlurValidacion={manicuristaValidacionOnBlur}
+                                            returnKeyType="send"
                                         />
                                     </>
                                 )}

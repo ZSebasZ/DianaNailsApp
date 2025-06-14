@@ -426,6 +426,7 @@ export const GestionEdicionScreen = (props) => {
                                                 onValueChange={onValueChange}
                                                 errorValidacion={errores.nombre}
                                                 onBlurValidacion={servicioValidacionOnBlur}
+                                                returnKeyType="next"
                                             />
                                             <CampoTextoInput
                                                 tipoCantidad={true}
@@ -443,6 +444,7 @@ export const GestionEdicionScreen = (props) => {
                                                 onValueChange={onValueChange}
                                                 errorValidacion={errores.precio}
                                                 onBlurValidacion={servicioValidacionOnBlur}
+                                                returnKeyType="next"
                                             />
                                             <CampoTextoInput
                                                 fuenteTexto={fuenteTexto.gantariRegular}
@@ -475,6 +477,7 @@ export const GestionEdicionScreen = (props) => {
                                                 onValueChange={onValueChange}
                                                 errorValidacion={errores.nombre}
                                                 onBlurValidacion={productoValidacionOnBlur}
+                                                returnKeyType="next"
                                             />
                                             <CampoTextoInput
                                                 conIcono={false}
@@ -492,6 +495,7 @@ export const GestionEdicionScreen = (props) => {
                                                 onValueChange={onValueChange}
                                                 errorValidacion={errores.descripcion}
                                                 onBlurValidacion={productoValidacionOnBlur}
+                                                returnKeyType="next"
                                             />
                                             <CampoTextoInput
                                                 tipoCantidad={true}
@@ -509,6 +513,7 @@ export const GestionEdicionScreen = (props) => {
                                                 onValueChange={onValueChange}
                                                 errorValidacion={errores.precio}
                                                 onBlurValidacion={productoValidacionOnBlur}
+                                                returnKeyType="next"
                                             />
                                             <CampoTextoInput
                                                 tipoCantidad={true}
@@ -526,6 +531,7 @@ export const GestionEdicionScreen = (props) => {
                                                 onValueChange={onValueChange}
                                                 errorValidacion={errores.stock}
                                                 onBlurValidacion={productoValidacionOnBlur}
+                                                returnKeyType="next"
                                             />
                                         </>
                                     )}
@@ -563,6 +569,7 @@ export const GestionEdicionScreen = (props) => {
                                                 onValueChange={onValueChange}
                                                 errorValidacion={errores.nombre}
                                                 onBlurValidacion={manicuristaValidacionOnBlur}
+                                                returnKeyType="next"
                                             />
                                             <CampoTextoInput
                                                 conIcono={true}
@@ -579,6 +586,7 @@ export const GestionEdicionScreen = (props) => {
                                                 onValueChange={onValueChange}
                                                 errorValidacion={errores.apellidos}
                                                 onBlurValidacion={manicuristaValidacionOnBlur}
+                                                returnKeyType="next"
                                             />
                                             <CampoTextoInput
                                                 conIcono={true}
@@ -595,6 +603,7 @@ export const GestionEdicionScreen = (props) => {
                                                 onValueChange={onValueChange}
                                                 errorValidacion={errores.telefono}
                                                 onBlurValidacion={manicuristaValidacionOnBlur}
+                                                returnKeyType="next"
                                             />
                                             <CampoTextoInput
                                                 conIcono={true}
